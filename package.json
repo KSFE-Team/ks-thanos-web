@@ -64,9 +64,9 @@
     "workbox-webpack-plugin": "4.2.0"
   },
   "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test"
+    "start": "node ./scripts/start.js",
+    "build": "node ./scripts/build.js",
+    "test": "node ./scripts/test.js"
   },
   "eslintConfig": {
     "extends": "react-app"

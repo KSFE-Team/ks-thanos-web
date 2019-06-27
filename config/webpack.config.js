@@ -1,4 +1,4 @@
-'use strict';
+
 
 const fs = require('fs');
 const isWsl = require('is-wsl');
@@ -107,11 +107,17 @@ module.exports = function(webpackEnv) {
       },
     ].filter(Boolean);
     if (preProcessor) {
+      let options = {
+        sourceMap: isEnvProduction && shouldUseSourceMap,
+      };
+
+      if (preProcessor === 'sass-loader') {
+        options.implementation = require('dart-sass');
+      }
+
       loaders.push({
         loader: require.resolve(preProcessor),
-        options: {
-          sourceMap: isEnvProduction && shouldUseSourceMap,
-        },
+        options,
       });
     }
     return loaders;
@@ -377,6 +383,9 @@ module.exports = function(webpackEnv) {
                     require.resolve('babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
+                ],
+                plugins:[
+                  ['import', {libraryName: 'antd', style: 'css'}]
                 ],
                 cacheDirectory: true,
                 cacheCompression: isEnvProduction,
