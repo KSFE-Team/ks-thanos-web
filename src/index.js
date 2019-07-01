@@ -1,10 +1,9 @@
 import React from 'react';
 import kredux from 'kredux';
-import { createBrowserHistory } from 'history'
+import history from 'Src/utils/history'
 import * as serviceWorker from './serviceWorker';
+// import 'antd/dist/antd.min.css';
 import './index.scss';
-
-const history = createBrowserHistory();
 
 const app = kredux({ history });
 
@@ -12,6 +11,10 @@ app.router([{
   path: '/',
   exact: true,
   component: () => import('./pages/SelectTemplate')
+}, {
+  path: '/generatePage',
+  exact: true,
+  component: () => import('./pages/GeneratePage')
 }])
 
 app.render(<div/>, '#root');

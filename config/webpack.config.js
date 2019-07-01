@@ -278,6 +278,7 @@ module.exports = function(webpackEnv) {
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
+        'Src': path.resolve(__dirname, '../src/')
       },
       plugins: [
         // Adds support for installing with Plug'n'Play, leading to faster installs and adding
@@ -359,6 +360,7 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  [require.resolve('babel-plugin-import'), {libraryName: 'antd', style: 'css'}]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -383,9 +385,6 @@ module.exports = function(webpackEnv) {
                     require.resolve('babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
-                ],
-                plugins:[
-                  ['import', {libraryName: 'antd', style: 'css'}]
                 ],
                 cacheDirectory: true,
                 cacheCompression: isEnvProduction,

@@ -1,0 +1,39 @@
+.thanos-generate-page-container {
+    
+    .page-wrapper {
+        display: flex;
+        height: calc(100vh - 56px);
+
+        .left-toolbar {
+            width: 50px;
+            height: 100%;
+            padding: 12px 10px;
+            text-align: center;
+
+            .anticon {
+                display: block;
+                padding: 6px;
+                cursor: pointer;
+            }
+
+            .scale-percent {
+                font-size: 12px;
+            }
+        }
+    
+        .page-shower {
+            display: flex;
+            flex: 1;
+            height: 100%;
+            background: #dcdcdc;
+            justify-content: center;
+            align-items: center;
+
+            .canvas {
+                width: 1060px;
+                height: 648px;
+                background: #fff;
+            }
+        }
+    }
+}
