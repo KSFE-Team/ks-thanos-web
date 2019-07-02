@@ -1,21 +1,43 @@
 import React, { Component } from 'react';
 import { Icon, Tooltip } from 'antd';
+import { connect, actions } from 'kredux';
 import Header from '../Header';
 import './index.scss';
 
-export default class GeneratePage extends Component {
+@connect(({ generatePage = {}, operate = {} }) => ({
+    generatePage,
+    operate
+}))
+class GeneratePage extends Component {
     state = {  }
+
+    componentDidMount() {
+        actions.operate.save({
+            modelName: 'generatePage',
+            data: {
+                count: 0
+            },
+        });
+    }
+
     render() {
+        const { count } = this.props.generatePage;
+        const { undoDisable, redoDisable } = this.props.operate;
+
         return (
             <div className="thanos-generate-page-container">
                 <Header showTopToolbar={true} />
                 <div className="page-wrapper">
                     <div className="left-toolbar">
                         <Tooltip placement="right" title="撤销" >
-                            <Icon type="undo" />
+                            <Icon type="undo" style={undoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={undoDisable ? () => {} : () => {
+                                actions.operate.undo()
+                            }} />
                         </Tooltip>
                         <Tooltip placement="right" title="重做" >
-                            <Icon type="redo" />
+                            <Icon type="redo" style={redoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={redoDisable ? () => {} : () => {
+                                actions.operate.redo()
+                            }} />
                         </Tooltip>
                         <Tooltip placement="right" title="放大" >
                             <Icon type="plus" />
@@ -27,7 +49,9 @@ export default class GeneratePage extends Component {
                     </div>
                     <div className="page-shower">
                         <div className="canvas">
-
+                            {
+                                count
+                            }
                         </div>
                     </div>
                 </div>
@@ -35,3 +59,5 @@ export default class GeneratePage extends Component {
         );
     }
 }
+
+export default GeneratePage;
