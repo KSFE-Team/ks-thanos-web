@@ -362,6 +362,9 @@ module.exports = function(webpackEnv) {
                       },
                     },
                   ],
+                  [require.resolve('babel-plugin-import'), {libraryName: 'antd', style: 'css'}],
+                  ["@babel/plugin-proposal-decorators", { "legacy": true }],
+                  ["@babel/plugin-proposal-class-properties", { "loose": true }]
                 ],
                 // This is a feature of `babel-loader` for webpack (not Babel itself).
                 // It enables caching results in ./node_modules/.cache/babel-loader/
@@ -386,9 +389,6 @@ module.exports = function(webpackEnv) {
                     require.resolve('babel-preset-react-app/dependencies'),
                     { helpers: true },
                   ],
-                ],
-                plugins:[
-                  ['import', {libraryName: 'antd', style: 'css'}]
                 ],
                 cacheDirectory: true,
                 cacheCompression: isEnvProduction,

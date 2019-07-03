@@ -1,0 +1,17 @@
+.thanos-top-toolbar {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+
+    li {
+        width: 50px;
+        text-align: center;
+        cursor: pointer;
+    }
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}

@@ -5,7 +5,10 @@ import { PageRender, PageConfig, ComponentConfig } from './components';
 import './index.scss';
 
 
-export class Page extends Component {
+@connect(({ page }) => ({
+    page
+}))
+class Page extends Component {
     static propTypes = {
         page: PropTypes.object // 页面redux
     };
@@ -34,6 +37,4 @@ export class Page extends Component {
     }
 }
 
-export default connect(({ page }) => ({
-    page
-}))(Page);
+export default Page

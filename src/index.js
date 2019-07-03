@@ -1,11 +1,10 @@
 import React from 'react';
 import kredux from 'kredux';
-import { createBrowserHistory } from 'history'
+import history from 'Src/utils/history';
 import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
+// import operate from './model/operate';
 import './index.scss';
-
-const history = createBrowserHistory();
 
 const app = kredux({ history });
 
@@ -13,19 +12,23 @@ app.router([
     {
         path: '/',
         exact: true,
-        component: () => import('./pages/SelectTemplate'),
+        component: () => import('./pages/SelectTemplate')
     },
     {
         path: '/page',
         exact: true,
         component: () => import('./pages/Page'),
-        modelList: [
-            () => import('./pages/Page/model'),
-        ]
+        modelList: [() => import('./pages/Page/model')]
+    },
+    {
+        path: '/generatePage',
+        exact: true,
+        modelList: [() => import('./pages/GeneratePage/model/generatePage')],
+        component: () => import('./pages/GeneratePage')
     }
 ]);
 
-app.render(<div/>, '#root');
+app.render(<div />, '#root');
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

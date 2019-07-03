@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
+import Header from '../Header';
+import history from 'Src/utils/history';
 import './index.scss';
 
+const titles = ['列表模板', '表单模板', '图表模板', 'H5活动模板'];
+
 export default class SelectTemplate extends Component {
-    state = {  }
+    state = {}
     render() {
         return (
             <div className="thanos-select-template-container">
-                <div className="header">
-                    <span className="title">灭霸&nbsp;&nbsp;</span>
-                    <span className="sub-title">打个响指，页面就好了</span>
-                    <span className="user">欢迎，每一位亲萌！</span>
-                </div>
+                <Header />
                 <ul className="template-lib-wrapper">
-                    <li>列表模板</li>
-                    <li>表单模板</li>
-                    <li>图表模板</li>
-                    <li>H5活动模板</li>
+                    {
+                        titles.map((title) => {
+                            return (
+                                <li onClick={() => history.push('/generatePage')}>
+                                    <div className="title">{title}</div>
+                                </li>
+                            );
+                        })
+                    }
                 </ul>
             </div>
         );
