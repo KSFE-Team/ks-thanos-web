@@ -11,7 +11,8 @@ export default class DnD extends React.PureComponent {
         dataSource: PropTypes.array, // 需要排序的数据源
         onRender: PropTypes.func,
         onDragStart: PropTypes.func, // 拖拽开始事件
-        onDragEnd: PropTypes.func // 拖拽结束事件
+        onDragEnd: PropTypes.func, // 拖拽结束事件
+        emptyNode: PropTypes.node, // 空节点渲染
     }
 
     static defaultProps = {
@@ -20,6 +21,11 @@ export default class DnD extends React.PureComponent {
         interval: 0,
         onDragStart: () => { },
         onDropEnd: () => { },
+        emptyNode: <div
+            style={{textAlign: 'center'}}
+        >
+            暂无数据
+        </div>
     }
 
     /**
@@ -60,7 +66,7 @@ export default class DnD extends React.PureComponent {
     }
 
     render() {
-        const { dataSource, direction, droppableId, interval, onRender } = this.props;
+        const { dataSource, direction, droppableId, interval, onRender, emptyNode } = this.props;
         return (
             <DragDropContext
                 onDragEnd={this.handleDragEnd}
@@ -100,6 +106,9 @@ export default class DnD extends React.PureComponent {
                                                 }
                                             </Draggable>
                                         ))
+                                    }
+                                    {
+                                       !dataSource.length && emptyNode
                                     }
                                     {provided.placeholder}
                                 </React.Fragment>

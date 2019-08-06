@@ -52,7 +52,7 @@
                         background-color: #fafafa;
                         display: flex;
                         flex-direction: 'column';
-                        height: 100vh;
+                        height: calc(100vh - 56px);
                 
                         .thanos-page-operation-bar-tools {
                             width: 44px;
