@@ -19,14 +19,14 @@ export default class PageConfig extends Component {
      * 设置redux
      */
     setRedux = (redux) => {
-        actions.page.setReducers(redux);
+        actions.generatePage.setReducers(redux);
     };
 
     /**
      * 设置页面配置
      */
     setJSON = (json) => {
-        const { pageJSON } = this.props.page;
+        const { pageJSON } = this.props.generatePage;
         this.setRedux({
             pageJSON: {
                 ...pageJSON,
@@ -36,7 +36,7 @@ export default class PageConfig extends Component {
     };
 
     render() {
-        const { pageJSON } = this.props.page;
+        const { pageJSON } = this.props.generatePage;
         return (
             <div className="thanos-page-config">
                 <div className="thanos-page-config-title">页面配置</div>

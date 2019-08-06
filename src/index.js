@@ -15,15 +15,12 @@ app.router([
         component: () => import('./pages/SelectTemplate')
     },
     {
-        path: '/page',
-        exact: true,
-        component: () => import('./pages/Page'),
-        modelList: [() => import('./pages/Page/model')]
-    },
-    {
         path: '/generatePage',
         exact: true,
-        modelList: [() => import('./pages/GeneratePage/model/generatePage')],
+        modelList: [
+            () => import('./pages/GeneratePage/model/generatePage'),
+            () => import('./model/operate'),
+        ],
         component: () => import('./pages/GeneratePage')
     }
 ]);

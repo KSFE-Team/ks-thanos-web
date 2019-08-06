@@ -24,8 +24,8 @@ export default class PageRender extends Component {
     /**
      * 显示配置界面
      */
-    showConfig = index => {
-        const { pageJSON } = this.props.page;
+    showConfig = (index) => {
+        const { pageJSON } = this.props.generatePage;
         let { components } = pageJSON;
         components[index]['configVisible'] = true;
         this.setJSON({
@@ -37,14 +37,14 @@ export default class PageRender extends Component {
      * 设置redux
      */
     setRedux = (redux) => {
-        actions.page.setReducers(redux);
+        actions.generatePage.setReducers(redux);
     };
 
     /**
      * 设置页面配置
      */
     setJSON = (json) => {
-        const { pageJSON } = this.props.page;
+        const { pageJSON } = this.props.generatePage;
         this.setRedux({
             pageJSON: {
                 ...pageJSON,
@@ -54,7 +54,7 @@ export default class PageRender extends Component {
     };
 
     render() {
-        const { pageJSON } = this.props.page;
+        const { pageJSON } = this.props.generatePage;
         const { components: dataSource } = pageJSON;
         return(
             <div
@@ -80,8 +80,8 @@ export default class PageRender extends Component {
                     dataSource={dataSource}
                     onDragStart={() => {}}
                     onDragEnd={dataSource => {
-                        this.setState({
-                            dataSource
+                        this.setJSON({
+                            components: dataSource
                         });
                     }}
                 />

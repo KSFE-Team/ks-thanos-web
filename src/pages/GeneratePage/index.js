@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Tooltip } from 'antd';
 import { connect, actions } from 'kredux';
 import Header from '../Header';
+import { PageRender, PageConfig, ComponentConfig } from './components';
 import './index.scss';
 
 @connect(({ generatePage = {}, operate = {} }) => ({
@@ -21,7 +22,7 @@ class GeneratePage extends Component {
     }
 
     render() {
-        const { count } = this.props.generatePage;
+        // const { count } = this.props.generatePage;
         const { undoDisable, redoDisable } = this.props.operate;
 
         return (
@@ -49,9 +50,15 @@ class GeneratePage extends Component {
                     </div>
                     <div className="page-shower">
                         <div className="canvas">
-                            {
-                                count
-                            }
+                            <div className="thanos-page">
+                                <div className="thanos-page-container">
+                                    <PageRender {...this.props}/>
+                                </div>
+                                <div className="thanos-page-operation">
+                                    <PageConfig {...this.props}/>
+                                </div>
+                                <ComponentConfig {...this.props}/>
+                            </div>
                         </div>
                     </div>
                 </div>
