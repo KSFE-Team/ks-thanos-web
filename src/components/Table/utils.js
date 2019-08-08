@@ -22,3 +22,12 @@ export const getInitJson = () => ({
         // 
     ],
 });
+
+/**
+ * 获取组件Tools配置
+ */
+export const getTools = () => ({
+    name: 'Table',
+    icon: 'table',
+    componentName: 'Table'
+});

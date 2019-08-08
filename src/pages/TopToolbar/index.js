@@ -7,13 +7,7 @@ import * as Components from 'Components';
 /**
  * 组件库
  */
-const TOOLS = [
-    {
-        name: 'Table',
-        icon: 'table',
-        componentName: 'Table'
-    }
-];
+const TOOLS = Object.keys(Components).map((key) => Components[key].getTools());
 
 export default class TopToolbar extends Component {
     state = {  }

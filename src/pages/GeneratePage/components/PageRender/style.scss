@@ -1,0 +1,27 @@
+.render-page {
+    padding: 8px 10px;
+    border: 1px dashed #000;
+    border-radius: 5px;
+
+    .page-item {
+        padding: 10px 5px;
+        position: relative;
+        border-radius: 5px;
+        border: 1px solid rgba(0, 0, 0, .2);
+        margin: 10px 0;
+        background: #E6DDCA;
+
+        .item-close {
+            position: absolute;
+            right: -8px;
+            top: -10px;
+
+            .item-close-icon {
+                font-size: 20px;
+                background: #fff;
+                border-radius: 100%;
+            }
+        }
+    }
+
+}
