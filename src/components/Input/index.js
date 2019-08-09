@@ -1,21 +1,21 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Input } from 'antd';
 import PropTypes from "prop-types";
 import { getInitJson, getTools } from './utils';
 
-export default class KTable extends Component {
+export default class KInput extends Component {
     static propTypes = {
         props: PropTypes.object
     };
     
     render() {
         return (
-            <Table
+            <Input
                 {...this.props}
             />
         );
     }
 }
 
-KTable.getInitJson = getInitJson;
-KTable.getTools = getTools;
+KInput.getInitJson = getInitJson;
+KInput.getTools = getTools;

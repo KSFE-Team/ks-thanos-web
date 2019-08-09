@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { actions } from 'kredux';
+import { Icon, Modal } from 'antd';
 import { DND } from 'BizComponents';
 import * as Components from 'Components';
-
+import './style.scss';
+const Confirm = Modal.confirm;
 
 export default class PageRender extends Component {
 
@@ -58,22 +60,35 @@ export default class PageRender extends Component {
         const { components: dataSource } = pageJSON;
         return(
             <div
-                style={{
-                    backgroud: 'rgba(0, 0, 0, .2)',
-                    padding: '8px 10px',
-                    border: '1px dashed #000',
-                    borderRadius: '5px'
-                }}
+                className='render-page'
             >
                 <DND
                     onRender={(data, index) => {
                         return (
+
                             <div
                                 onClick={() => {
                                     this.showConfig(index);
                                 }}
+                                className='page-item'
                             >
                                 {this.renderComponent(data)}
+                                <div className='item-close'
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        Confirm({
+                                            title: '请确认删除组件',
+                                            content: '删除后其配置会消失，请谨慎操作',
+                                            onOk: () => {
+                                                this.setJSON({
+                                                    components: dataSource.filter((record, idx) => idx !== index)
+                                                });
+                                            }
+                                        })
+                                    }}
+                                >
+                                    <Icon type='close-circle' className='item-close-icon' size='large' />
+                                </div>
                             </div>
                         );
                     }}
