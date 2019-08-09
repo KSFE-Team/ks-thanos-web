@@ -54,9 +54,9 @@ class GeneratePage extends Component {
                                 <div className="thanos-page-container">
                                     <PageRender {...this.props}/>
                                 </div>
-                                <div className="thanos-page-operation">
-                                    <PageConfig {...this.props}/>
-                                </div>
+                                {/*<div className="thanos-page-operation">*/}
+                                    {/*<PageConfig {...this.props}/>*/}
+                                {/*</div>*/}
                                 <ComponentConfig {...this.props}/>
                             </div>
                         </div>
