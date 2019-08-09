@@ -115,9 +115,8 @@ export default class ComponentConfig extends Component {
     };
 
     saveTableData = () => {
-        let {pageJSON} = this.props.generatePage,
-            {components} = pageJSON;
-        components = components.map((item) => {
+        let {pageJSON} = this.props.generatePage;
+        pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.props.columns = this.state.dataSource.map((item) => {
                     return {
