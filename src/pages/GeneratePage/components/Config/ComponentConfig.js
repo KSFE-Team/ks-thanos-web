@@ -161,7 +161,7 @@ export default class ComponentConfig extends Component {
                     render: (text, record) =>
                         this.state.dataSource.length >= 1 ? (
                             <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleDelete(record.key)}>
-                                <a href="javascript:;">Delete</a>
+                                Delete
                             </Button>
                         ) : null,
                 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Tooltip } from 'antd';
 import { connect, actions } from 'kredux';
 import Header from '../Header';
-import { PageRender, PageConfig, ComponentConfig } from './components';
+import { PageRender, ComponentConfig } from './components';
 import './index.scss';
 
 @connect(({ generatePage = {}, operate = {} }) => ({
