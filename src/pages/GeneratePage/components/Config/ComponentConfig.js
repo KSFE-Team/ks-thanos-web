@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
-import { actions } from 'kredux';
+import React, {Component} from 'react';
+import {actions} from 'kredux';
 import { Drawer } from 'antd';
-import TableConfig from '../../../../components/Table/config';
+import * as Components from 'Components';
 
 export default class ComponentConfig extends Component {
 
@@ -38,9 +38,6 @@ export default class ComponentConfig extends Component {
         components.forEach((component) => {
             if ('configVisible' in component) {
                 component['configVisible'] = false;
-                if (component.components) {
-                    this.onClose(component.components);
-                }
             }
         });
         this.setJSON({
@@ -68,8 +65,31 @@ export default class ComponentConfig extends Component {
         });
     };
 
-    render() {
+    handleSave = pageJSON => {
+        this.setRedux(pageJSON);
+        this.onClose();
+    };
 
+    renderConfig = () => {
+        const {pageJSON} = this.props.generatePage;
+        const {components} = pageJSON;
+        const Component = Components[(components.find(({configVisible}) => configVisible) || {}).name];
+        if (Component) {
+            const Config = Component.config;
+            const commonProps = {
+                pageJSON,
+                onSave: this.handleSave
+            };
+
+            return <Config
+                {...commonProps}
+            />;
+        } else {
+            return null;
+        }
+    }
+
+    render() {
         return (
             <Drawer
                 width={700}
@@ -81,7 +101,7 @@ export default class ComponentConfig extends Component {
                 }}
                 visible={this.getShowConfig().visible}
             >
-                <TableConfig dataSource={this.props.generatePage} />
+                {this.renderConfig()}
             </Drawer>
         );
     }

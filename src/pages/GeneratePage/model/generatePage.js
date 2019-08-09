@@ -1,5 +1,5 @@
-import { actions } from 'kredux';
-import { getUniqueID } from 'Src/utils';
+import {actions} from 'kredux';
+import {getUniqueID} from 'Src/utils';
 
 export default {
     namespace: 'generatePage',
@@ -13,9 +13,9 @@ export default {
     reducers: {
         insertComponent: (payload, getState, dispatch) => {
             const state = getState();
-            let { generatePage } = state,
-                { pageJSON } = generatePage,
-                { components } = pageJSON;
+            let {generatePage} = state,
+                {pageJSON} = generatePage,
+                {components} = pageJSON;
             pageJSON = {
                 ...pageJSON,
                 components: [

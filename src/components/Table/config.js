@@ -1,5 +1,4 @@
 import React from 'react';
-import { actions } from 'kredux';
 import { Form, Input, Table, Button, Row, Col } from 'antd';
 
 const FormItem = Form.Item;
@@ -21,6 +20,36 @@ export default class TableConfig extends React.Component {
         count: 0,
         api: ''
     };
+
+    static getDerivedStateFromProps(props, state) {
+        const newState = {};
+        if(state.dataSource.length === 0 || !state.api) {
+            const currentComponent = props.pageJSON.components.find((item) => {
+                if(item.configVisible) {
+                    return true;
+                }
+            });
+
+            if (currentComponent) {
+                if (state.dataSource.length === 0) {
+                    let dataSource = currentComponent.props.columns.map((item, index) => {
+                        return {
+                            key: index,
+                            dataKey: item.dataIndex,
+                            tableName: item.title
+                        }
+                    });
+                    newState.dataSource = dataSource;
+                    newState.count = dataSource.length
+                }
+
+                if (!state.api && currentComponent.dependencies[0]) {
+                    newState.api = currentComponent.dependencies[0].api || ''
+                }
+            }
+        }
+        return Object.keys(newState).length ? newState : null
+    }
 
     handleSave = row => {
         const newData = [...this.state.dataSource];
@@ -52,7 +81,7 @@ export default class TableConfig extends React.Component {
     };
 
     saveTableData = () => {
-        let {pageJSON} = this.props.generatePage;
+        const pageJSON = this.props.pageJSON;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.props.columns = this.state.dataSource.map((item) => {
@@ -71,7 +100,8 @@ export default class TableConfig extends React.Component {
             }
             return item
         });
-        actions.generatePage.setReducers(pageJSON);
+        console.log(JSON.stringify(pageJSON));
+        this.props.onSave(pageJSON);
     };
 
     render() {
