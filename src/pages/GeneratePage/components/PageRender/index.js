@@ -12,7 +12,7 @@ export default class PageRender extends Component {
      * 渲染组件
      */
     renderComponent = component => {
-        const ComponentName = Components[component.name];
+        const ComponentName = Components[component.componentName];
         if (!ComponentName) {
             console.error('thanos：no present component');
             return null;
@@ -30,6 +30,14 @@ export default class PageRender extends Component {
         const { pageJSON } = this.props.generatePage;
         let { components } = pageJSON;
         components[index]['configVisible'] = true;
+        components.map((item, idx) => {
+            if(idx === index) {
+                item.configVisible = true;
+            } else {
+                item.configVisible = false;
+            }
+            return item
+        });
         this.setJSON({
             components
         });

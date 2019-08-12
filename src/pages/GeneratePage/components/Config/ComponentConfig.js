@@ -73,7 +73,7 @@ export default class ComponentConfig extends Component {
     renderConfig = () => {
         const {pageJSON} = this.props.generatePage;
         const {components} = pageJSON;
-        const Component = Components[(components.find(({configVisible}) => configVisible) || {}).name];
+        const Component = Components[(components.find(({configVisible}) => configVisible) || {}).componentName];
         if (Component) {
             const Config = Component.config;
             const commonProps = {
@@ -99,6 +99,7 @@ export default class ComponentConfig extends Component {
                 onClose={() => {
                     this.onClose();
                 }}
+                keyboard={true}
                 visible={this.getShowConfig().visible}
             >
                 {this.renderConfig()}

@@ -1,5 +1,8 @@
 import React from 'react';
-import { Form, Input, Table, Button, Row, Col } from 'antd';
+import { actions } from 'kredux';
+import { Form, Input, Table, Button, Row, Col, Checkbox } from 'antd';
+import * as Components from 'Components';
+
 
 const FormItem = Form.Item;
 
@@ -16,21 +19,34 @@ const EditableFormRow = Form.create()(EditableRow);
 export default class TableConfig extends React.Component {
 
     state = {
-        dataSource: [],
-        count: 0,
-        api: ''
+        dataSource: [], // table data
+        tableCount: 0, // table key
+        searchComponentChecked: false, // checkbox search component check flag
+        api: '', // api path
+        currentComponent: {
+            name: '',
+        }, // current component info
+        currentComponentIdx: '' // current component index
     };
+
 
     static getDerivedStateFromProps(props, state) {
         const newState = {};
         if(state.dataSource.length === 0 || !state.api) {
-            const currentComponent = props.pageJSON.components.find((item) => {
-                if(item.configVisible) {
-                    return true;
+            const currentComponent = props.pageJSON.components.find((item, index) => {
+                if (item.configVisible) {
+                    newState.currentComponentIdx = index;
                 }
+                return item.configVisible;
             });
 
             if (currentComponent) {
+                newState.currentComponent = currentComponent;
+                props.pageJSON.components.forEach((item) => {
+                    if (item.parentId && item.parentId === currentComponent.id) {
+                        newState.searchComponentChecked = true;
+                    }
+                });
                 if (state.dataSource.length === 0) {
                     let dataSource = currentComponent.props.columns.map((item, index) => {
                         return {
@@ -40,7 +56,7 @@ export default class TableConfig extends React.Component {
                         }
                     });
                     newState.dataSource = dataSource;
-                    newState.count = dataSource.length
+                    newState.tableCount = dataSource.length
                 }
 
                 if (!state.api && currentComponent.dependencies[0]) {
@@ -51,6 +67,10 @@ export default class TableConfig extends React.Component {
         return Object.keys(newState).length ? newState : null
     }
 
+    /**
+     * @desc Edit the table automatic save
+     * @param { Object } row (current row data)
+     */
     handleSave = row => {
         const newData = [...this.state.dataSource];
         const index = newData.findIndex(item => row.key === item.key);
@@ -62,28 +82,39 @@ export default class TableConfig extends React.Component {
         this.setState({ dataSource: newData });
     };
 
+    /**
+     * @desc add one row to the table
+     */
     handleAdd = () => {
-        const { count, dataSource } = this.state;
+        let { tableCount, dataSource } = this.state;
         const newData = {
-            key: count,
+            key: ++tableCount,
             dataKey: '',
             tableName: '',
         };
         this.setState({
             dataSource: [...dataSource, newData],
-            count: count + 1,
+            tableCount,
         });
     };
 
+    /**
+     * @desc delete one row to the table
+     * @param { String } key (table key)
+     */
     handleDelete = key => {
         const dataSource = [...this.state.dataSource];
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     };
 
+    /**
+     * @desc save table data
+     */
     saveTableData = () => {
         const pageJSON = this.props.pageJSON;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
+                item.name = this.state.currentComponent.name;
                 item.props.columns = this.state.dataSource.map((item) => {
                     return {
                         title: item.tableName,
@@ -100,8 +131,35 @@ export default class TableConfig extends React.Component {
             }
             return item
         });
-        console.log(JSON.stringify(pageJSON));
         this.props.onSave(pageJSON);
+    };
+
+    /**
+     * @desc add a search component
+     * @param { Object } e event
+     */
+    addSearchComponent = (e) => {
+        const pageJSON = this.props.pageJSON;
+        if (e.target.checked) {
+            let { currentComponentIdx, currentComponent } = this.state,
+                InputData = {
+                ...Components.Input.getInitJson(),
+                parentId: currentComponent.id
+            };
+
+            pageJSON.components.splice(currentComponentIdx, 0, InputData);
+
+            actions.generatePage.setReducers(pageJSON);
+        } else {
+            let searchComponentIdx = pageJSON.components.findIndex((item) => {
+                return item.parentId && item.parentId === this.state.currentComponent.id;
+            });
+            pageJSON.components.splice(searchComponentIdx, 1);
+            actions.generatePage.setReducers(pageJSON);
+        }
+        this.setState({
+            searchComponentChecked: e.target.checked
+        })
     };
 
     render() {
@@ -110,7 +168,7 @@ export default class TableConfig extends React.Component {
             wrapperCol: {span: 16},
         };
 
-        let { dataSource } = this.state,
+        let { dataSource, searchComponentChecked } = this.state,
             columns = [
                 {
                     title: '表头名称',
@@ -125,12 +183,13 @@ export default class TableConfig extends React.Component {
                 {
                     title: 'operation',
                     dataIndex: 'operation',
-                    render: (text, record) =>
-                        this.state.dataSource.length >= 1 ? (
+                    render: (text, record) => {
+                        return this.state.dataSource.length >= 2 ? (
                             <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleDelete(record.key)}>
                                 <a href="javascript:;">Delete</a>
                             </Button>
-                        ) : null,
+                        ) : null;
+                    }
                 }
             ],
             components = {
@@ -168,6 +227,19 @@ export default class TableConfig extends React.Component {
                                })
                            }}/>
                 </FormItem>
+                <FormItem {...formItemLayout} label="表格名称">
+                    <Input value={this.state.currentComponent.name}
+                           placeholder="组件存储数据Key, 使用英文且唯一"
+                           onChange={e => {
+                               const {value} = e.target;
+                               this.setState({
+                                   currentComponent: {
+                                       ...this.state.currentComponent,
+                                       name: value
+                                   }
+                               })
+                           }}/>
+                </FormItem>
                 <Table
                     components={components}
                     dataSource={dataSource}
@@ -176,6 +248,9 @@ export default class TableConfig extends React.Component {
                     pagination={false}
                 />
                 <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
+                    <Checkbox checked={searchComponentChecked} onChange={this.addSearchComponent}>是否拥有条件搜索</Checkbox>
+                </Row>
+                <Row style={{marginTop: '20px'}} type="flex" justify="end" gutter={1}>
                     <Col>
                         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                             Add a row
