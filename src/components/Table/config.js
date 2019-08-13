@@ -186,7 +186,7 @@ export default class TableConfig extends React.Component {
                     render: (text, record) => {
                         return this.state.dataSource.length >= 2 ? (
                             <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleDelete(record.key)}>
-                                <a href="javascript:;">Delete</a>
+                                Delete
                             </Button>
                         ) : null;
                     }
