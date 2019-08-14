@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import TopToolbar from '../TopToolbar';
 import { connect } from 'kredux';
 import { Button } from 'antd';
+import { formatJSON } from './utils';
 import './index.scss';
 
 @connect(({ generatePage = {}, operate = {} }) => ({
@@ -24,7 +25,7 @@ class Header extends Component {
                         <Button
                             type='primary'
                             onClick={() => {
-                                console.log('pageJSON', JSON.parse(JSON.stringify(pageJSON)));
+                                console.log('pageJSON', JSON.stringify(formatJSON(pageJSON)));
                             }}
                         >
                             打响指
