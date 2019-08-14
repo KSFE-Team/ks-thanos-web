@@ -13,6 +13,9 @@ export default class KInput extends Component {
         return (
             <Input
                 {...this.props}
+                style={{
+                    width: '300px'
+                }}
             />
         );
     }

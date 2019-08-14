@@ -1,11 +1,17 @@
 import React, { Component } from 'react';
 import TopToolbar from '../TopToolbar';
+import { connect } from 'kredux';
+import { Button } from 'antd';
 import './index.scss';
 
-export default class Header extends Component {
+@connect(({ generatePage = {}, operate = {} }) => ({
+    generatePage,
+    operate
+}))
+class Header extends Component {
     render() {
-        const { showTopToolbar = false } = this.props;
-
+        const { showTopToolbar = false, generatePage } = this.props;
+        const { pageJSON } = generatePage;
         return (
             <div className="thanos-common">
                 <div className="header">
@@ -14,9 +20,20 @@ export default class Header extends Component {
                     {
                         showTopToolbar ? <TopToolbar /> : null
                     }
-                    <span className="user" style={showTopToolbar ? { flex: 'none' } : {}}>欢迎，每一位亲萌！</span>
+                    <span className="user" style={showTopToolbar ? { flex: 'none' } : {}}>
+                        <Button
+                            type='primary'
+                            onClick={() => {
+                                console.log('pageJSON', JSON.parse(JSON.stringify(pageJSON)));
+                            }}
+                        >
+                            打响指
+                        </Button>
+                    </span>
                 </div>
             </div>
         );
     }
 }
+
+export default Header;

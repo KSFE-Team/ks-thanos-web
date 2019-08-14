@@ -1,6 +1,7 @@
 import React from 'react';
 import { actions } from 'kredux';
 import { Form, Input, Table, Button, Row, Col, Checkbox } from 'antd';
+import { getUniqueID } from '../../utils';
 import * as Components from 'Components';
 
 
@@ -144,6 +145,7 @@ export default class TableConfig extends React.Component {
             let { currentComponentIdx, currentComponent } = this.state,
                 InputData = {
                 ...Components.Input.getInitJson(),
+                id: getUniqueID(),
                 parentId: currentComponent.id
             };
 
