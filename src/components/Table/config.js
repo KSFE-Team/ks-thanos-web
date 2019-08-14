@@ -1,9 +1,10 @@
 import React from 'react';
 import { actions } from 'kredux';
-import { Form, Input, Table, Button, Row, Col, Checkbox } from 'antd';
+import { Form, Input, Table, Button, Row, Col, Checkbox, Select, message } from 'antd';
 import { getUniqueID } from '../../utils';
 import * as Components from 'Components';
 
+const { Option } = Select;
 
 const FormItem = Form.Item;
 
@@ -24,8 +25,9 @@ export default class TableConfig extends React.Component {
         tableCount: 0, // table key
         searchComponentChecked: false, // checkbox search component check flag
         api: '', // api path
+        method: 'GET', // request method
         currentComponent: {
-            name: '',
+            stateName: '',
         }, // current component info
         currentComponentIdx: '' // current component index
     };
@@ -60,8 +62,12 @@ export default class TableConfig extends React.Component {
                     newState.tableCount = dataSource.length
                 }
 
-                if (!state.api && currentComponent.dependencies[0]) {
-                    newState.api = currentComponent.dependencies[0].api || ''
+                if (!state.api && currentComponent.dependencies) {
+                    newState.api = currentComponent.dependencies.api || ''
+                }
+
+                if (currentComponent.dependencies.method) {
+                    newState.method = currentComponent.dependencies.method
                 }
             }
         }
@@ -72,7 +78,7 @@ export default class TableConfig extends React.Component {
      * @desc Edit the table automatic save
      * @param { Object } row (current row data)
      */
-    handleSave = row => {
+    handleTableInputSave = row => {
         const newData = [...this.state.dataSource];
         const index = newData.findIndex(item => row.key === item.key);
         const item = newData[index];
@@ -103,7 +109,7 @@ export default class TableConfig extends React.Component {
      * @desc delete one row to the table
      * @param { String } key (table key)
      */
-    handleDelete = key => {
+    handleTableRowDelete = key => {
         const dataSource = [...this.state.dataSource];
         this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
     };
@@ -112,27 +118,53 @@ export default class TableConfig extends React.Component {
      * @desc save table data
      */
     saveTableData = () => {
+        if (!this.checkData()) return;
         const pageJSON = this.props.pageJSON;
+        const { currentComponent, api, method, dataSource } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
-                item.name = this.state.currentComponent.name;
-                item.props.columns = this.state.dataSource.map((item) => {
+                item.stateName = currentComponent.stateName;
+                item.props.columns = dataSource.map((item) => {
                     return {
                         title: item.tableName,
                         dataIndex: item.dataKey
                     }
                 });
 
-                item.dependencies = [ // 数据依赖
-                    {
-                        type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
-                        api: this.state.api, // 接口地址
-                        responseType: 'list', // 接口返回类型， // list 列表， object 对象
-                    }]
+                item.dependencies = {
+                    type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
+                    responseType: 'list', // 接口返回类型， // list 列表， object 对象
+                    api, // 接口地址
+                    method
+                }
             }
             return item
         });
         this.props.onSave(pageJSON);
+    };
+
+    /**
+     * @desc check require option
+     */
+    checkData = () => {
+        const { api, method, dataSource, currentComponent } = this.state;
+        if (!api) {
+            message.error('api不可为空');
+            return false;
+        } else if (!method) {
+            message.error('请求方式不可为空');
+            return false;
+        } else if (!method) {
+            message.error('请求方式不可为空');
+            return false;
+        } else if (!dataSource.length) {
+            message.error('表头数据不能为空');
+            return false;
+        } else if (!currentComponent.stateName) {
+            message.error('表头名称不能为空');
+            return false;
+        }
+        return true
     };
 
     /**
@@ -164,6 +196,41 @@ export default class TableConfig extends React.Component {
         })
     };
 
+    /**
+     * @desc method change evebt
+     * @param { String } value
+     */
+    methodChange = (value) => {
+        this.setState({
+            method: value
+        })
+    };
+
+    /**
+     * @desc api input onChange
+     * @param { Object } event
+     */
+    apiInputChange = event => {
+        const {value} = event.target;
+        this.setState({
+            api: value
+        })
+    };
+
+    /**
+     * @desc state name input onChange
+     * @param { Object } event
+     */
+    stateNameInputChange = event => {
+        const {value} = event.target;
+        this.setState({
+            currentComponent: {
+                ...this.state.currentComponent,
+                stateName: value
+            }
+        })
+    };
+
     render() {
         const formItemLayout = {
             labelCol: {span: 8},
@@ -187,7 +254,7 @@ export default class TableConfig extends React.Component {
                     dataIndex: 'operation',
                     render: (text, record) => {
                         return this.state.dataSource.length >= 2 ? (
-                            <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleDelete(record.key)}>
+                            <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleTableRowDelete(record.key)}>
                                 Delete
                             </Button>
                         ) : null;
@@ -212,7 +279,7 @@ export default class TableConfig extends React.Component {
                     editable: col.editable,
                     dataIndex: col.dataIndex,
                     title: col.title,
-                    handleSave: this.handleSave,
+                    handleSave: this.handleTableInputSave,
                 }),
             };
         });
@@ -222,25 +289,18 @@ export default class TableConfig extends React.Component {
                 <FormItem {...formItemLayout} label="接口地址">
                     <Input value={this.state.api}
                            placeholder="例：/userservice/media/upload"
-                           onChange={e => {
-                               const {value} = e.target;
-                               this.setState({
-                                   api: value
-                               })
-                           }}/>
+                           onChange={this.apiInputChange}/>
+                </FormItem>
+                <FormItem {...formItemLayout} label="请求方式">
+                    <Select defaultValue={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
+                        <Option value="GET">GET</Option>
+                        <Option value="POST">POST</Option>
+                    </Select>
                 </FormItem>
                 <FormItem {...formItemLayout} label="表格名称">
-                    <Input value={this.state.currentComponent.name}
+                    <Input value={this.state.currentComponent.stateName}
                            placeholder="组件存储数据Key, 使用英文且唯一"
-                           onChange={e => {
-                               const {value} = e.target;
-                               this.setState({
-                                   currentComponent: {
-                                       ...this.state.currentComponent,
-                                       name: value
-                                   }
-                               })
-                           }}/>
+                           onChange={this.stateNameInputChange}/>
                 </FormItem>
                 <Table
                     components={components}

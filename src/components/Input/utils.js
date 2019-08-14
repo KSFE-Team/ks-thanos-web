@@ -2,12 +2,12 @@
  * 获取初始化JSON
  */
 export const getInitJson = () => ({
-    name: "",
+    stateName: "",
     componentName: "Input",
     source: "antd",
     default: false,
-    props: {},
-    dependencies: [],
+    key: '',
+    label: ''
 });
 
 /**

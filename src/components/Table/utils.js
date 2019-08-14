@@ -2,14 +2,15 @@
  * 获取初始化JSON
  */
 export const getInitJson = () => ({
-    name: '',
+    stateName: '',
     componentName: "Table",
     source: "antd",
     default: false,
     props: {
         columns: [{title: '示例', dataIndex: 'example'}]
     },
-    dependencies: [],
+    dependencies: {},
+    components: []
 });
 
 /**
