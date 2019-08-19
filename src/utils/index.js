@@ -1,3 +1,5 @@
+export { default as request } from './request';
+
 // 生成随机码
 export const getUniqueID = () => {
     return Math.random().toString(36).substring(2);

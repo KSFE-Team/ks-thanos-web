@@ -16,7 +16,11 @@ export const formatJSON = (JSON) => {
                         ...component,
                         stateName: parent.stateName,
                     }],
-                    dependencies: parent.dependencies
+                    stateName: parent.stateName,
+                    activeEvent: {
+                        eventType: 'api',
+                        dependencies: parent.dependencies
+                    }
                 }
             } else {
                 result.push(component);
