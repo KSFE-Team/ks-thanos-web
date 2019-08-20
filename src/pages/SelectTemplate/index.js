@@ -13,9 +13,9 @@ export default class SelectTemplate extends Component {
                 <Header />
                 <ul className="template-lib-wrapper">
                     {
-                        titles.map((title) => {
+                        titles.map((title, index) => {
                             return (
-                                <li onClick={() => history.push('/generatePage')}>
+                                <li onClick={() => history.push('/generatePage')} key={index}>
                                     <div className="title">{title}</div>
                                 </li>
                             );

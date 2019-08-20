@@ -19,13 +19,14 @@ const LABEL = 'label';
 export default class InputConfig extends Component {
     static propTypes = {
         onSave: PropTypes.func
-    }
+    };
+
     state={
         formData: {
 
         },
         isTouch: false
-    }
+    };
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -72,7 +73,7 @@ export default class InputConfig extends Component {
             },
             isTouch: true
         });
-    }
+    };
 
     render() {
         const { formData } = this.state;
