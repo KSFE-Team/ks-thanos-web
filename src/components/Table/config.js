@@ -197,7 +197,7 @@ export default class TableConfig extends React.Component {
     };
 
     /**
-     * @desc method change evebt
+     * @desc method change event
      * @param { String } value
      */
     methodChange = (value) => {
@@ -207,7 +207,7 @@ export default class TableConfig extends React.Component {
     };
 
     /**
-     * @desc api input onChange
+     * @desc api input change event
      * @param { Object } event
      */
     apiInputChange = event => {
@@ -218,7 +218,7 @@ export default class TableConfig extends React.Component {
     };
 
     /**
-     * @desc state name input onChange
+     * @desc state name input change event
      * @param { Object } event
      */
     stateNameInputChange = event => {
