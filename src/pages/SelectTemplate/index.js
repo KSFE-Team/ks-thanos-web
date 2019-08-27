@@ -15,7 +15,7 @@ export default class SelectTemplate extends Component {
                     {
                         titles.map((title, index) => {
                             return (
-                                <li onClick={() => history.push('/generatePage')} key={index}>
+                                <li onClick={() => history.push('/h5/ks-thanos/generatePage')} key={index}>
                                     <div className="title">{title}</div>
                                 </li>
                             );

@@ -5,25 +5,22 @@ import * as serviceWorker from './serviceWorker';
 import 'antd/dist/antd.css';
 // import operate from './model/operate';
 import './index.scss';
+import router from './router';
+
+
 
 const app = kredux({ history });
 
-app.router([
-    {
-        path: '/',
-        exact: false,
-        component: () => import('./pages/SelectTemplate')
-    },
-    {
-        path: '/generatePage',
-        exact: false,
-        modelList: [
-            () => import('./pages/GeneratePage/model/generatePage'),
-            () => import('./model/operate'),
-        ],
-        component: () => import('./pages/GeneratePage')
-    }
-]);
+const env = process.env.NODE_ENV;
+
+const projectName = env === 'production' ? '/h5/ks-thanos' : '';
+
+
+
+app.router(router.map((item) => {
+    item.path = projectName + item.path;
+    return item
+}));
 
 app.render(<div />, '#root');
 
