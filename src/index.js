@@ -16,7 +16,7 @@ app.router([
     },
     {
         path: '/generatePage',
-        exact: true,
+        exact: false,
         modelList: [
             () => import('./pages/GeneratePage/model/generatePage'),
             () => import('./model/operate'),
