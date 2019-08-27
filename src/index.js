@@ -11,7 +11,7 @@ const app = kredux({ history });
 app.router([
     {
         path: '/',
-        exact: true,
+        exact: false,
         component: () => import('./pages/SelectTemplate')
     },
     {
