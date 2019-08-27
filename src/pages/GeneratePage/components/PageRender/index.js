@@ -12,7 +12,7 @@ export default class PageRender extends Component {
      * 渲染组件
      */
     renderComponent = component => {
-        const ComponentName = Components[component.componentName];
+        const ComponentName = Components[component.componentName].component;
         if (!ComponentName) {
             console.error('thanos：no present component');
             return null;

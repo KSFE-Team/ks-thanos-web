@@ -16,7 +16,12 @@ const formItemLayout = {
 const KEY = 'key';
 const LABEL = 'label';
 
-export default class InputConfig extends Component {
+interface InputConfigProps{
+    onSave(pageJSON:any): void,
+    pageJSON: any
+}
+
+export default class InputConfig extends Component<InputConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
@@ -100,7 +105,7 @@ export default class InputConfig extends Component {
             </FormItem>
             <FormItem>
                 <Row>
-                    <Col align='right'>
+                    <Col>
                         <Button
                             onClick={this.handleSave}
                             type='primary'

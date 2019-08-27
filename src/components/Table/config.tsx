@@ -8,7 +8,7 @@ const { Option } = Select;
 
 const FormItem = Form.Item;
 
-const EditableContext = React.createContext();
+const EditableContext = React.createContext(null);
 
 const EditableRow = ({ form, index, ...props }) => (
     <EditableContext.Provider value={form}>
@@ -18,7 +18,12 @@ const EditableRow = ({ form, index, ...props }) => (
 
 const EditableFormRow = Form.create()(EditableRow);
 
-export default class TableConfig extends React.Component {
+interface TableConfigProps {
+    pageJSON: any,
+    onSave(pageJSON:any): any,
+}
+
+export default class TableConfig extends React.Component<TableConfigProps> {
 
     state = {
         dataSource: [], // table data
@@ -28,13 +33,14 @@ export default class TableConfig extends React.Component {
         method: 'GET', // request method
         currentComponent: {
             stateName: '',
+            id: ''
         }, // current component info
         currentComponentIdx: '' // current component index
     };
 
 
     static getDerivedStateFromProps(props, state) {
-        const newState = {};
+        const newState: any = {};
         if(state.dataSource.length === 0 || !state.api) {
             const currentComponent = props.pageJSON.components.find((item, index) => {
                 if (item.configVisible) {
@@ -78,14 +84,14 @@ export default class TableConfig extends React.Component {
      * @desc Edit the table automatic save
      * @param { Object } row (current row data)
      */
-    handleTableInputSave = row => {
+    handleTableInputSave = (row) => {
+        interface itemInterface{
+            key: number|string
+        }
         const newData = [...this.state.dataSource];
-        const index = newData.findIndex(item => row.key === item.key);
+        const index = newData.findIndex((item:itemInterface) => row.key === item.key);
         const item = newData[index];
-        newData.splice(index, 1, {
-            ...item,
-            ...row,
-        });
+        newData.splice(index, 1, Object.assign({}, item, row));
         this.setState({ dataSource: newData });
     };
 
@@ -111,7 +117,10 @@ export default class TableConfig extends React.Component {
      */
     handleTableRowDelete = key => {
         const dataSource = [...this.state.dataSource];
-        this.setState({ dataSource: dataSource.filter(item => item.key !== key) });
+        interface itemInterface{
+            key: number|string
+        }
+        this.setState({ dataSource: dataSource.filter((item:itemInterface) => item.key !== key) });
     };
 
     /**
@@ -124,12 +133,10 @@ export default class TableConfig extends React.Component {
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.stateName = currentComponent.stateName;
-                item.props.columns = dataSource.map((item) => {
-                    return {
-                        title: item.tableName,
-                        dataIndex: item.dataKey
-                    }
-                });
+                item.props.columns = dataSource.map((item: any) => ({
+                    title: item.tableName,
+                    dataIndex: item.dataKey
+                }));
 
                 item.dependencies = {
                     type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
@@ -254,7 +261,7 @@ export default class TableConfig extends React.Component {
                     dataIndex: 'operation',
                     render: (text, record) => {
                         return this.state.dataSource.length >= 2 ? (
-                            <Button title="Sure to delete?" tyep="danger" onClick={() => this.handleTableRowDelete(record.key)}>
+                            <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
                                 Delete
                             </Button>
                         ) : null;
@@ -329,10 +336,23 @@ export default class TableConfig extends React.Component {
     }
 }
 
-class EditableCell extends React.Component {
+interface EditableCellProps{
+    record: any,
+    handleSave(params: any): void,
+    dataIndex: number,
+    title: string,
+    editable: boolean,
+    index: number
+}
+
+class EditableCell extends React.Component<EditableCellProps> {
     state = {
         editing: false,
     };
+
+    input: any;
+
+    form: any;
 
     toggleEdit = () => {
         const editing = !this.state.editing;

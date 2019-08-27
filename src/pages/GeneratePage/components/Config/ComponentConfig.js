@@ -87,7 +87,7 @@ export default class ComponentConfig extends Component {
         } else {
             return null;
         }
-    }
+    };
 
     render() {
         return (

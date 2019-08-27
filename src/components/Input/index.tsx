@@ -1,23 +1,29 @@
 import React, { Component } from 'react';
-import { Table } from 'antd';
+import { Input } from 'antd';
 import PropTypes from "prop-types";
 import { getInitJson, getTools } from './utils';
-import TableConfig from "./config";
+import InputConfig from './config';
 
-export default class KTable extends Component {
+class KInput extends Component {
     static propTypes = {
         props: PropTypes.object
     };
     
     render() {
         return (
-            <Table
+            <Input
                 {...this.props}
+                style={{
+                    width: '300px'
+                }}
             />
         );
     }
 }
 
-KTable.getInitJson = getInitJson;
-KTable.getTools = getTools;
-KTable.config = TableConfig;
+export {
+    KInput as component,
+    getInitJson,
+    getTools,
+    InputConfig as config
+}

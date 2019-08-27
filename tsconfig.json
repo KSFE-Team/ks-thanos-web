@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "esnext",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "removeComments": true,
+    "strict": true,
+    "alwaysStrict": true,
+    "outDir": "output",
+    "rootDir": "./",
+    "noUnusedLocals": true,
+    "allowJs": true,
+    "experimentalDecorators": true,
+    "baseUrl": "./src",
+    "jsx": "react",
+    "noImplicitAny": false,
+    "paths": {
+      "Src/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./src"
+  ],
+  "typeRoots": [
+    "./node_modules/@types"
+  ]
+}

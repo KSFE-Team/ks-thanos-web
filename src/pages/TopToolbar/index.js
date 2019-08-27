@@ -7,10 +7,10 @@ import * as Components from 'Components';
 /**
  * 组件库
  */
+
 const TOOLS = Object.keys(Components).map((key) => Components[key].getTools());
 
 export default class TopToolbar extends Component {
-    state = {  }
     render() {
         return (
             <ul className="thanos-top-toolbar">
