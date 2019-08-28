@@ -19,7 +19,7 @@
     "noImplicitAny": false,
     "paths": {
       "Src/*": [
-        "./src/*"
+        "./*"
       ]
     }
   },

@@ -7,7 +7,32 @@ export default {
         count: 0,
         pageJSON: {
             name: "", // 页面名称
-            components: [] // 子组件
+            components: [
+                {
+                    stateName: "",
+                    componentName: "Input",
+                    source: "antd",
+                    default: false,
+                    key: '',
+                    label: ''
+                },
+                {
+                    stateName: "",
+                    componentName: "Input",
+                    source: "antd",
+                    default: false,
+                    key: '',
+                    label: ''
+                },
+                {
+                    stateName: "",
+                    componentName: "Input",
+                    source: "antd",
+                    default: false,
+                    key: '',
+                    label: ''
+                }
+            ] // 子组件
         }
     },
     reducers: {

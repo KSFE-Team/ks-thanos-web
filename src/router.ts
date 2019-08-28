@@ -9,7 +9,7 @@ export default [
         exact: true,
         modelList: [
             () => import('./pages/GeneratePage/model/generatePage'),
-            () => import('./model/operate'),
+            () => import('./pages/GeneratePage/model/operate'),
         ],
         component: () => import('./pages/GeneratePage')
     }
