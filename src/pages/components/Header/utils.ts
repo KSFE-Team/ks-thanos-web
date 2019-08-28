@@ -2,9 +2,17 @@
  * 整理JSON
  */
 export const formatJSON = (JSON) => {
+    interface formChildren {
+        components?: any,
+        stateName?: string,
+        activeEvent?: {},
+        componentName?: string,
+        source?: string,
+        default?: boolean
+    }
     let { components } = JSON,
-        formChildren = {},
-        result = [];
+        formChildren: formChildren = {},
+        result:any[] = [];
     components.forEach((component) => {
         const { parentId } = component;
         if (parentId) {
@@ -35,10 +43,10 @@ export const formatJSON = (JSON) => {
             componentName: "Form",
             source: "antd",
             default: false,
-        }
+        };
         result.unshift(formChildren);
     }
     return {
         components: result
     }
-}
+};

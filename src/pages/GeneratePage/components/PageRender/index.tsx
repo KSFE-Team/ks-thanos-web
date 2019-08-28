@@ -6,7 +6,14 @@ import * as Components from 'Components';
 import './style.scss';
 const Confirm = Modal.confirm;
 
-export default class PageRender extends Component {
+interface PageRenderProps{
+    generatePage: {
+        pageJSON: any
+    },
+
+}
+
+export default class PageRender extends Component<PageRenderProps> {
 
      /**
      * 渲染组件
@@ -95,7 +102,7 @@ export default class PageRender extends Component {
                                         })
                                     }}
                                 >
-                                    <Icon type='close-circle' className='item-close-icon' size='large' />
+                                    <Icon type='close-circle' className='item-close-icon' />
                                 </div>
                             </div>
                         );

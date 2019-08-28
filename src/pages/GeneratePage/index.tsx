@@ -5,12 +5,19 @@ import Header from '../components/Header';
 import { PageRender, ComponentConfig } from './components';
 import './index.scss';
 
+interface  GeneratePageProps{
+    generatePage: {pageJSON: any},
+    operate: {
+        undoDisable: any,
+        redoDisable: any
+    }
+}
+
 @connect(({ generatePage = {}, operate = {} }) => ({
     generatePage,
     operate
 }))
-class GeneratePage extends Component {
-    state = {  }
+class GeneratePage extends Component<GeneratePageProps> {
 
     componentDidMount() {
         actions.operate.save({
@@ -22,7 +29,6 @@ class GeneratePage extends Component {
     }
 
     render() {
-        // const { count } = this.props.generatePage;
         const { undoDisable, redoDisable } = this.props.operate;
 
         return (

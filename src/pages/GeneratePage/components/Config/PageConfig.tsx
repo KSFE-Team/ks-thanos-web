@@ -1,10 +1,21 @@
+
 import React, { Component } from 'react';
 import { Form, Input } from 'antd';
 import { actions } from 'kredux';
 import './index.scss';
 const FormItem = Form.Item;
 
-export default class PageConfig extends Component {
+interface PageConfigProps{
+    generatePage: {
+        pageJSON: {
+            components: any[],
+            name: string
+        }
+    },
+
+}
+
+export default class PageConfig extends Component<PageConfigProps> {
 
     /**
      * 变更页面名称

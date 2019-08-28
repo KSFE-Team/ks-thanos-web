@@ -8,11 +8,16 @@ import { API } from 'Src/api';
 import './index.scss';
 const confirm = Modal.confirm;
 
+interface HeaderProps{
+    generatePage?: any,
+    showTopToolbar?: boolean
+}
+
 @connect(({ generatePage = {}, operate = {} }) => ({
     generatePage,
     operate
 }))
-class Header extends Component {
+class Header extends Component<HeaderProps> {
     render() {
         const { showTopToolbar = false, generatePage } = this.props;
         const { pageJSON } = generatePage;
@@ -38,7 +43,7 @@ class Header extends Component {
                                                 pageData: JSON.stringify(formatJSON(pageJSON)),
                                                 pageName: 'demo'
                                             }
-                                        })
+                                        });
                                         if (response && response.errcode === 0) {
                                             message.success('提交配置成功');
                                         }
