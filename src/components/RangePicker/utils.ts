@@ -7,7 +7,9 @@ export const getInitJson = () => ({
     source: "antd",
     default: false,
     key: '',
-    label: ''
+    label: '',
+    parentComponentName: 'DatePicker',
+    props: {}
 });
 
 /**
