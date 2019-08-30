@@ -90,7 +90,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                     }
                     return component;
                 })
-                console.log('pageJSON', JSON.stringify(pageJSON));
+                // console.log('pageJSON', JSON.stringify(pageJSON));
                 onSave && onSave(pageJSON)
             }
         });

@@ -10,7 +10,6 @@ class KRangePicker extends Component {
     render() {
         return (
             <RangePicker
-                showTime={{format: ''}}
                 {...this.props}
             />
         );

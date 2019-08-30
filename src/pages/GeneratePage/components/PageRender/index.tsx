@@ -27,7 +27,7 @@ export default class PageRender extends Component<PageRenderProps> {
         let props = {
             ...(component.props || {})
         };
-        return <ComponentName {...props} showTime={props.showTime} />;
+        return <ComponentName {...props} />;
     };
 
     /**
