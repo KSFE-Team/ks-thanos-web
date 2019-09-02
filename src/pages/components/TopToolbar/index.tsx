@@ -12,6 +12,7 @@ const FormItem = Form.Item;
  */
 
 const TOOLS = Object.keys(Components).map((key) => Components[key].getTools());
+console.log(TOOLS);
 
 export default class TopToolbar extends Component {
 
