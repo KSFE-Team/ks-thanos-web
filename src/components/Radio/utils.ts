@@ -7,11 +7,9 @@ export const getInitJson = () => ({
     source: "antd",
     default: false,
     key: '',
-    label: '',
     props: {
         list: [{ id: 1,label:'启用',value:'1' },{ id: 2,label:'禁用',value:'0' }],
         label:'状态'
-
     },
 });
 

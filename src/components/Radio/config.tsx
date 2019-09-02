@@ -60,6 +60,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             }
             return {
                 choiceNodeList: [...current.props.list],
+                choiceNodeId:current.props.list.length+1,
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
@@ -85,7 +86,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             return !this[`label${index}`].state.value||!(this[`value${index}`].state.value)
         }).length;
         if(length>0){
-            message.error('表单项名称不可为空');
+            message.error('选项不可为空');
             return ;
         }
         let array:Array<object> = [];
@@ -136,7 +137,6 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     };
     render() {
         const { formData,choiceNodeId,choiceNodeList } = this.state;
-        console.log(choiceNodeList,'choiceNodeList')
         return <div>
              <FormItem
                 label={'表单项Key'}
@@ -210,9 +210,11 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                     (index + 1) === choiceNodeList.length && <React.Fragment>
                                         <Col span={2}>
                                             <Button shape="circle" size='small' icon='plus' onClick={() => {
+                                                let tempNodeList = [...choiceNodeList, { id: choiceNodeId + 1 }];
                                                 this.setState({
-                                                        choiceNodeList: [...choiceNodeList, { id: choiceNodeId + 1 }],
-                                                        choiceNodeId: choiceNodeId + 1
+                                                    choiceNodeList: tempNodeList,
+                                                    choiceNodeId: choiceNodeId + 1,
+                                                    isTouch: true
                                                 })
                                             }}></Button>
                                             {

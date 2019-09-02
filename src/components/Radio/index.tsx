@@ -3,7 +3,7 @@ import { Radio } from 'antd';
 import PropTypes from "prop-types";
 import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
-const RadioGroup = Radio.Group;
+// const RadioGroup = Radio.Group;
 interface RadioProps {
     list: any,
     label:string
@@ -16,7 +16,7 @@ class KRadio extends Component<RadioProps> {
         return (
             <div style={{display:'flex'}}>
                 <span style={{marginRight:'10px'}}>{this.props.label}:</span>
-                <RadioGroup style={{display:'flex'}}>
+                <Radio.Group style={{display:'flex'}}>
                     {
                         this.props.list.map(item=>{
                             return <div key={item.id}  onClick={(e)=> {
@@ -24,7 +24,7 @@ class KRadio extends Component<RadioProps> {
                             }}><Radio value={item.value}>{item.label}</Radio></div>
                         })
                     }
-                </RadioGroup>
+                </Radio.Group>
             </div>
            
         );

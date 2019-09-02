@@ -4,7 +4,7 @@ import * as Select from './Select/index';
 import * as InputNumber from './InputNumber/index';
 import * as RangePicker from './RangePicker/index';
 import * as TextArea from './TextArea/index';
-import * as Radio from './TextArea/index';
+import * as Radio from './Radio/index';
 
 export {
     Table,
