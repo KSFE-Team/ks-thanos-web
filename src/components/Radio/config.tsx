@@ -44,7 +44,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         },
         isTouch: false,
         choiceNodeList: [{ id: 1 },{ id: 2 }],
-        choiceNodeId:2
+        choiceNodeId:2,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -52,6 +52,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             let { pageJSON } = props,
                 { components } = pageJSON;
             let  current = components.find(({ configVisible }) => configVisible);
+            let index=current.props.list.length-1;
             if(!current.key){
                 current.key='status'
             }
@@ -60,7 +61,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             }
             return {
                 choiceNodeList: [...current.props.list],
-                choiceNodeId:current.props.list.length+1,
+                choiceNodeId:current.props.list[index].id,
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
@@ -72,7 +73,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     }
 
     handleSave = () => {
-        const { formData } = this.state;
+        const { formData,choiceNodeList } = this.state;
         let { pageJSON, onSave } = this.props;
         if (!this[`key`].state.value) {
             message.error('表单项Key不可为空');
@@ -82,15 +83,16 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             return ;
         }       
               
-        let length = this.state.choiceNodeList.filter((item:object ,index:number)=>{
+        let length =  choiceNodeList.filter((item:object ,index:number)=>{
             return !this[`label${index}`].state.value||!(this[`value${index}`].state.value)
         }).length;
         if(length>0){
             message.error('选项不可为空');
             return ;
         }
+
         let array:Array<object> = [];
-        this.state.choiceNodeList.forEach((item,index)=>{
+        choiceNodeList.forEach((item,index)=>{
             array.push({
                 id: item.id,
                 label:this[`label${index}`].state.value,
@@ -106,7 +108,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                         ...component.props,
                         placeholder: formData[LABEL],
                         list:array,
-                        label:this[`label`].state.value
+                        label:this[`label`].state.value,
                     }
                 }
             }
@@ -175,7 +177,6 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                     ref={(ref)=>this[`label${index}`]=ref}
                                     placeholder='启用'
                                     onChange={this.handleChangeChoice.bind(this, LABEL,index)}
-
                                 />
                             </FormItem>
                             </Col>
@@ -200,7 +201,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                                 let tempNodeList = [...choiceNodeList];
                                                 tempNodeList.splice(index, 1);
                                                 this.setState({
-                                                    choiceNodeList: tempNodeList
+                                                    choiceNodeList: tempNodeList,
+                                                    isTouch: true
                                                 })
                                             }}></Button>
                                         </Col>
@@ -210,9 +212,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                     (index + 1) === choiceNodeList.length && <React.Fragment>
                                         <Col span={2}>
                                             <Button shape="circle" size='small' icon='plus' onClick={() => {
-                                                let tempNodeList = [...choiceNodeList, { id: choiceNodeId + 1 }];
                                                 this.setState({
-                                                    choiceNodeList: tempNodeList,
+                                                    choiceNodeList: [...choiceNodeList, { id: choiceNodeId + 1 }],
                                                     choiceNodeId: choiceNodeId + 1,
                                                     isTouch: true
                                                 })
@@ -222,8 +223,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                                     let tempNodeList = [...choiceNodeList];
                                                     tempNodeList.splice(index, 1);
                                                     this.setState({
-                                                            choiceNodeList: tempNodeList
-
+                                                        choiceNodeList: tempNodeList,
+                                                        isTouch: true
                                                     })
                                                 }}></Button>
                                             }
@@ -235,8 +236,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                     })
                 }
            </div>
-
-            <FormItem>
+            <FormItem
+            >
                 <Row>
                     <Col>
                         <Button

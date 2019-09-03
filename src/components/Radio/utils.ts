@@ -9,7 +9,8 @@ export const getInitJson = () => ({
     key: '',
     props: {
         list: [{ id: 1,label:'启用',value:'1' },{ id: 2,label:'禁用',value:'0' }],
-        label:'状态'
+        label:'状态',
+        defaultValue:'1'
     },
 });
 
