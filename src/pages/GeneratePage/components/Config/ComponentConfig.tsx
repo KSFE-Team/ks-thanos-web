@@ -3,12 +3,16 @@ import {actions} from 'kredux';
 import { Drawer } from 'antd';
 import * as Components from 'Components';
 
-export default class ComponentConfig extends Component {
+interface ComponentConfigProps{
+    generatePage: {pageJSON: any},
+
+}
+export default class ComponentConfig extends Component<ComponentConfigProps> {
 
     /**
      * 获取显示配置的组件
      */
-    getShowConfig = (components) => {
+    getShowConfig = (components?) => {
         if (!components) {
             const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
@@ -30,7 +34,7 @@ export default class ComponentConfig extends Component {
         }
     };
 
-    onClose = (components) => {
+    onClose = (components?) => {
         if (!components) {
             const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
@@ -94,12 +98,11 @@ export default class ComponentConfig extends Component {
             <Drawer
                 width={700}
                 title="组件配置"
-                placement={'right'}
+                placement="right"
                 mask={false}
                 onClose={() => {
                     this.onClose();
                 }}
-                keyboard={true}
                 visible={this.getShowConfig().visible}
             >
                 {this.renderConfig()}

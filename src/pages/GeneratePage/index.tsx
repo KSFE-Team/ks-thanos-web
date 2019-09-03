@@ -5,12 +5,19 @@ import Header from '../components/Header';
 import { PageRender, ComponentConfig } from './components';
 import './index.scss';
 
+interface GeneratePageProps {
+    generatePage: { pageJSON: any },
+    operate: {
+        undoDisable: any,
+        redoDisable: any
+    }
+}
+
 @connect(({ generatePage = {}, operate = {} }) => ({
     generatePage,
     operate
 }))
-class GeneratePage extends Component {
-    state = {  }
+class GeneratePage extends Component<GeneratePageProps> {
 
     componentDidMount() {
         actions.operate.save({
@@ -22,7 +29,6 @@ class GeneratePage extends Component {
     }
 
     render() {
-        // const { count } = this.props.generatePage;
         const { undoDisable, redoDisable } = this.props.operate;
 
         return (
@@ -31,12 +37,12 @@ class GeneratePage extends Component {
                 <div className="page-wrapper">
                     <div className="left-toolbar">
                         <Tooltip placement="right" title="撤销" >
-                            <Icon type="undo" style={undoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={undoDisable ? () => {} : () => {
+                            <Icon type="undo" style={undoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={undoDisable ? () => { } : () => {
                                 actions.operate.undo()
                             }} />
                         </Tooltip>
                         <Tooltip placement="right" title="重做" >
-                            <Icon type="redo" style={redoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={redoDisable ? () => {} : () => {
+                            <Icon type="redo" style={redoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={redoDisable ? () => { } : () => {
                                 actions.operate.redo()
                             }} />
                         </Tooltip>
@@ -52,12 +58,12 @@ class GeneratePage extends Component {
                         <div className="canvas">
                             <div className="thanos-page">
                                 <div className="thanos-page-container">
-                                    <PageRender {...this.props}/>
+                                    <PageRender {...this.props} />
                                 </div>
                                 {/*<div className="thanos-page-operation">*/}
-                                    {/*<PageConfig {...this.props}/>*/}
+                                {/*<PageConfig {...this.props}/>*/}
                                 {/*</div>*/}
-                                <ComponentConfig {...this.props}/>
+                                <ComponentConfig {...this.props} />
                             </div>
                         </div>
                     </div>

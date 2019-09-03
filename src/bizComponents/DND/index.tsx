@@ -2,7 +2,17 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 
-export default class DnD extends React.PureComponent {
+interface DnDProps{
+    onDragStart(): void,
+    onDragEnd(dataSource: any, result: any): void,
+    dataSource: any[],
+    direction: string,
+    droppableId: string,
+    interval: string | number,
+    onRender(dataItem: any, index: number): void,
+    emptyNode: any,
+}
+export default class DnD extends React.PureComponent<DnDProps> {
 
     static propTypes = {
         droppableId: PropTypes.string, // 唯一拖拽id
