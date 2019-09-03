@@ -38,12 +38,12 @@ class GeneratePage extends Component<GeneratePageProps> {
                     <div className="left-toolbar">
                         <Tooltip placement="right" title="撤销" >
                             <Icon type="undo" style={undoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={undoDisable ? () => { } : () => {
-                                actions.operate.undo()
+                                actions.operate.undo();
                             }} />
                         </Tooltip>
                         <Tooltip placement="right" title="重做" >
                             <Icon type="redo" style={redoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={redoDisable ? () => { } : () => {
-                                actions.operate.redo()
+                                actions.operate.redo();
                             }} />
                         </Tooltip>
                         <Tooltip placement="right" title="放大" >
@@ -60,9 +60,9 @@ class GeneratePage extends Component<GeneratePageProps> {
                                 <div className="thanos-page-container">
                                     <PageRender {...this.props} />
                                 </div>
-                                {/*<div className="thanos-page-operation">*/}
-                                {/*<PageConfig {...this.props}/>*/}
-                                {/*</div>*/}
+                                {/* <div className="thanos-page-operation"> */}
+                                {/* <PageConfig {...this.props}/> */}
+                                {/* </div> */}
                                 <ComponentConfig {...this.props} />
                             </div>
                         </div>

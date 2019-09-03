@@ -32,7 +32,7 @@ function checkStatus(response, customerError) {
     * status 可能是状态码 可能是返回code
     * @type {number}
     */
-    let status
+    let status;
     if ('status' in response) {
         status = response.status;
     } else if ('errcode' in response) {
@@ -112,5 +112,5 @@ export default function request(url, options, customerError = false) {
         // .then((response) => Humps.parse(response))
         .catch((e) => {
             console.warn(e);
-        });;
+        }); ;
 }

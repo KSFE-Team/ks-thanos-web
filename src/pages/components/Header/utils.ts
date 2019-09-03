@@ -1,22 +1,25 @@
+interface FormChildren {
+    components?: any,
+    stateName?: string,
+    activeEvent?: {},
+    componentName?: string,
+    source?: string,
+    default?: boolean
+}
+
 /**
  * 整理JSON
  */
 export const formatJSON = (JSON) => {
-    interface formChildren {
-        components?: any,
-        stateName?: string,
-        activeEvent?: {},
-        componentName?: string,
-        source?: string,
-        default?: boolean
-    }
-    let { components } = JSON,
-        formChildren: formChildren = {},
-        result:any[] = [];
+    const { components } = JSON;
+    const result:any[] = [];
+
+    let formChildren: FormChildren = {};
+
     components.forEach((component) => {
         const { parentId } = component;
         if (parentId) {
-            let parent = components.find(({id}) => id === parentId);
+            const parent = components.find(({id}) => id === parentId);
             if (parent) {
                 formChildren = {
                     ...formChildren,
@@ -29,7 +32,7 @@ export const formatJSON = (JSON) => {
                         eventType: 'api',
                         dependencies: parent.dependencies
                     }
-                }
+                };
             } else {
                 result.push(component);
             }
@@ -40,13 +43,13 @@ export const formatJSON = (JSON) => {
     if (Object.keys(formChildren).length > 0) {
         formChildren = {
             ...formChildren,
-            componentName: "Form",
-            source: "antd",
+            componentName: 'Form',
+            source: 'antd',
             default: false,
         };
         result.unshift(formChildren);
     }
     return {
         components: result
-    }
+    };
 };

@@ -2,9 +2,9 @@
  * 获取初始化JSON
  */
 export const getInitJson = () => ({
-    stateName: "",
-    componentName: "InputNumber",
-    source: "antd",
+    stateName: '',
+    componentName: 'InputNumber',
+    source: 'antd',
     default: false,
     props: {
         key: '', // 唯一

@@ -6,16 +6,16 @@ export default {
     initialState: {
         count: 0,
         pageJSON: {
-            name: "", // 页面名称
+            name: '', // 页面名称
             components: [] // 子组件
         }
     },
     reducers: {
         insertComponent: (payload, getState, dispatch) => {
             const state = getState();
-            let {generatePage} = state,
-                {pageJSON} = generatePage,
-                {components} = pageJSON;
+            const { generatePage } = state;
+            let { pageJSON } = generatePage;
+            const { components } = pageJSON;
             pageJSON = {
                 ...pageJSON,
                 components: [
@@ -38,3 +38,4 @@ export default {
         },
     }
 }
+;

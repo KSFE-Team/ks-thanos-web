@@ -1,4 +1,4 @@
-import { actions } from "kredux";
+import { actions } from 'kredux';
 
 export default {
     namespace: 'operate',
@@ -17,8 +17,8 @@ export default {
             const { history, operateId } = operate;
 
             const detail = history[operateId - 2];
-            for (let modelName in detail) {
-                actions[modelName].setReducers(detail[modelName])
+            for (const modelName in detail) {
+                actions[modelName].setReducers(detail[modelName]);
             }
 
             actions.operate.setReducers({
@@ -27,9 +27,9 @@ export default {
             });
 
             actions.operate.setReducers({
-                undoDisable: operateId - 2 <= 0, 
+                undoDisable: operateId - 2 <= 0,
                 redoDisable: operateId > history.length,
-            })
+            });
         },
         redo: (action, getState, dispatch) => {
             const state = getState();
@@ -37,10 +37,10 @@ export default {
             const { history, operateId } = operate;
 
             const detail = history[operateId];
-            for (let modelName in detail) {
-                actions[modelName].setReducers(detail[modelName])
+            for (const modelName in detail) {
+                actions[modelName].setReducers(detail[modelName]);
             }
-            
+
             actions.operate.setReducers({
                 operateId: operateId + 1,
                 undoDisable: operateId + 2 <= 2,
@@ -59,7 +59,7 @@ export default {
             actions.operate.end();
         },
         saveWithOperateId: (action, getState, dispatch) => {
-            let { operateId, modelName, data } = action;
+            const { operateId, modelName, data } = action;
             const state = getState();
 
             const { operate } = state;
@@ -89,9 +89,9 @@ export default {
             });
 
             actions.operate.setReducers({
-                undoDisable: operateId - 1 === 0, 
+                undoDisable: operateId - 1 === 0,
                 redoDisable: operateId <= history.length
             });
         }
     }
-}
+};
