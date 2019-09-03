@@ -2,7 +2,7 @@ import React from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 
-interface DnDProps{
+interface DnDProps {
     onDragStart(): void,
     onDragEnd(dataSource: any, result: any): void,
     dataSource: any[],
@@ -32,7 +32,7 @@ export default class DnD extends React.PureComponent<DnDProps> {
         onDragStart: () => { },
         onDropEnd: () => { },
         emptyNode: <div
-            style={{textAlign: 'center'}}
+            style={{ textAlign: 'center' }}
         >
             暂无数据
         </div>
@@ -118,7 +118,7 @@ export default class DnD extends React.PureComponent<DnDProps> {
                                         ))
                                     }
                                     {
-                                       !dataSource.length && emptyNode
+                                        !dataSource.length && emptyNode
                                     }
                                     {provided.placeholder}
                                 </React.Fragment>

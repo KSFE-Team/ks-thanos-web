@@ -6,7 +6,8 @@ import Config from './config';
 interface prp {
     formData: [{
         key: string,
-        label: string
+        label: string,
+        isCheck: boolean
     }]
 }
 
@@ -17,7 +18,10 @@ class KCheckBox extends React.Component<prp> {
         return (
             formData
                 ? formData.map((ele, index) => {
-                    return <Checkbox key={index} >{ele.label}</Checkbox>
+                    return <Checkbox
+                        key={index}
+                        checked={ele.isCheck}
+                    >{ele.label}</Checkbox>
                 })
                 : <div></div>
         );

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Icon } from 'antd';
+import { Form, Input, Button, Row, Col, Icon, Switch, Alert } from 'antd';
 import PropTypes from 'prop-types';
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -15,6 +15,7 @@ const formItemLayout = {
 
 const KEY = 'key';
 const LABEL = 'label';
+const IS_CHECK = 'isCheck'
 
 interface CheckBoxConfigProps {
     onSave(pageJSON: any): void,
@@ -29,9 +30,11 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     state = {
         formData: [{
             [KEY]: '',
-            [LABEL]: ''
+            [LABEL]: '',
+            [IS_CHECK]: false,
         }],
-        isTouch: false
+        isTouch: false,
+        errMessage: ''
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -42,7 +45,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             return {
                 formData: current.formData || [{
                     [KEY]: '',
-                    [LABEL]: ''
+                    [LABEL]: '',
+                    [IS_CHECK]: false
                 }]
             }
         } else {
@@ -56,6 +60,20 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     handleSave = () => {
         const { formData } = this.state;
         let { pageJSON, onSave } = this.props;
+        for (let i = 0; i < formData.length; i++) {
+            let item = formData[i];
+            if (!item[KEY]) {
+                this.setState({
+                    errMessage: '请输入表单项Key'
+                })
+                return;
+            } else if (!item[LABEL]) {
+                this.setState({
+                    errMessage: '请输入表单项名称'
+                })
+                return;
+            }
+        }
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
@@ -91,10 +109,12 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         let { formData } = this.state;
         formData.push({
             [KEY]: '',
-            [LABEL]: ''
+            [LABEL]: '',
+            [IS_CHECK]: false
         });
         this.setState({
-            formData
+            formData,
+            isTouch: true
         });
     }
 
@@ -109,9 +129,42 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         });
     }
 
+    /**
+     * @desc    是否默认选中
+     */
+    handleSwitchChange = (index) => {
+        let { formData } = this.state,
+            data = formData[index],
+            newData = !data[IS_CHECK];
+        data[IS_CHECK] = newData;
+        formData[index] = data;
+        this.setState({
+            formData,
+            isTouch: true
+        })
+    }
+
+    /**
+     * @desc    错误提示关闭
+     */
+    handleAlertClose = () => {
+        this.setState({
+            errMessage: ''
+        });
+    }
+
     render() {
-        const { formData } = this.state;
+        const { formData, errMessage } = this.state;
         return <div>
+            {
+                errMessage
+                    ? <Alert message={errMessage}
+                        type='error'
+                        closable
+                        onClose={this.handleAlertClose}
+                    ></Alert>
+                    : null
+            }
             {
                 formData.map((item, index: number) => {
                     return <React.Fragment key={index}>
@@ -134,13 +187,24 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                             </Row>
                         </FormItem>
                         <FormItem label={'表单项名称'} {...formItemLayout} >
-                            <Col>
-                                <Input
-                                    value={item[LABEL]}
-                                    placeholder='例如： 姓名'
-                                    onChange={this.handleChange.bind(this, LABEL, index)}
-                                />
-                            </Col>
+                            <Row type="flex" justify='space-between'>
+                                <Col>
+                                    <Input
+                                        value={item[LABEL]}
+                                        placeholder='例如： 姓名'
+                                        onChange={this.handleChange.bind(this, LABEL, index)}
+                                    />
+                                </Col>
+                                <Col>
+                                    是否选中：
+                                    <Switch
+                                        defaultChecked={item[IS_CHECK]}
+                                        checkedChildren="是"
+                                        unCheckedChildren="否"
+                                        onChange={this.handleSwitchChange.bind(this, index)}
+                                    />
+                                </Col>
+                            </Row>
                         </FormItem>
                     </React.Fragment>
                 })
