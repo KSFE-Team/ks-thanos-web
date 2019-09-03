@@ -3,8 +3,8 @@
  */
 export const getInitJson = () => ({
     stateName: '',
-    componentName: "Table",
-    source: "antd",
+    componentName: 'Table',
+    source: 'antd',
     default: false,
     props: {
         columns: [{title: '示例', dataIndex: 'example'}]

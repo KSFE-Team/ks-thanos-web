@@ -2,9 +2,9 @@
  * 获取初始化JSON
  */
 export const getInitJson = () => ({
-    stateName: "",
-    componentName: "TextArea",
-    source: "antd",
+    stateName: '',
+    componentName: 'TextArea',
+    source: 'antd',
     default: false,
     props: {
         key: '',

@@ -15,16 +15,16 @@ interface PageRenderProps{
 
 export default class PageRender extends Component<PageRenderProps> {
 
-     /**
+    /**
      * 渲染组件
      */
-    renderComponent = component => {
+    renderComponent = (component) => {
         const ComponentName = Components[component.componentName].component;
         if (!ComponentName) {
             console.error('thanos：no present component');
             return null;
         }
-        let props = {
+        const props = {
             ...(component.props || {})
         };
         return <ComponentName {...props} />;
@@ -35,15 +35,15 @@ export default class PageRender extends Component<PageRenderProps> {
      */
     showConfig = (index) => {
         const { pageJSON } = this.props.generatePage;
-        let { components } = pageJSON;
-        components[index]['configVisible'] = true;
+        const { components } = pageJSON;
+        components[index].configVisible = true;
         components.map((item, idx) => {
-            if(idx === index) {
+            if (idx === index) {
                 item.configVisible = true;
             } else {
                 item.configVisible = false;
             }
-            return item
+            return item;
         });
         this.setJSON({
             components
@@ -73,7 +73,7 @@ export default class PageRender extends Component<PageRenderProps> {
     render() {
         const { pageJSON } = this.props.generatePage;
         const { components: dataSource } = pageJSON;
-        return(
+        return (
             <div
                 className='render-page'
             >
@@ -90,7 +90,7 @@ export default class PageRender extends Component<PageRenderProps> {
                                 {this.renderComponent(data)}
                                 <div className='item-close'
                                     onClick={(e) => {
-                                        e.stopPropagation()
+                                        e.stopPropagation();
                                         Confirm({
                                             title: '请确认删除组件',
                                             content: '删除后其配置会消失，请谨慎操作',
@@ -99,7 +99,7 @@ export default class PageRender extends Component<PageRenderProps> {
                                                     components: dataSource.filter((record, idx) => idx !== index)
                                                 });
                                             }
-                                        })
+                                        });
                                     }}
                                 >
                                     <Icon type='close-circle' className='item-close-icon' />
@@ -109,7 +109,7 @@ export default class PageRender extends Component<PageRenderProps> {
                     }}
                     dataSource={dataSource}
                     onDragStart={() => {}}
-                    onDragEnd={dataSource => {
+                    onDragEnd={(dataSource) => {
                         this.setJSON({
                             components: dataSource
                         });

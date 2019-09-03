@@ -22,13 +22,13 @@ export function toTreeData(data, {
     parentId,
     rootId
 }) {
-    let resData:any[] = [...data], tree:any[] = [];
+    const resData:any[] = [...data]; const tree:any[] = [];
     function run(chiArr) {
         if (resData.length !== 0) {
             for (let i = 0; i < chiArr.length; i++) {
                 for (let j = 0; j < resData.length; j++) {
                     if (chiArr[i][id] === resData[j][parentId]) {
-                        chiArr[i]['children'] = chiArr[i]['children'] || [];
+                        chiArr[i].children = chiArr[i].children || [];
                         chiArr[i].children.push(resData[j]);
                         resData.splice(j, 1);
                         j--;

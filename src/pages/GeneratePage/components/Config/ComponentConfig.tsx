@@ -31,7 +31,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
         });
         return {
             visible,
-        }
+        };
     };
 
     onClose = (components?) => {
@@ -41,12 +41,12 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
         }
         components.forEach((component) => {
             if ('configVisible' in component) {
-                component['configVisible'] = false;
+                component.configVisible = false;
             }
         });
         this.setJSON({
             components
-        })
+        });
     };
 
     /**
@@ -69,7 +69,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
         });
     };
 
-    handleSave = pageJSON => {
+    handleSave = (pageJSON) => {
         this.setRedux(pageJSON);
         this.onClose();
     };

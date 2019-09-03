@@ -1,0 +1,106 @@
+{
+    "root": true,
+    "parser": "babel-eslint",
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaFeatures": {
+            "jsx": true,
+            "legacyDecorators": true
+        }
+    },
+    "env": {
+        "browser": true
+    },
+    "extends": [
+        "standard",
+        "plugin:react/recommended"
+    ],
+    "plugins": [
+        "html",
+        "react"
+    ],
+    "settings": {
+        "html/html-extensions": [
+            ".html",
+            ".wpy"
+        ],
+        "react": {
+            "createClass": "createReactClass",
+            "pragma": "React",
+            "version": "15.0"
+        }
+    },
+    "globals": {
+        "wx": true,
+        "__DEV__": true
+    },
+    "rules": {
+        "no-fallthrough": 0,
+        "object-curly-spacing": 0,
+        "arrow-parens": 2,
+        "generator-star-spacing": 2,
+        "semi": [
+            "error",
+            "always"
+        ],
+        "comma-dangle": [
+            "error",
+            "only-multiline"
+        ],
+        "padded-blocks": [
+            "error",
+            {
+                "blocks": "never"
+            }
+        ],
+        "one-var": [
+            "error",
+            {
+                "var": "always",
+                "let": "consecutive",
+                "const": "never"
+            }
+        ],
+        "no-return-assign": 2,
+        "indent": [
+            "error",
+            4,
+            {
+                "VariableDeclarator": {
+                    "var": 1,
+                    "let": 1
+                },
+                "SwitchCase": 1
+            }
+        ],
+        "no-debugger": 2,
+        "space-before-function-paren": [
+            "error",
+            "never"
+        ],
+        "space-infix-ops": [
+            "error",
+            {
+                "int32Hint": false
+            }
+        ],
+        "quotes": [
+            "error",
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
+        ],
+        "eqeqeq": [
+            "error",
+            "always"
+        ],
+        "import/no-webpack-loader-syntax": "off",
+        "react/jsx-uses-react": "error",
+        "react/jsx-uses-vars": "error",
+        "react/no-string-refs": "error",
+        "react/prop-types": "error",
+        "react/display-name": "off",
+        "react/no-unescaped-entities": "off"
+    }
+}

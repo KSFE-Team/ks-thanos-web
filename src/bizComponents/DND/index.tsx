@@ -118,7 +118,7 @@ export default class DnD extends React.PureComponent<DnDProps> {
                                         ))
                                     }
                                     {
-                                       !dataSource.length && emptyNode
+                                        !dataSource.length && emptyNode
                                     }
                                     {provided.placeholder}
                                 </React.Fragment>

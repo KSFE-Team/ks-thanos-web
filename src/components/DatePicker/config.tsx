@@ -37,7 +37,7 @@ export default class Config extends Component<ConfigProps> {
 
     handleSave = () => {
         const {placeholder, showTime, format} = this.state;
-        let {pageJSON, onSave} = this.props;
+        const {pageJSON, onSave} = this.props;
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
@@ -48,12 +48,12 @@ export default class Config extends Component<ConfigProps> {
                         [SHOW_TIME]: showTime,
                         [FORMAT]: format
                     }
-                }
+                };
             }
             return component;
         });
         console.log('pageJSON----------', pageJSON);
-        onSave && onSave(pageJSON)
+        onSave && onSave(pageJSON);
     };
 
     handleChange = (key, e) => {
@@ -104,6 +104,6 @@ export default class Config extends Component<ConfigProps> {
                     </Col>
                 </Row>
             </FormItem>
-        </div>
+        </div>;
     }
 }

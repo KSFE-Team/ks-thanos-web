@@ -71,10 +71,17 @@
   "scripts": {
     "start": "node ./scripts/start.js",
     "build": "node ./scripts/build.js",
-    "test": "node ./scripts/test.js"
+    "test": "node ./scripts/test.js",
+    "lint": "eslint './src/**/*.{js,jsx,ts,tsx}'"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "plugin:jsx-a11y/recommended"
+    ],
+    "plugins": [
+      "jsx-a11y"
+    ]
   },
   "browserslist": {
     "production": [
@@ -143,6 +150,11 @@
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@types/react": "^16.9.2",
     "@types/react-dom": "^16.9.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-node": "^9.2.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "ts-loader": "^6.0.4",
     "typescript": "^3.5.3"
   }

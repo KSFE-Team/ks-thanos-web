@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Row, Col,Input,message } from 'antd';
+import { Form, Button, Row, Col, Input, message } from 'antd';
 import PropTypes from 'prop-types';
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -35,70 +35,71 @@ interface RadioConfigProps{
 export default class RadioConfig extends Component<RadioConfigProps> {
     static propTypes = {
         onSave: PropTypes.func,
-        form:PropTypes.object
+        form: PropTypes.object
     };
 
     state={
         formData: {
-        
+
         },
         isTouch: false,
-        choiceNodeList: [{ id: 1 },{ id: 2 }],
-        choiceNodeId:2,
+        choiceNodeList: [{ id: 1 }, { id: 2 }],
+        choiceNodeId: 2
     };
+
+    key: any;
+    label: any;
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-            let { pageJSON } = props,
-                { components } = pageJSON;
-            let  current = components.find(({ configVisible }) => configVisible);
-            let index=current.props.list.length-1;
-            if(!current.key){
-                current.key='status'
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = components.find(({ configVisible }) => configVisible);
+            if (!current.key) {
+                current.key = 'status';
             }
-            if(!current.label){
-                current.label='状态'
+            if (!current.label) {
+                current.label = '状态';
             }
             return {
                 choiceNodeList: [...current.props.list],
-                choiceNodeId:current.props.list[index].id,
+                choiceNodeId: current.props.list.length + 1,
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
                 }
-            }
+            };
         } else {
-            return state
+            return state;
         }
     }
 
     handleSave = () => {
-        const { formData,choiceNodeList } = this.state;
-        let { pageJSON, onSave } = this.props;
-        if (!this[`key`].state.value) {
+        const { formData } = this.state;
+        const { pageJSON, onSave } = this.props;
+        if (!this.key.state.value) {
             message.error('表单项Key不可为空');
-            return ;
-        }else if (!this[`label`].state.value) {
+            return;
+        } else if (!this.label.state.value) {
             message.error('表单项名称不可为空');
-            return ;
-        }       
-              
-        let length =  choiceNodeList.filter((item:object ,index:number)=>{
-            return !this[`label${index}`].state.value||!(this[`value${index}`].state.value)
-        }).length;
-        if(length>0){
-            message.error('选项不可为空');
-            return ;
+            return;
         }
 
-        let array:Array<object> = [];
-        choiceNodeList.forEach((item,index)=>{
+        const length = this.state.choiceNodeList.filter((item:any, index:number) => {
+            return !this[`label${index}`].state.value || !(this[`value${index}`].state.value);
+        }).length;
+        if (length > 0) {
+            message.error('选项不可为空');
+            return;
+        }
+        const array:Array<any> = [];
+        this.state.choiceNodeList.forEach((item, index) => {
             array.push({
                 id: item.id,
-                label:this[`label${index}`].state.value,
-                value:this[`value${index}`].state.value
-           })
-        })
+                label: this[`label${index}`].state.value,
+                value: this[`value${index}`].state.value
+            });
+        });
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
@@ -107,14 +108,14 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                     props: {
                         ...component.props,
                         placeholder: formData[LABEL],
-                        list:array,
-                        label:this[`label`].state.value,
+                        list: array,
+                        label: this.label.state.value
                     }
-                }
+                };
             }
             return component;
-        })
-        onSave && onSave(pageJSON)
+        });
+        onSave && onSave(pageJSON);
     }
 
     handleChange = (key, e) => {
@@ -128,26 +129,29 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             isTouch: true
         });
     };
-    
-    handleChangeChoice = (key,index,e) => {
+
+    handleChangeChoice = (key, index, e) => {
         const { choiceNodeList } = this.state;
         const value = e.target.value;
-        choiceNodeList[index][key]=value
+        choiceNodeList[index][key] = value;
         this.setState({
             choiceNodeList
         });
     };
+
     render() {
-        const { formData,choiceNodeId,choiceNodeList } = this.state;
+        const { formData, choiceNodeId, choiceNodeList } = this.state;
         return <div>
-             <FormItem
+            <FormItem
                 label={'表单项Key'}
                 {...formItemLayout}
             >
                 <Input
                     value={formData[KEY]}
                     placeholder='例如: status'
-                    ref={(ref)=>this[`key`]=ref}
+                    ref={(ref) => {
+                        this.key = ref;
+                    }}
                     onChange={this.handleChange.bind(this, KEY)}
                 />
             </FormItem>
@@ -158,52 +162,58 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 <Input
                     value={formData[LABEL]}
                     placeholder='例如: 状态'
-                    ref={(ref)=>this[`label`]=ref}
+                    ref={(ref) => {
+                        this.label = ref;
+                    }}
                     onChange={this.handleChange.bind(this, LABEL)}
                 />
             </FormItem>
             <div>
                 {
-                    choiceNodeList && choiceNodeList.map((item, index) => {
+                    choiceNodeList && choiceNodeList.map((item: any, index) => {
                         return (
                             <Row key={item.id} type='flex'>
-                            <Col span={10}>
-                            <FormItem
-                                label={`选项Label${index+1}`}
-                                {...formItemLayoutRadio}
-                            >
-                                <Input
-                                    value={item['label']}
-                                    ref={(ref)=>this[`label${index}`]=ref}
-                                    placeholder='启用'
-                                    onChange={this.handleChangeChoice.bind(this, LABEL,index)}
-                                />
-                            </FormItem>
-                            </Col>
-                            <Col span={10}>
-                                <FormItem
-                                    label={`选项value${index+1}`}
-                                    {...formItemLayoutRadio}
-                                >
-                                    <Input
-                                        value={item['value']}
-                                        placeholder={'请填入值'}
-                                        ref={(ref)=>this[`value${index}`]=ref}
-                                        onChange={this.handleChangeChoice.bind(this, VALUE,index)}
-                                    />
-                                </FormItem>
-                            
-                            </Col>
+                                <Col span={10}>
+                                    <FormItem
+                                        label={`选项Label${index + 1}`}
+                                        {...formItemLayoutRadio}
+                                    >
+                                        <Input
+                                            value={item.label}
+                                            ref={(ref) => {
+                                                this[`label${index}`] = ref;
+                                            }}
+                                            placeholder='启用'
+                                            onChange={this.handleChangeChoice.bind(this, LABEL, index)}
+
+                                        />
+                                    </FormItem>
+                                </Col>
+                                <Col span={10}>
+                                    <FormItem
+                                        label={`选项value${index + 1}`}
+                                        {...formItemLayoutRadio}
+                                    >
+                                        <Input
+                                            value={item.value}
+                                            placeholder={'请填入值'}
+                                            ref={(ref) => {
+                                                this[`value${index}`] = ref;
+                                            }}
+                                            onChange={this.handleChangeChoice.bind(this, VALUE, index)}
+                                        />
+                                    </FormItem>
+
+                                </Col>
                                 {
                                     (index + 1) !== choiceNodeList.length && choiceNodeList.length > 2 && <React.Fragment>
                                         <Col span={2}>
                                             <Button shape="circle" size='small' icon='minus' onClick={() => {
-                                                let tempNodeList = [...choiceNodeList];
+                                                const tempNodeList = [...choiceNodeList];
                                                 tempNodeList.splice(index, 1);
                                                 this.setState({
-                                                    choiceNodeList: tempNodeList,
-                                                    isTouch: true
-                                                })
+                                                    choiceNodeList: tempNodeList
+                                                });
                                             }}></Button>
                                         </Col>
                                     </React.Fragment>
@@ -212,20 +222,21 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                     (index + 1) === choiceNodeList.length && <React.Fragment>
                                         <Col span={2}>
                                             <Button shape="circle" size='small' icon='plus' onClick={() => {
+                                                // const tempNodeList = [...choiceNodeList, { id: choiceNodeId + 1 }];
                                                 this.setState({
                                                     choiceNodeList: [...choiceNodeList, { id: choiceNodeId + 1 }],
                                                     choiceNodeId: choiceNodeId + 1,
                                                     isTouch: true
-                                                })
+                                                });
                                             }}></Button>
                                             {
                                                 choiceNodeList.length && choiceNodeList.length > 2 && <Button className='mar-l-4' shape="circle" size='small' icon='minus' onClick={() => {
-                                                    let tempNodeList = [...choiceNodeList];
+                                                    const tempNodeList = [...choiceNodeList];
                                                     tempNodeList.splice(index, 1);
                                                     this.setState({
-                                                        choiceNodeList: tempNodeList,
-                                                        isTouch: true
-                                                    })
+                                                        choiceNodeList: tempNodeList
+
+                                                    });
                                                 }}></Button>
                                             }
                                         </Col>
@@ -235,9 +246,9 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                         );
                     })
                 }
-           </div>
-            <FormItem
-            >
+            </div>
+
+            <FormItem>
                 <Row>
                     <Col>
                         <Button
@@ -247,6 +258,6 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                     </Col>
                 </Row>
             </FormItem>
-        </div>
+        </div>;
     }
 }

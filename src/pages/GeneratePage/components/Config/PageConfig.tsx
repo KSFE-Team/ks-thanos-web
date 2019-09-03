@@ -56,7 +56,7 @@ export default class PageConfig extends Component<PageConfigProps> {
                         <Input
                             value={pageJSON.name}
                             placeholder="页面名称"
-                            onChange={e => {
+                            onChange={(e) => {
                                 const { value } = e.target;
                                 this.changePageName(value);
                             }}
