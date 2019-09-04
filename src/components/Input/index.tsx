@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Input } from 'antd';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import InputConfig from './config';
 
@@ -8,7 +8,7 @@ class KInput extends Component {
     static propTypes = {
         props: PropTypes.object
     };
-    
+
     render() {
         return (
             <Input
@@ -26,4 +26,4 @@ export {
     getInitJson,
     getTools,
     InputConfig as config
-}
+};

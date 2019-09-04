@@ -13,4 +13,4 @@ export default [
         ],
         component: () => import('./pages/GeneratePage')
     }
-]
+];

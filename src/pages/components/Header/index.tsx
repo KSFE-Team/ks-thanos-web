@@ -37,7 +37,7 @@ class Header extends Component<HeaderProps> {
                                     title: '确认提交配置？',
                                     content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
                                     onOk: async() => {
-                                        let response = await request(API.page.save, {
+                                        const response = await request(API.page.save, {
                                             method: 'post',
                                             body: {
                                                 pageData: JSON.stringify(formatJSON(pageJSON)),
@@ -48,7 +48,7 @@ class Header extends Component<HeaderProps> {
                                             message.success('提交配置成功');
                                         }
                                     }
-                                })
+                                });
                             }}
                         >
                             打响指

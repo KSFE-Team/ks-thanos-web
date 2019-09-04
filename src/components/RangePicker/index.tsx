@@ -21,4 +21,4 @@ export {
     getInitJson,
     getTools,
     RangePickerConfig as config
-}
+};

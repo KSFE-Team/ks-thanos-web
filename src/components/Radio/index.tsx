@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { Radio } from 'antd';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
-const RadioGroup = Radio.Group;
+
 interface RadioProps {
     configList: any,
     label:string,
@@ -25,7 +25,7 @@ class KRadio extends Component<RadioProps> {
         return (    
             <div style={{display:'flex'}}>
                 <span style={{marginRight:'10px'}}>{this.props.label}:</span>
-                <RadioGroup style={{display:'flex'}} value={this.state.defaultValue} onChange={(e)=>{
+                <Radio.Group style={{display:'flex'}} value={this.state.defaultValue} onChange={(e)=>{
                     this.setState({
                         defaultValue:e.target.value
                     })
@@ -37,9 +37,9 @@ class KRadio extends Component<RadioProps> {
                             }}><Radio value={item.value}>{item.label}</Radio></div>
                         })
                     }
-                </RadioGroup>
+                </Radio.Group>
             </div>
-           
+
         );
     }
 }
@@ -49,5 +49,4 @@ export {
     getInitJson,
     getTools,
     RadioConfig as config
-}
-
+};

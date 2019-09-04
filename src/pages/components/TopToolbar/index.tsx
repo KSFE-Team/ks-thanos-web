@@ -20,23 +20,23 @@ export default class TopToolbar extends Component {
     }
 
     render() {
-        {/* <ul className="thanos-top-toolbar">
-                {
-                    TOOLS.map(({name, icon, componentName}, index) => {
-                        return (
-                            <li
-                                key={index}
-                                onClick={() => {
-                                    actions.generatePage.insertComponent(Components[componentName].getInitJson())
-                                }}
-                            >
-                                <Icon type={icon} />
-                                <div>{name}</div>
-                            </li>
-                        )
-                    })
-                }
-            </ul> */}
+        /* <ul className="thanos-top-toolbar">
+            {
+                TOOLS.map(({name, icon, componentName}, index) => {
+                    return (
+                        <li
+                            key={index}
+                            onClick={() => {
+                                actions.generatePage.insertComponent(Components[componentName].getInitJson())
+                            }}
+                        >
+                            <Icon type={icon} />
+                            <div>{name}</div>
+                        </li>
+                    )
+                })
+            }
+        </ul> */
         return (
             <Form
                 layout="inline"
@@ -56,7 +56,7 @@ export default class TopToolbar extends Component {
                             if (!val) {
                                 return;
                             }
-                            actions.generatePage.insertComponent(Components[val].getInitJson())
+                            actions.generatePage.insertComponent(Components[val].getInitJson());
                         }}
                     >
                         {
@@ -77,7 +77,9 @@ export default class TopToolbar extends Component {
                     <Button
                         type='primary'
                         onClick={() => {
-                            actions.generatePage.insertComponent(Components[this.state.currComp].getInitJson())}
+                            actions.generatePage.insertComponent(Components[this.state.currComp].getInitJson())
+                            ;
+                        }
                         }
                     >再来一个</Button>
                 </FormItem>}
@@ -85,4 +87,3 @@ export default class TopToolbar extends Component {
         );
     }
 }
-

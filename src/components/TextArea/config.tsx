@@ -36,24 +36,24 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-            let { pageJSON } = props,
-                { components } = pageJSON,
-                current = components.find(({ configVisible }) => configVisible);
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = components.find(({ configVisible }) => configVisible);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [Rows]: current[Rows],
                     [Placeholder]: current[Placeholder]
                 }
-            }
+            };
         } else {
-            return state
+            return state;
         }
     }
 
     handleSave = () => {
         const { formData } = this.state;
-        let { pageJSON, onSave } = this.props;
+        const { pageJSON, onSave } = this.props;
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
@@ -63,11 +63,11 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                         ...component.props,
                         ...formData,
                     }
-                }
+                };
             }
             return component;
-        })
-        onSave && onSave(pageJSON)
+        });
+        onSave && onSave(pageJSON);
     }
 
     handleChange = (key, e) => {
@@ -125,6 +125,6 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                     </Col>
                 </Row>
             </FormItem>
-        </div>
+        </div>;
     }
 }

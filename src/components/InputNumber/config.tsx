@@ -40,29 +40,29 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-            let { pageJSON } = props,
-                { components } = pageJSON,
-                current = components.find(({ configVisible }) => configVisible);
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = components.find(({ configVisible }) => configVisible);
             return {
                 formData: {
-                    [KEY]: current['props'][KEY],
-                    [LABEL]: current['props'][LABEL],
-                    [DEFAULT_VALUE]: current['props'][DEFAULT_VALUE],
-                    [MIN_VALUE]: current['props'][MIN_VALUE],
-                    [MAX_VALUE]: current['props'][MAX_VALUE],
-                    [DISABLED]: current['props'][DISABLED],
-                    [PRECISION]: current['props'][PRECISION],
-                    [STEP]: current['props'][STEP],
+                    [KEY]: current.props[KEY],
+                    [LABEL]: current.props[LABEL],
+                    [DEFAULT_VALUE]: current.props[DEFAULT_VALUE],
+                    [MIN_VALUE]: current.props[MIN_VALUE],
+                    [MAX_VALUE]: current.props[MAX_VALUE],
+                    [DISABLED]: current.props[DISABLED],
+                    [PRECISION]: current.props[PRECISION],
+                    [STEP]: current.props[STEP],
                 }
-            }
+            };
         } else {
-            return state
+            return state;
         }
     }
 
     handleSave = () => {
         const { formData } = this.state;
-        let { pageJSON, onSave } = this.props;
+        const { pageJSON, onSave } = this.props;
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
@@ -71,11 +71,11 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
                         ...component.props,
                         ...formData,
                     }
-                }
+                };
             }
             return component;
-        })
-        onSave && onSave(pageJSON)
+        });
+        onSave && onSave(pageJSON);
     }
 
     handleChange = (key, e) => {
@@ -185,6 +185,6 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
                     </Col>
                 </Row>
             </FormItem>
-        </div>
+        </div>;
     }
 }

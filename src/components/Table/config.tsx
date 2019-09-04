@@ -10,7 +10,7 @@ const FormItem = Form.Item;
 
 const EditableContext = React.createContext(null);
 
-const EditableRow = ({ form, index, ...props }) => (
+const EditableRow = ({ form, index, ...props }: any) => (
     <EditableContext.Provider value={form}>
         <tr {...props} />
     </EditableContext.Provider>
@@ -38,10 +38,9 @@ export default class TableConfig extends React.Component<TableConfigProps> {
         currentComponentIdx: '' // current component index
     };
 
-
     static getDerivedStateFromProps(props, state) {
         const newState: any = {};
-        if(state.dataSource.length === 0 || !state.api) {
+        if (state.dataSource.length === 0 || !state.api) {
             const currentComponent = props.pageJSON.components.find((item, index) => {
                 if (item.configVisible) {
                     newState.currentComponentIdx = index;
@@ -57,27 +56,27 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                     }
                 });
                 if (state.dataSource.length === 0) {
-                    let dataSource = currentComponent.props.columns.map((item, index) => {
+                    const dataSource = currentComponent.props.columns.map((item, index) => {
                         return {
                             key: index,
                             dataKey: item.dataIndex,
                             tableName: item.title
-                        }
+                        };
                     });
                     newState.dataSource = dataSource;
-                    newState.tableCount = dataSource.length
+                    newState.tableCount = dataSource.length;
                 }
 
                 if (!state.api && currentComponent.dependencies) {
-                    newState.api = currentComponent.dependencies.api || ''
+                    newState.api = currentComponent.dependencies.api || '';
                 }
 
                 if (currentComponent.dependencies.method) {
-                    newState.method = currentComponent.dependencies.method
+                    newState.method = currentComponent.dependencies.method;
                 }
             }
         }
-        return Object.keys(newState).length ? newState : null
+        return Object.keys(newState).length ? newState : null;
     }
 
     /**
@@ -115,7 +114,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
      * @desc delete one row to the table
      * @param { String } key (table key)
      */
-    handleTableRowDelete = key => {
+    handleTableRowDelete = (key) => {
         const dataSource = [...this.state.dataSource];
         interface itemInterface{
             key: number|string
@@ -143,9 +142,9 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                     responseType: 'list', // 接口返回类型， // list 列表， object 对象
                     api, // 接口地址
                     method
-                }
+                };
             }
-            return item
+            return item;
         });
         this.props.onSave(pageJSON);
     };
@@ -171,7 +170,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             message.error('表头名称不能为空');
             return false;
         }
-        return true
+        return true;
     };
 
     /**
@@ -181,8 +180,8 @@ export default class TableConfig extends React.Component<TableConfigProps> {
     addSearchComponent = (e) => {
         const pageJSON = this.props.pageJSON;
         if (e.target.checked) {
-            let { currentComponentIdx, currentComponent } = this.state,
-                InputData = {
+            const { currentComponentIdx, currentComponent } = this.state;
+            const InputData = {
                 ...Components.Input.getInitJson(),
                 id: getUniqueID(),
                 parentId: currentComponent.id
@@ -192,7 +191,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
 
             actions.generatePage.setReducers(pageJSON);
         } else {
-            let searchComponentIdx = pageJSON.components.findIndex((item) => {
+            const searchComponentIdx = pageJSON.components.findIndex((item) => {
                 return item.parentId && item.parentId === this.state.currentComponent.id;
             });
             pageJSON.components.splice(searchComponentIdx, 1);
@@ -200,7 +199,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
         }
         this.setState({
             searchComponentChecked: e.target.checked
-        })
+        });
     };
 
     /**
@@ -210,32 +209,32 @@ export default class TableConfig extends React.Component<TableConfigProps> {
     methodChange = (value) => {
         this.setState({
             method: value
-        })
+        });
     };
 
     /**
      * @desc api input change event
      * @param { Object } event
      */
-    apiInputChange = event => {
+    apiInputChange = (event) => {
         const {value} = event.target;
         this.setState({
             api: value
-        })
+        });
     };
 
     /**
      * @desc state name input change event
      * @param { Object } event
      */
-    stateNameInputChange = event => {
+    stateNameInputChange = (event) => {
         const {value} = event.target;
         this.setState({
             currentComponent: {
                 ...this.state.currentComponent,
                 stateName: value
             }
-        })
+        });
     };
 
     render() {
@@ -244,44 +243,44 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             wrapperCol: {span: 16},
         };
 
-        let { dataSource, searchComponentChecked } = this.state,
-            columns = [
-                {
-                    title: '表头名称',
-                    dataIndex: 'tableName',
-                    editable: true
-                },
-                {
-                    title: '接口字段',
-                    dataIndex: 'dataKey',
-                    editable: true
-                },
-                {
-                    title: 'operation',
-                    dataIndex: 'operation',
-                    render: (text, record) => {
-                        return this.state.dataSource.length >= 2 ? (
-                            <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
+        const { dataSource, searchComponentChecked } = this.state;
+        let columns = [
+            {
+                title: '表头名称',
+                dataIndex: 'tableName',
+                editable: true
+            },
+            {
+                title: '接口字段',
+                dataIndex: 'dataKey',
+                editable: true
+            },
+            {
+                title: 'operation',
+                dataIndex: 'operation',
+                render: (text, record) => {
+                    return this.state.dataSource.length >= 2 ? (
+                        <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
                                 Delete
-                            </Button>
-                        ) : null;
-                    }
+                        </Button>
+                    ) : null;
                 }
-            ],
-            components = {
-                body: {
-                    row: EditableFormRow,
-                    cell: EditableCell,
-                },
-            };
+            }
+        ];
+        const components = {
+            body: {
+                row: EditableFormRow,
+                cell: EditableCell,
+            },
+        };
 
-        columns = columns.map(col => {
+        columns = columns.map((col) => {
             if (!col.editable) {
                 return col;
             }
             return {
                 ...col,
-                onCell: record => ({
+                onCell: (record) => ({
                     record,
                     editable: col.editable,
                     dataIndex: col.dataIndex,
@@ -295,8 +294,8 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             <React.Fragment>
                 <FormItem {...formItemLayout} label="接口地址">
                     <Input value={this.state.api}
-                           placeholder="例：/userservice/media/upload"
-                           onChange={this.apiInputChange}/>
+                        placeholder="例：/userservice/media/upload"
+                        onChange={this.apiInputChange}/>
                 </FormItem>
                 <FormItem {...formItemLayout} label="请求方式">
                     <Select defaultValue={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
@@ -306,8 +305,8 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                 </FormItem>
                 <FormItem {...formItemLayout} label="表格名称">
                     <Input value={this.state.currentComponent.stateName}
-                           placeholder="组件存储数据Key, 使用英文且唯一"
-                           onChange={this.stateNameInputChange}/>
+                        placeholder="组件存储数据Key, 使用英文且唯一"
+                        onChange={this.stateNameInputChange}/>
                 </FormItem>
                 <Table
                     components={components}
@@ -332,7 +331,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                     </Col>
                 </Row>
             </React.Fragment>
-        )
+        );
     }
 }
 
@@ -363,7 +362,7 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     };
 
-    save = e => {
+    save = (e) => {
         const { record, handleSave } = this.props;
         this.form.validateFields((error, values) => {
             if (error && error[e.currentTarget.id]) {
@@ -374,7 +373,7 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     };
 
-    renderCell = form => {
+    renderCell = (form) => {
         this.form = form;
         const { children, dataIndex, record, title } = this.props;
         const { editing } = this.state;
@@ -388,7 +387,7 @@ class EditableCell extends React.Component<EditableCellProps> {
                         },
                     ],
                     initialValue: record[dataIndex],
-                })(<Input ref={node => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+                })(<Input ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
             </Form.Item>
         ) : (
             <div

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { DatePicker } from 'antd';
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import Config from './config';
 
@@ -26,4 +26,4 @@ export {
     getInitJson,
     getTools,
     Config as config
-}
+};

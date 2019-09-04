@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col, Switch } from 'antd';
 import PropTypes from 'prop-types';
-import {FormComponentProps} from "antd/es/form";
+import {FormComponentProps} from 'antd/es/form';
 
 const FormItem = Form.Item;
 
@@ -44,18 +44,18 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-            let { pageJSON } = props,
-                { components } = pageJSON,
-                current = components.find(({ configVisible }) => configVisible);
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = components.find(({ configVisible }) => configVisible);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
-                    props: current['props']
+                    props: current.props
                 }
-            }
+            };
         } else {
-            return state
+            return state;
         }
     }
 
@@ -70,7 +70,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                 });
 
                 const {props: fieldProps} = fieldValues;
-                let { pageJSON, onSave } = this.props;
+                const { pageJSON, onSave } = this.props;
                 pageJSON.components = pageJSON.components.map((component) => {
                     if (component.configVisible) {
                         component = {
@@ -83,15 +83,15 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                                 showTime: fieldProps.showTimeFormat ? {format: fieldProps.showTimeFormat} : fieldProps.showTime,
                                 // showTimeFormat: fieldProps.showTimeFormat
                             }
-                        }
+                        };
                         if (fieldProps.placeholder) {
-                            component.props.placeholder = fieldProps.placeholder.split('/')
+                            component.props.placeholder = fieldProps.placeholder.split('/');
                         }
                     }
                     return component;
-                })
+                });
                 // console.log('pageJSON', JSON.stringify(pageJSON));
-                onSave && onSave(pageJSON)
+                onSave && onSave(pageJSON);
             }
         });
     }
@@ -144,7 +144,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                                     if (!value) {
                                         callback();
                                     }
-                                    if (value && !/^[^\/\s]+\/[^\/\s]+$/.test(value)) {
+                                    if (value && !/^[^/\s]+\/[^/\s]+$/.test(value)) {
                                         callback(rule.message);
                                     }
                                     callback();
@@ -168,15 +168,15 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                     getFieldDecorator('props.format', {
                         rules: [
                             {
-                                validator: ((rule, value, callback) => {
+                                validator: (rule, value, callback) => {
                                     if (!value) {
                                         callback();
                                     }
-                                    if (value && getFieldValue('showTime') && !/^[^\/\s]+ [^\/\s]+$/.test(value)) {
+                                    if (value && getFieldValue('showTime') && !/^[^/\s]+ [^/\s]+$/.test(value)) {
                                         callback(rule.message);
                                     }
                                     callback();
-                                }),
+                                },
                                 message: '时间格式化不正确'
                             }
                         ],
@@ -194,15 +194,15 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             >
                 {
                     getFieldDecorator('props.showTime', {
-                        valuePropName: "checked",
+                        valuePropName: 'checked',
                         initialValue: (stateProps[SHOWTIME] || stateProps[SHOWTIME] === false) ? stateProps[SHOWTIME] : true
                     })(
                         <Switch
                             onChange={(value) => {
                                 if (!value) {
-                                    setFieldsValue({'props.format': DATE_FORMAT})
+                                    setFieldsValue({'props.format': DATE_FORMAT});
                                 } else {
-                                    setFieldsValue({'props.format': `${DATE_FORMAT} ${TIME_FORMAT}`})
+                                    setFieldsValue({'props.format': `${DATE_FORMAT} ${TIME_FORMAT}`});
                                 }
                             }}
                         />
@@ -235,7 +235,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                     </Col>
                 </Row>
             </FormItem>
-        </div>
+        </div>;
     }
 }
 
