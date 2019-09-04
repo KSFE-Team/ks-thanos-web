@@ -1,21 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Icon, Switch, Alert } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Alert, Table } from 'antd';
 import PropTypes from 'prop-types';
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
 
 const KEY = 'key';
 const LABEL = 'label';
-const IS_CHECK = 'isCheck'
+const IS_CHECK = 'isCheck';
+const IS_DISABLED = 'isDisabled';
 
 interface CheckBoxConfigProps {
     onSave(pageJSON: any): void,
@@ -28,10 +18,11 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     };
 
     state = {
-        formData: [{
-            [KEY]: '',
-            [LABEL]: '',
+        options: [{
+            [IS_DISABLED]: false,
             [IS_CHECK]: false,
+            [KEY]: 0,
+            [LABEL]: '',
         }],
         isTouch: false,
         errMessage: ''
@@ -43,10 +34,12 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 { components } = pageJSON,
                 current = components.find(({ configVisible }) => configVisible);
             return {
-                formData: current.formData || [{
-                    [KEY]: '',
+                options: current.options || [{
+
+                    [IS_DISABLED]: false,
+                    [IS_CHECK]: false,
+                    [KEY]: 0,
                     [LABEL]: '',
-                    [IS_CHECK]: false
                 }]
             }
         } else {
@@ -58,16 +51,11 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 保存修改
      */
     handleSave = () => {
-        const { formData } = this.state;
+        const { options } = this.state;
         let { pageJSON, onSave } = this.props;
-        for (let i = 0; i < formData.length; i++) {
-            let item = formData[i];
-            if (!item[KEY]) {
-                this.setState({
-                    errMessage: '请输入表单项Key'
-                })
-                return;
-            } else if (!item[LABEL]) {
+        for (let i = 0; i < options.length; i++) {
+            let item = options[i];
+            if (!item[LABEL]) {
                 this.setState({
                     errMessage: '请输入表单项名称'
                 })
@@ -78,9 +66,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             if (component.configVisible) {
                 component = {
                     ...component,
-                    formData,
+                    options,
                     props: {
-                        formData: formData
+                        options
                     }
                 }
             }
@@ -93,11 +81,11 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc    框内数据发生变化
      */
     handleChange = (key, index: number, e) => {
-        const { formData } = this.state;
+        const { options } = this.state;
         const value = e.target.value;
-        formData[index][key] = value;
+        options[index][key] = value;
         this.setState({
-            formData,
+            options,
             isTouch: true
         });
     };
@@ -106,14 +94,16 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 添加项
      */
     handleAddCheck = (): void => {
-        let { formData } = this.state;
-        formData.push({
-            [KEY]: '',
+        let { options } = this.state;
+        // number = options[options.length - 1][KEY];
+        options.push({
+            [IS_DISABLED]: false,
+            [IS_CHECK]: false,
+            [KEY]: options[options.length - 1][KEY] + 1,
             [LABEL]: '',
-            [IS_CHECK]: false
         });
         this.setState({
-            formData,
+            options,
             isTouch: true
         });
     }
@@ -122,26 +112,41 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 删除项
      */
     handleDeleteChekItem = (index) => {
-        let { formData } = this.state;
-        formData.splice(index, 1);
+        let { options } = this.state;
+        options.splice(index, 1);
         this.setState({
-            formData
+            options
         });
     }
 
     /**
      * @desc    是否默认选中
      */
-    handleSwitchChange = (index) => {
-        let { formData } = this.state,
-            data = formData[index],
+    listenIsSelect = (index) => {
+        let { options } = this.state,
+            data = options[index],
             newData = !data[IS_CHECK];
         data[IS_CHECK] = newData;
-        formData[index] = data;
+        options[index] = data;
         this.setState({
-            formData,
+            options,
             isTouch: true
         })
+    }
+    /**
+     * @desc    是否禁用
+     */
+    listenIsDisabled = (index) => {
+        let { options } = this.state,
+            data = options[index],
+            newData = !data[IS_DISABLED];
+        data[IS_DISABLED] = newData;
+        options[index] = data;
+        this.setState({
+            options,
+            isTouch: true
+        })
+        console.log(index);
     }
 
     /**
@@ -154,8 +159,61 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     }
 
     render() {
-        const { formData, errMessage } = this.state;
-        return <div>
+        const { options, errMessage } = this.state;
+        const columns = [
+            {
+                title: '表单项Key',
+                dataIndex: 'key',
+                key: 'key'
+            },
+            {
+                title: '表单项名称',
+                dataIndex: 'label',
+                key: 'label',
+                render: (item, record, index) => <Input
+                    value={record[LABEL]}
+                    placeholder='例如： 姓名'
+                    onChange={this.handleChange.bind(this, LABEL, index)}
+                />
+            },
+            {
+                title: '是否默认选中',
+                dataIndex: 'isCheck',
+                key: 'isCheck',
+                render: (item, record, index) =>
+                    <Switch
+                        defaultChecked={record[IS_CHECK]}
+                        checkedChildren="是"
+                        unCheckedChildren="否"
+                        onChange={this.listenIsSelect.bind(this, index)}
+                    />
+            },
+            {
+                title: '是否禁用',
+                dataIndex: 'isDisabled',
+                key: 'isDisabled',
+                render: (item, record, index) =>
+                    <Switch
+                        defaultChecked={record[IS_CHECK]}
+                        checkedChildren="是"
+                        unCheckedChildren="否"
+                        onChange={this.listenIsDisabled.bind(this, index)}
+                    />
+            },
+            {
+                title: '删除',
+                dataIndex: 'delete',
+                key: 'delete',
+                render: () =>
+                    options.length > 1
+                        ? <Col>
+                            <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index) }} />
+                        </Col>
+                        : <></>
+
+            }
+        ];
+        return <>
             {
                 errMessage
                     ? <Alert message={errMessage}
@@ -165,60 +223,17 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     ></Alert>
                     : null
             }
-            {
-                formData.map((item, index: number) => {
-                    return <React.Fragment key={index}>
-                        <FormItem label={'表单项Key'} {...formItemLayout} >
-                            <Row type="flex" justify='space-between'>
-                                <Col>
-                                    <Input
-                                        value={item[KEY]}
-                                        placeholder='例如： name'
-                                        onChange={this.handleChange.bind(this, KEY, index)}
-                                    />
-                                </Col>
-                                {
-                                    formData.length > 1
-                                        ? <Col>
-                                            <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index) }} />
-                                        </Col>
-                                        : null
-                                }
-                            </Row>
-                        </FormItem>
-                        <FormItem label={'表单项名称'} {...formItemLayout} >
-                            <Row type="flex" justify='space-between'>
-                                <Col>
-                                    <Input
-                                        value={item[LABEL]}
-                                        placeholder='例如： 姓名'
-                                        onChange={this.handleChange.bind(this, LABEL, index)}
-                                    />
-                                </Col>
-                                <Col>
-                                    是否选中：
-                                    <Switch
-                                        defaultChecked={item[IS_CHECK]}
-                                        checkedChildren="是"
-                                        unCheckedChildren="否"
-                                        onChange={this.handleSwitchChange.bind(this, index)}
-                                    />
-                                </Col>
-                            </Row>
-                        </FormItem>
-                    </React.Fragment>
-                })
-            }
-            <FormItem>
-                <Row type="flex" justify='space-between'>
-                    <Col>
-                        <Button onClick={this.handleAddCheck} type='primary' >添加项</Button>
-                    </Col>
-                    <Col>
-                        <Button onClick={this.handleSave} type='primary' >确定</Button>
-                    </Col>
-                </Row>
-            </FormItem>
-        </div>
+            <br />
+            <Table dataSource={options} columns={columns} bordered pagination={false} />
+            <br />
+            <Row type="flex" justify='space-between'>
+                <Col>
+                    <Button onClick={this.handleAddCheck} type='primary' >添加项</Button>
+                </Col>
+                <Col>
+                    <Button onClick={this.handleSave} type='primary' >确定</Button>
+                </Col>
+            </Row>
+        </>
     }
 }
