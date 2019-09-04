@@ -5,7 +5,7 @@ import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
 
 interface RadioProps {
-    list: any,
+    configList: any,
     label:string,
     defaultValue:string
 };
@@ -13,17 +13,28 @@ class KRadio extends Component<RadioProps> {
     static propTypes = {
         props: PropTypes.object,
     };
-
+    state={
+        defaultValue:this.props.defaultValue,
+    }
+         componentWillReceiveProps(nextProps) {
+            this.setState({
+                defaultValue:nextProps.defaultValue
+            })
+        }
     render() {
-        return (
-            <div style={{display: 'flex'}}>
-                <span style={{marginRight: '10px'}}>{this.props.label}:</span>
-                <Radio.Group style={{display: 'flex'}}>
+        return (    
+            <div style={{display:'flex'}}>
+                <span style={{marginRight:'10px'}}>{this.props.label}:</span>
+                <Radio.Group style={{display:'flex'}} value={this.state.defaultValue} onChange={(e)=>{
+                    this.setState({
+                        defaultValue:e.target.value
+                    })
+                }}>
                     {
-                        this.props.list.map((item) => {
-                            return <div key={item.id} onClick={(e) => {
-                                e.stopPropagation();
-                            }}><Radio value={item.value}>{item.label}</Radio></div>;
+                        this.props.configList.map(item=>{
+                            return <div key={item.id}  onClick={(e)=> {
+                                e.stopPropagation()
+                            }}><Radio value={item.value}>{item.label}</Radio></div>
                         })
                     }
                 </Radio.Group>
