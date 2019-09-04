@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Radio } from 'antd';
+import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
+import {FormComponentProps} from 'antd/es/form';
+
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -19,21 +21,21 @@ const MAX_VALUE = 'max';
 const DISABLED = 'disabled';
 const PRECISION = 'precision';
 const STEP = 'step';
-const KEY = 'key';
+const KEYS = 'keys';
 
-interface InputConfigProps{
+interface InputConfigProps extends FormComponentProps{
     onSave(pageJSON:any): void,
     pageJSON: any
 }
 
-export default class InputNumberConfig extends Component<InputConfigProps> {
+
+class InputNumberConfig extends Component<InputConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
 
     state={
         formData: {
-
         },
         isTouch: false
     };
@@ -45,14 +47,7 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
             const current = components.find(({ configVisible }) => configVisible);
             return {
                 formData: {
-                    [KEY]: current.props[KEY],
-                    [LABEL]: current.props[LABEL],
-                    [DEFAULT_VALUE]: current.props[DEFAULT_VALUE],
-                    [MIN_VALUE]: current.props[MIN_VALUE],
-                    [MAX_VALUE]: current.props[MAX_VALUE],
-                    [DISABLED]: current.props[DISABLED],
-                    [PRECISION]: current.props[PRECISION],
-                    [STEP]: current.props[STEP],
+                    ...current.props
                 }
             };
         } else {
@@ -61,119 +56,175 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
     }
 
     handleSave = () => {
-        const { formData } = this.state;
-        const { pageJSON, onSave } = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    props: {
-                        ...component.props,
-                        ...formData,
+        this.props.form.validateFields((err, fieldValues) => {
+            if (!err) {
+                if (fieldValues[MIN_VALUE] > fieldValues[MAX_VALUE]) {
+                    message.error('最小值不能大于最大值！');
+                    return;
+                }
+                const { pageJSON, onSave } = this.props;
+                pageJSON.components = pageJSON.components.map((component) => {
+                    if (component.configVisible) {
+                        component = {
+                            ...component,
+                            props: {
+                                ...component.props,
+                                ...fieldValues,
+                            }
+                        };
                     }
-                };
+                    return component;
+                });
+                onSave && onSave(pageJSON);
             }
-            return component;
-        });
-        onSave && onSave(pageJSON);
+        })
     }
-
-    handleChange = (key, e) => {
-        const { formData } = this.state;
-        const value = e.target.value;
-        this.setState({
-            formData: {
-                ...formData,
-                [key]: value
-            },
-            isTouch: true
-        });
-    };
-
     render() {
+        const { getFieldDecorator } = this.props.form;
         const { formData } = this.state;
         return <div>
             <FormItem
                 label={'key'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[KEY]}
-                    placeholder='例如： inputnumber'
-                    onChange={this.handleChange.bind(this, KEY)}
-                />
+                {
+                    getFieldDecorator(KEYS, {
+                        rules: [
+                            {required: true, message: '请输入表单key'},
+
+                        ],
+                        initialValue: formData[KEYS]
+                    })(
+                        <Input
+                            placeholder='例如:inputnumber'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'名称'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[LABEL]}
-                    placeholder='例如： inputNumber'
-                    onChange={this.handleChange.bind(this, LABEL)}
-                />
+                {
+                    getFieldDecorator(LABEL, {
+                        rules: [
+                            {required: true, message: '请输入表单key'},
+
+                        ],
+                        initialValue: formData[LABEL]
+                    })(
+                        <Input
+                            placeholder='例如:inputnumber'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'默认值'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[DEFAULT_VALUE]}
-                    placeholder='例如： 1'
-                    onChange={this.handleChange.bind(this, DEFAULT_VALUE)}
-                />
+                {
+                    getFieldDecorator(DEFAULT_VALUE, {
+                        rules: [
+                            {required: true, message: '请输入表单key'},
+
+                        ],
+                        initialValue: formData[DEFAULT_VALUE]
+                    })(
+                        <InputNumber
+                            placeholder='例如:1'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'最小值'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[MIN_VALUE]}
-                    placeholder='例如： 1'
-                    onChange={this.handleChange.bind(this, MIN_VALUE)}
-                />
+                {
+                    getFieldDecorator(MIN_VALUE, {
+                        rules: [
+                            {required: true, message: '请输入表单key'},
+                        ],
+                        initialValue: formData[MIN_VALUE]
+                    })(
+                        <InputNumber
+                            placeholder='例如:1'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'最大值'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[MAX_VALUE]}
-                    placeholder='例如： 100'
-                    onChange={this.handleChange.bind(this, MAX_VALUE)}
-                />
+                {
+                    getFieldDecorator(MAX_VALUE, {
+                        rules: [
+                            {required: true, message: '请输入表单最大值'},
+                        ],
+                        initialValue: formData[MAX_VALUE]
+                    })(
+                        <InputNumber
+                            placeholder='例如:100'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'是否禁用'}
                 {...formItemLayout}
             >
-                <Radio.Group
-                    onChange={this.handleChange.bind(this, DISABLED)}
-                    value={formData[DISABLED]}
-                    defaultValue={false}>
-                    <Radio value={true}>true</Radio>
-                    <Radio value={false}>false</Radio>
-                </Radio.Group>
+                {
+                    getFieldDecorator(DISABLED, {
+                        rules: [
+                            {required: true},
+                        ],
+                        initialValue: formData[DISABLED]
+                    })(
+                        <Radio.Group>
+                            <Radio value={true}>true</Radio>
+                            <Radio value={false}>false</Radio>
+                        </Radio.Group>
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'数值精度'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[PRECISION]}
-                    placeholder='例如： 100'
-                    onChange={this.handleChange.bind(this, PRECISION)}
-                />
+                {
+                    getFieldDecorator(PRECISION, {
+                        rules: [
+                            {required: true, message: '请输入表单最大值'},
+
+                        ],
+                        initialValue: formData[PRECISION]
+                    })(
+                        <InputNumber
+                            placeholder='例如:100'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem
                 label={'每次改变步数'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[STEP]}
-                    placeholder='例如： 1'
-                    onChange={this.handleChange.bind(this, STEP)}
-                />
+
+                {
+                    getFieldDecorator(STEP, {
+                        rules: [
+                            {required: true, message: '请输入表单最大值'},
+
+                        ],
+                        initialValue: formData[STEP]
+                    })(
+                        <InputNumber
+                            placeholder='例如:1'
+                        />
+                    )
+                }
             </FormItem>
             <FormItem>
                 <Row>
@@ -188,3 +239,6 @@ export default class InputNumberConfig extends Component<InputConfigProps> {
         </div>;
     }
 }
+
+// @ts-ignore
+export default Form.create<InputConfigProps>()(InputNumberConfig);
