@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Button, Row, Col,Input,message } from 'antd';
+import { Form, Button, Row, Col,Input,message,Radio } from 'antd';
 import PropTypes from 'prop-types';
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -29,7 +29,8 @@ const VALUE = 'value';
 
 interface RadioConfigProps{
     onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any,
+    isRequired:boolean
 }
 
 export default class RadioConfig extends Component<RadioConfigProps> {
@@ -43,8 +44,10 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         
         },
         isTouch: false,
-        choiceNodeList: [{ id: 1 },{ id: 2 }],
+        choiceNodeList: [{ id: 1},{ id: 2}],
         choiceNodeId:2,
+        defaultValue:1,
+        isRequired:true,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -52,7 +55,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             let { pageJSON } = props,
                 { components } = pageJSON;
             let  current = components.find(({ configVisible }) => configVisible);
-            let index=current.props.list.length-1;
+            let index=current.props.configList.length-1;
             if(!current.key){
                 current.key='status'
             }
@@ -60,8 +63,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 current.label='状态'
             }
             return {
-                choiceNodeList: [...current.props.list],
-                choiceNodeId:current.props.list[index].id,
+                choiceNodeList: [...current.props.configList],
+                choiceNodeId:current.props.configList[index].id,
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
@@ -73,7 +76,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     }
 
     handleSave = () => {
-        const { formData,choiceNodeList } = this.state;
+        const { formData,choiceNodeList,isRequired,defaultValue } = this.state;
         let { pageJSON, onSave } = this.props;
         if (!this[`key`].state.value) {
             message.error('表单项Key不可为空');
@@ -84,7 +87,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         }       
               
         let length =  choiceNodeList.filter((item:object ,index:number)=>{
-            return !this[`label${index}`].state.value||!(this[`value${index}`].state.value)
+            return !this[`label${index}`].state.value||this[`value${index}`].state.value===undefined||this[`value${index}`].state.value===''
         }).length;
         if(length>0){
             message.error('选项不可为空');
@@ -96,7 +99,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             array.push({
                 id: item.id,
                 label:this[`label${index}`].state.value,
-                value:this[`value${index}`].state.value
+                value:isNaN(this[`value${index}`].state.value)?this[`value${index}`].state.value:this[`value${index}`].state.value*1
            })
         })
         pageJSON.components = pageJSON.components.map((component) => {
@@ -104,11 +107,12 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 component = {
                     ...component,
                     ...formData,
+                    isRequired:isRequired,
                     props: {
                         ...component.props,
-                        placeholder: formData[LABEL],
-                        list:array,
+                        configList:array,
                         label:this[`label`].state.value,
+                        defaultValue:isRequired?isNaN(defaultValue)?defaultValue:defaultValue*1:undefined,
                     }
                 }
             }
@@ -138,7 +142,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         });
     };
     render() {
-        const { formData,choiceNodeId,choiceNodeList } = this.state;
+        const { formData,choiceNodeId,choiceNodeList,isRequired } = this.state;
         return <div>
              <FormItem
                 label={'表单项Key'}
@@ -238,13 +242,30 @@ export default class RadioConfig extends Component<RadioConfigProps> {
            </div>
             <FormItem
             >
-                <Row>
+                <Row  type='flex' align='middle'>
                     <Col>
                         <Button
                             onClick={this.handleSave}
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <Col span={6} style={{marginLeft:'10px'}}>
+                    <Radio.Group style={{display:'flex',alignItems:'center'}} defaultValue={isRequired} onChange={(e)=>{
+                        this.setState({
+                            isRequired:e.target.value
+                        })
+                    }}>
+                        <Radio value={true}>必填</Radio>
+                        <Radio value={false}>非必填</Radio>
+                    </Radio.Group>
+                    </Col>
+                    {isRequired&&<Col span={5} style={{marginLeft:'10px'}}>
+                        <Input placeholder='默认选中value1'  onChange={(e)=>{
+                            this.setState({
+                                defaultValue:e.target.value
+                            })
+                        }}/>
+                    </Col>}
                 </Row>
             </FormItem>
         </div>
