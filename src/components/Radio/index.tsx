@@ -13,28 +13,31 @@ class KRadio extends Component<RadioProps> {
     static propTypes = {
         props: PropTypes.object,
     };
+
     state={
-        defaultValue:this.props.defaultValue,
+        defaultValue: this.props.defaultValue,
     }
-         componentWillReceiveProps(nextProps) {
-            this.setState({
-                defaultValue:nextProps.defaultValue
-            })
-        }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            defaultValue: nextProps.defaultValue
+        });
+    }
+
     render() {
-        return (    
-            <div style={{display:'flex'}}>
-                <span style={{marginRight:'10px'}}>{this.props.label}:</span>
-                <Radio.Group style={{display:'flex'}} value={this.state.defaultValue} onChange={(e)=>{
+        return (
+            <div style={{display: 'flex'}}>
+                <span style={{marginRight: '10px'}}>{this.props.label}:</span>
+                <Radio.Group style={{display: 'flex'}} value={this.state.defaultValue} onChange={(e) => {
                     this.setState({
-                        defaultValue:e.target.value
-                    })
+                        defaultValue: e.target.value
+                    });
                 }}>
                     {
-                        this.props.configList.map(item=>{
-                            return <div key={item.id}  onClick={(e)=> {
-                                e.stopPropagation()
-                            }}><Radio value={item.value}>{item.label}</Radio></div>
+                        this.props.configList.map((item) => {
+                            return <div key={item.id} onClick={(e) => {
+                                e.stopPropagation();
+                            }}><Radio value={item.value}>{item.label}</Radio></div>;
                         })
                     }
                 </Radio.Group>

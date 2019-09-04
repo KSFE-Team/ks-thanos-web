@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-<<<<<<< HEAD
-import { Form, Button, Row, Col,Input,message,Radio } from 'antd';
-=======
-import { Form, Button, Row, Col, Input, message } from 'antd';
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+import { Form, Button, Row, Col, Input, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -48,15 +44,10 @@ export default class RadioConfig extends Component<RadioConfigProps> {
 
         },
         isTouch: false,
-<<<<<<< HEAD
-        choiceNodeList: [{ id: 1},{ id: 2}],
-        choiceNodeId:2,
-        defaultValue:1,
-        isRequired:true,
-=======
-        choiceNodeList: [{ id: 1 }, { id: 2 }],
-        choiceNodeId: 2
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+        choiceNodeList: [{ id: 1}, { id: 2}],
+        choiceNodeId: 2,
+        defaultValue: 1,
+        isRequired: true,
     };
 
     key: any;
@@ -64,32 +55,19 @@ export default class RadioConfig extends Component<RadioConfigProps> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-<<<<<<< HEAD
-            let { pageJSON } = props,
-                { components } = pageJSON;
-            let  current = components.find(({ configVisible }) => configVisible);
-            let index=current.props.configList.length-1;
-            if(!current.key){
-                current.key='status'
-=======
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = components.find(({ configVisible }) => configVisible);
+            const index = current.props.configList.length - 1;
             if (!current.key) {
                 current.key = 'status';
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
             }
             if (!current.label) {
                 current.label = '状态';
             }
             return {
-<<<<<<< HEAD
                 choiceNodeList: [...current.props.configList],
-                choiceNodeId:current.props.configList[index].id,
-=======
-                choiceNodeList: [...current.props.list],
-                choiceNodeId: current.props.list.length + 1,
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+                choiceNodeId: current.props.configList[index].id,
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
@@ -101,32 +79,18 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     }
 
     handleSave = () => {
-<<<<<<< HEAD
-        const { formData,choiceNodeList,isRequired,defaultValue } = this.state;
-        let { pageJSON, onSave } = this.props;
-        if (!this[`key`].state.value) {
-=======
-        const { formData } = this.state;
+        const { formData, choiceNodeList, isRequired, defaultValue } = this.state;
         const { pageJSON, onSave } = this.props;
         if (!this.key.state.value) {
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
             message.error('表单项Key不可为空');
             return;
         } else if (!this.label.state.value) {
             message.error('表单项名称不可为空');
-<<<<<<< HEAD
-            return ;
-        }       
-              
-        let length =  choiceNodeList.filter((item:object ,index:number)=>{
-            return !this[`label${index}`].state.value||this[`value${index}`].state.value===undefined||this[`value${index}`].state.value===''
-=======
             return;
         }
 
-        const length = this.state.choiceNodeList.filter((item:any, index:number) => {
-            return !this[`label${index}`].state.value || !(this[`value${index}`].state.value);
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+        const length = choiceNodeList.filter((item:any, index:number) => {
+            return !this[`label${index}`].state.value || this[`value${index}`].state.value === undefined || this[`value${index}`].state.value === '';
         }).length;
         if (length > 0) {
             message.error('选项不可为空');
@@ -136,34 +100,21 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         this.state.choiceNodeList.forEach((item, index) => {
             array.push({
                 id: item.id,
-<<<<<<< HEAD
-                label:this[`label${index}`].state.value,
-                value:isNaN(this[`value${index}`].state.value)?this[`value${index}`].state.value:this[`value${index}`].state.value*1
-           })
-        })
-=======
                 label: this[`label${index}`].state.value,
-                value: this[`value${index}`].state.value
+                value: isNaN(this[`value${index}`].state.value) ? this[`value${index}`].state.value : this[`value${index}`].state.value * 1
             });
         });
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
                     ...component,
                     ...formData,
-                    isRequired:isRequired,
+                    isRequired: isRequired,
                     props: {
                         ...component.props,
-<<<<<<< HEAD
-                        configList:array,
-                        label:this[`label`].state.value,
-                        defaultValue:isRequired?isNaN(defaultValue)?defaultValue:defaultValue*1:undefined,
-=======
-                        placeholder: formData[LABEL],
-                        list: array,
-                        label: this.label.state.value
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+                        configList: array,
+                        label: this.label.state.value,
+                        defaultValue: isRequired ? isNaN(defaultValue) ? defaultValue : defaultValue * 1 : undefined,
                     }
                 };
             }
@@ -194,11 +145,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     };
 
     render() {
-<<<<<<< HEAD
-        const { formData,choiceNodeId,choiceNodeList,isRequired } = this.state;
-=======
-        const { formData, choiceNodeId, choiceNodeList } = this.state;
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+        const { formData, choiceNodeId, choiceNodeList, isRequired } = this.state;
         return <div>
             <FormItem
                 label={'表单项Key'}
@@ -304,38 +251,31 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                         );
                     })
                 }
-<<<<<<< HEAD
-           </div>
+            </div>
             <FormItem
             >
-                <Row  type='flex' align='middle'>
-=======
-            </div>
-
-            <FormItem>
-                <Row>
->>>>>>> 405c17b17b028a1680b7d13cb92d779ba4878ab6
+                <Row type='flex' align='middle'>
                     <Col>
                         <Button
                             onClick={this.handleSave}
                             type='primary'
                         >确定</Button>
                     </Col>
-                    <Col span={6} style={{marginLeft:'10px'}}>
-                    <Radio.Group style={{display:'flex',alignItems:'center'}} defaultValue={isRequired} onChange={(e)=>{
-                        this.setState({
-                            isRequired:e.target.value
-                        })
-                    }}>
-                        <Radio value={true}>必填</Radio>
-                        <Radio value={false}>非必填</Radio>
-                    </Radio.Group>
-                    </Col>
-                    {isRequired&&<Col span={5} style={{marginLeft:'10px'}}>
-                        <Input placeholder='默认选中value1'  onChange={(e)=>{
+                    <Col span={6} style={{marginLeft: '10px'}}>
+                        <Radio.Group style={{display: 'flex', alignItems: 'center'}} defaultValue={isRequired} onChange={(e) => {
                             this.setState({
-                                defaultValue:e.target.value
-                            })
+                                isRequired: e.target.value
+                            });
+                        }}>
+                            <Radio value={true}>必填</Radio>
+                            <Radio value={false}>非必填</Radio>
+                        </Radio.Group>
+                    </Col>
+                    {isRequired && <Col span={5} style={{marginLeft: '10px'}}>
+                        <Input placeholder='默认选中value1' onChange={(e) => {
+                            this.setState({
+                                defaultValue: e.target.value
+                            });
                         }}/>
                     </Col>}
                 </Row>
