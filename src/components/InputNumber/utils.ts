@@ -7,7 +7,7 @@ export const getInitJson = () => ({
     source: 'antd',
     default: false,
     props: {
-        key: '', // 唯一
+        keys: '', // 唯一
         label: '数字框', // 名称
         min: 0, // 最小值
         max: 0, // 最大值
