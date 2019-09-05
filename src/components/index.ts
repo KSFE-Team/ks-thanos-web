@@ -6,6 +6,7 @@ import * as InputNumber from './InputNumber/index';
 import * as RangePicker from './RangePicker/index';
 import * as TextArea from './TextArea/index';
 import * as Radio from './Radio/index';
+import * as CheckBox from './CheckBox';
 
 export {
     Table,
@@ -15,5 +16,6 @@ export {
     InputNumber,
     RangePicker,
     TextArea,
-    Radio
+    Radio,
+    CheckBox
 };
