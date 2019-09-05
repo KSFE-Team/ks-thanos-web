@@ -30,9 +30,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
-            let { pageJSON } = props,
-                { components } = pageJSON,
-                current = components.find(({ configVisible }) => configVisible);
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = components.find(({ configVisible }) => configVisible);
             return {
                 options: current.options || [{
 
@@ -41,9 +41,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     [KEY]: 0,
                     [LABEL]: '',
                 }]
-            }
+            };
         } else {
-            return state
+            return state;
         }
     }
 
@@ -52,13 +52,13 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      */
     handleSave = () => {
         const { options } = this.state;
-        let { pageJSON, onSave } = this.props;
+        const { pageJSON, onSave } = this.props;
         for (let i = 0; i < options.length; i++) {
-            let item = options[i];
+            const item = options[i];
             if (!item[LABEL]) {
                 this.setState({
                     errMessage: '请输入表单项名称'
-                })
+                });
                 return;
             }
         }
@@ -70,11 +70,11 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     props: {
                         options
                     }
-                }
+                };
             }
             return component;
-        })
-        onSave && onSave(pageJSON)
+        });
+        onSave && onSave(pageJSON);
     }
 
     /**
@@ -94,7 +94,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 添加项
      */
     handleAddCheck = (): void => {
-        let { options } = this.state;
+        const { options } = this.state;
         // number = options[options.length - 1][KEY];
         options.push({
             [IS_DISABLED]: false,
@@ -112,7 +112,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 删除项
      */
     handleDeleteChekItem = (index) => {
-        let { options } = this.state;
+        const { options } = this.state;
         options.splice(index, 1);
         this.setState({
             options
@@ -123,30 +123,30 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc    是否默认选中
      */
     listenIsSelect = (index) => {
-        let { options } = this.state,
-            data = options[index],
-            newData = !data[IS_CHECK];
+        const { options } = this.state;
+        const data = options[index];
+        const newData = !data[IS_CHECK];
         data[IS_CHECK] = newData;
         options[index] = data;
         this.setState({
             options,
             isTouch: true
-        })
+        });
     }
+
     /**
      * @desc    是否禁用
      */
     listenIsDisabled = (index) => {
-        let { options } = this.state,
-            data = options[index],
-            newData = !data[IS_DISABLED];
+        const { options } = this.state;
+        const data = options[index];
+        const newData = !data[IS_DISABLED];
         data[IS_DISABLED] = newData;
         options[index] = data;
         this.setState({
             options,
             isTouch: true
-        })
-        console.log(index);
+        });
     }
 
     /**
@@ -207,7 +207,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 render: () =>
                     options.length > 1
                         ? <Col>
-                            <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index) }} />
+                            <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index); }} />
                         </Col>
                         : <></>
 
@@ -234,6 +234,6 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
                 </Col>
             </Row>
-        </>
+        </>;
     }
 }
