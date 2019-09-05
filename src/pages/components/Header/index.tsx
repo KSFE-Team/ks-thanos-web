@@ -8,7 +8,7 @@ import { API } from 'Src/api';
 import './index.scss';
 const confirm = Modal.confirm;
 
-interface HeaderProps{
+interface HeaderProps {
     generatePage?: any,
     showTopToolbar?: boolean
 }
