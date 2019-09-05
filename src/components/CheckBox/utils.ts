@@ -2,9 +2,9 @@
  * 获取初始化JSON
  */
 export const getInitJson = () => ({
-    stateName: "",
-    componentName: "CheckBox",
-    source: "antd",
+    stateName: '',
+    componentName: 'CheckBox',
+    source: 'antd',
     default: false,
 });
 

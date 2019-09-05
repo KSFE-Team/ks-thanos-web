@@ -24,7 +24,7 @@ class KCheckBox extends React.Component<Props> {
                         key={index}
                         checked={ele.isCheck}
                         disabled={ele.isDisabled}
-                    >{ele.label}</Checkbox>
+                    >{ele.label}</Checkbox>;
                 })
                 : <div></div>
         );
@@ -36,4 +36,4 @@ export {
     getInitJson,
     getTools,
     Config as config
-}
+};
