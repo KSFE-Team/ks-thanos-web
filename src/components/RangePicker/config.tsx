@@ -152,7 +152,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                                 message: '用/分割的两个名称'
                             }
                         ],
-                        initialValue: stateProps[PLACEHOLDER] ? stateProps[PLACEHOLDER].join('/') : ''
+                        initialValue: stateProps[PLACEHOLDER] ? stateProps[PLACEHOLDER].join('/') : '开始时间/截止时间'
                     })(
                         <Input
                             placeholder='例如： 开始时间/截止时间'
