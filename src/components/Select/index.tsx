@@ -10,6 +10,8 @@ class KSelect extends Component {
     };
 
     render() {
+        console.log(this.props);
+
         return (
             <Select
                 {...this.props}

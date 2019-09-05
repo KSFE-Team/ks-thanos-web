@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
-import PropTypes from 'prop-types';
+import ConfigItem from './ConfigItem';
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -16,22 +16,51 @@ const formItemLayout = {
 const KEY = 'key';
 const LABEL = 'label';
 
-interface ConfigProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any
+interface ConfigProps {
+    form: any;
+    onSave(pageJSON:any): void;
+    pageJSON: any;
 }
 
-export default class Config extends Component<ConfigProps> {
-    static propTypes = {
-        onSave: PropTypes.func
-    };
+interface ConfigState {
+    formData: any;
+    isTouch: boolean;
+}
 
-    state={
-        formData: {
+const selectProps = [
+    {
+        name: 'placeholder',
+        label: 'placeholder',
+        type: 'input',
+        placeholder: '请选择订单类型'
+    },
+    {
+        name: 'allowClear',
+        label: '允许清空',
+        type: 'boolean'
+    },
+    {
+        name: 'disabled',
+        label: '是否禁用',
+        type: 'boolean'
+    },
+    {
+        name: 'showSearch',
+        label: '展示搜索',
+        type: 'boolean'
+    }
+];
 
-        },
-        isTouch: false
-    };
+class Config extends Component<ConfigProps, ConfigState> {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            formData: {},
+            isTouch: false
+        };
+    }
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -41,7 +70,8 @@ export default class Config extends Component<ConfigProps> {
             return {
                 formData: {
                     [KEY]: current[KEY],
-                    [LABEL]: current[LABEL]
+                    [LABEL]: current[LABEL],
+                    props: current.props
                 }
             };
         } else {
@@ -50,22 +80,34 @@ export default class Config extends Component<ConfigProps> {
     }
 
     handleSave = () => {
-        const { formData } = this.state;
-        const { pageJSON, onSave } = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    ...formData,
-                    props: {
-                        ...component.props,
-                        placeholder: formData[LABEL]
+        this.props.form.validateFields((err, fieldValues) => {
+            if (!err) {
+                this.setState({
+                    formData: {
+                        ...fieldValues
+                    },
+                    isTouch: true
+                });
+
+                const {props: fieldProps} = fieldValues;
+                const { pageJSON, onSave } = this.props;
+                pageJSON.components = pageJSON.components.map((component) => {
+                    if (component.configVisible) {
+                        component = {
+                            ...component,
+                            key: fieldValues.key,
+                            label: fieldValues.label || '',
+                            props: {
+                                ...fieldProps
+                            }
+                        };
                     }
-                };
+                    return component;
+                });
+                // console.log('pageJSON', JSON.stringify(pageJSON));
+                onSave && onSave(pageJSON);
             }
-            return component;
         });
-        onSave && onSave(pageJSON);
     }
 
     handleChange = (key, e) => {
@@ -82,27 +124,45 @@ export default class Config extends Component<ConfigProps> {
 
     render() {
         const { formData } = this.state;
+        const { form } = this.props;
+        const { getFieldDecorator } = form;
         return <div>
             <FormItem
                 label={'表单项Key'}
                 {...formItemLayout}
             >
-                <Input
-                    value={formData[KEY]}
-                    placeholder='例如： name'
-                    onChange={this.handleChange.bind(this, KEY)}
-                />
+                {
+                    getFieldDecorator('key', {
+                        rules: [
+                            {required: true, message: '请输入表单字段名'}
+                        ],
+                        initialValue: formData[KEY]
+                    })(
+                        <Input
+                            placeholder='例如： orderType'
+                        />
+                    )
+                }
+
             </FormItem>
-            <FormItem
-                label={'表单项名称'}
-                {...formItemLayout}
-            >
-                <Input
-                    value={formData[LABEL]}
-                    placeholder='例如： 姓名'
-                    onChange={this.handleChange.bind(this, LABEL)}
-                />
-            </FormItem>
+            {
+                selectProps.map((item, index) => {
+                    const { type, name, label, ...otherProps } = item;
+
+                    return (
+                        <ConfigItem
+                            key={index}
+                            type={type}
+                            name={`props.${name}`}
+                            label={label}
+                            defaultValue={formData.props ? formData.props[item.name] : undefined}
+                            form={this.props.form}
+                            formItemLayout={formItemLayout}
+                            {...otherProps}
+                        />
+                    );
+                })
+            }
             <FormItem>
                 <Row>
                     <Col>
@@ -116,3 +176,6 @@ export default class Config extends Component<ConfigProps> {
         </div>;
     }
 }
+
+// @ts-ignore
+export default Form.create<ConfigProps>()(Config);
