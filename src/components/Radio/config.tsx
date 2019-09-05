@@ -217,7 +217,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                                 const tempNodeList = [...choiceNodeList];
                                                 tempNodeList.splice(index, 1);
                                                 this.setState({
-                                                    choiceNodeList: tempNodeList
+                                                    choiceNodeList: tempNodeList,
+                                                    isTouch: true
                                                 });
                                             }}></Button>
                                         </Col>
@@ -239,8 +240,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                                                     const tempNodeList = [...choiceNodeList];
                                                     tempNodeList.splice(index, 1);
                                                     this.setState({
-                                                        choiceNodeList: tempNodeList
-
+                                                        choiceNodeList: tempNodeList,
+                                                        isTouch: true
                                                     });
                                                 }}></Button>
                                             }

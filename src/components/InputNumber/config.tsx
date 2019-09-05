@@ -28,7 +28,6 @@ interface InputConfigProps extends FormComponentProps{
     pageJSON: any
 }
 
-
 class InputNumberConfig extends Component<InputConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
@@ -77,8 +76,9 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 });
                 onSave && onSave(pageJSON);
             }
-        })
+        });
     }
+
     render() {
         const { getFieldDecorator } = this.props.form;
         const { formData } = this.state;
