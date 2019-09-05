@@ -36,8 +36,8 @@ class Header extends Component<HeaderProps> {
                                 confirm({
                                     title: '确认提交配置？',
                                     content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
-                                    onOk: async () => {
-                                        let response = await request(API.page.save, {
+                                    onOk: async() => {
+                                        const response = await request(API.page.save, {
                                             method: 'post',
                                             body: {
                                                 pageData: JSON.stringify(formatJSON(pageJSON)),
