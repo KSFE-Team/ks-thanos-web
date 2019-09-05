@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, Card } from 'antd';
 import ConfigItem from './ConfigItem';
+import DynamicConfigItem from './DynamicConfigItem';
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -71,7 +72,8 @@ class Config extends Component<ConfigProps, ConfigState> {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
-                    props: current.props
+                    props: current.props,
+                    options: current.options
                 }
             };
         } else {
@@ -89,7 +91,7 @@ class Config extends Component<ConfigProps, ConfigState> {
                     isTouch: true
                 });
 
-                const {props: fieldProps} = fieldValues;
+                const { options, props: fieldProps } = fieldValues;
                 const { pageJSON, onSave } = this.props;
                 pageJSON.components = pageJSON.components.map((component) => {
                     if (component.configVisible) {
@@ -99,7 +101,8 @@ class Config extends Component<ConfigProps, ConfigState> {
                             label: fieldValues.label || '',
                             props: {
                                 ...fieldProps
-                            }
+                            },
+                            options
                         };
                     }
                     return component;
@@ -145,24 +148,35 @@ class Config extends Component<ConfigProps, ConfigState> {
                 }
 
             </FormItem>
-            {
-                selectProps.map((item, index) => {
-                    const { type, name, label, ...otherProps } = item;
+            <Card title="Select Props 配置">
+                {
+                    selectProps.map((item, index) => {
+                        const { type, name, label, ...otherProps } = item;
 
-                    return (
-                        <ConfigItem
-                            key={index}
-                            type={type}
-                            name={`props.${name}`}
-                            label={label}
-                            defaultValue={formData.props ? formData.props[item.name] : undefined}
-                            form={this.props.form}
-                            formItemLayout={formItemLayout}
-                            {...otherProps}
-                        />
-                    );
-                })
-            }
+                        return (
+                            <ConfigItem
+                                key={index}
+                                type={type}
+                                name={`props.${name}`}
+                                label={label}
+                                defaultValue={formData.props ? formData.props[item.name] : undefined}
+                                form={form}
+                                formItemLayout={formItemLayout}
+                                {...otherProps}
+                            />
+                        );
+                    })
+                }
+            </Card>
+            <Card title="Option 配置">
+                <DynamicConfigItem
+                    form={form}
+                    name="options"
+                    label="下拉选项"
+                    addText="添加选项"
+                    defaultValue={formData.options}
+                />
+            </Card>
             <FormItem>
                 <Row>
                     <Col>
