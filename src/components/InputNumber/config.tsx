@@ -21,7 +21,7 @@ const MAX_VALUE = 'max';
 const DISABLED = 'disabled';
 const PRECISION = 'precision';
 const STEP = 'step';
-const KEYS = 'keys';
+const KEY = 'key';
 
 interface InputConfigProps extends FormComponentProps{
     onSave(pageJSON:any): void,
@@ -46,7 +46,9 @@ class InputNumberConfig extends Component<InputConfigProps> {
             const current = components.find(({ configVisible }) => configVisible);
             return {
                 formData: {
-                    ...current.props
+                    ...current.props,
+                    [KEY]: current[KEY],
+                    [LABEL]: current[LABEL],
                 }
             };
         } else {
@@ -62,10 +64,16 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     return;
                 }
                 const { pageJSON, onSave } = this.props;
+                const key = fieldValues[KEY];
+                const label = fieldValues[LABEL];
+                delete fieldValues[KEY];
+                delete fieldValues[LABEL];
                 pageJSON.components = pageJSON.components.map((component) => {
                     if (component.configVisible) {
                         component = {
                             ...component,
+                            [KEY]: key,
+                            [LABEL]: label,
                             props: {
                                 ...component.props,
                                 ...fieldValues,
@@ -88,12 +96,11 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 {...formItemLayout}
             >
                 {
-                    getFieldDecorator(KEYS, {
+                    getFieldDecorator(KEY, {
                         rules: [
-                            {required: true, message: '请输入表单key'},
-
+                            {required: true, message: '请输入表单key'}
                         ],
-                        initialValue: formData[KEYS]
+                        initialValue: formData[KEY]
                     })(
                         <Input
                             placeholder='例如:inputnumber'
@@ -102,15 +109,11 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 }
             </FormItem>
             <FormItem
-                label={'名称'}
+                label={'label'}
                 {...formItemLayout}
             >
                 {
                     getFieldDecorator(LABEL, {
-                        rules: [
-                            {required: true, message: '请输入表单key'},
-
-                        ],
                         initialValue: formData[LABEL]
                     })(
                         <Input
@@ -125,10 +128,6 @@ class InputNumberConfig extends Component<InputConfigProps> {
             >
                 {
                     getFieldDecorator(DEFAULT_VALUE, {
-                        rules: [
-                            {required: true, message: '请输入表单key'},
-
-                        ],
                         initialValue: formData[DEFAULT_VALUE]
                     })(
                         <InputNumber
@@ -143,9 +142,6 @@ class InputNumberConfig extends Component<InputConfigProps> {
             >
                 {
                     getFieldDecorator(MIN_VALUE, {
-                        rules: [
-                            {required: true, message: '请输入表单key'},
-                        ],
                         initialValue: formData[MIN_VALUE]
                     })(
                         <InputNumber
@@ -160,9 +156,6 @@ class InputNumberConfig extends Component<InputConfigProps> {
             >
                 {
                     getFieldDecorator(MAX_VALUE, {
-                        rules: [
-                            {required: true, message: '请输入表单最大值'},
-                        ],
                         initialValue: formData[MAX_VALUE]
                     })(
                         <InputNumber
@@ -177,9 +170,6 @@ class InputNumberConfig extends Component<InputConfigProps> {
             >
                 {
                     getFieldDecorator(DISABLED, {
-                        rules: [
-                            {required: true},
-                        ],
                         initialValue: formData[DISABLED]
                     })(
                         <Radio.Group>
@@ -195,13 +185,10 @@ class InputNumberConfig extends Component<InputConfigProps> {
             >
                 {
                     getFieldDecorator(PRECISION, {
-                        rules: [
-                            {required: true, message: '请输入表单最大值'},
-
-                        ],
                         initialValue: formData[PRECISION]
                     })(
                         <InputNumber
+                            max={100}
                             placeholder='例如:100'
                         />
                     )
@@ -214,10 +201,6 @@ class InputNumberConfig extends Component<InputConfigProps> {
 
                 {
                     getFieldDecorator(STEP, {
-                        rules: [
-                            {required: true, message: '请输入表单最大值'},
-
-                        ],
                         initialValue: formData[STEP]
                     })(
                         <InputNumber

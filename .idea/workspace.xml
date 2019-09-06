@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27f5d668-038f-4eeb-87f0-7ed3adc88b44" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CheckBox/config.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CheckBox/config.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CheckBox/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CheckBox/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/CheckBox/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/CheckBox/utils.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pages/components/Header/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/pages/components/Header/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputNumber/config.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InputNumber/config.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/InputNumber/utils.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/InputNumber/utils.ts" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -100,13 +96,13 @@
       <file leaf-file-name="utils.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/InputNumber/utils.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
-              <caret line="16" column="19" lean-forward="true" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+            <state relative-caret-position="330">
+              <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="335">
@@ -118,8 +114,8 @@
       <file leaf-file-name="config.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/RangePicker/config.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3124">
-              <caret line="145" column="37" selection-start-line="145" selection-start-column="37" selection-end-line="145" selection-end-column="37" />
+            <state relative-caret-position="287">
+              <caret line="110" column="26" lean-forward="true" selection-start-line="108" selection-start-column="31" selection-end-line="110" selection-end-column="26" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -130,8 +126,8 @@
       <file leaf-file-name="index.tsx" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/components/InputNumber/index.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="550">
-              <caret line="29" selection-start-line="29" selection-end-line="29" />
+            <state relative-caret-position="280">
+              <caret line="30" column="14" lean-forward="true" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -139,11 +135,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="config.tsx" pinned="false" current-in-tab="false">
+      <file leaf-file-name="config.tsx" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/components/InputNumber/config.tsx">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-3273">
-              <caret line="26" column="18" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="18" />
+            <state relative-caret-position="474">
+              <caret line="71" column="43" selection-start-line="71" selection-start-column="43" selection-end-line="71" selection-end-column="43" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -191,7 +187,6 @@
       <find>#E6DDCA</find>
       <find>FormItem</find>
       <find>getDerivedStateFromProps</find>
-      <find>onSave</find>
       <find>request</find>
       <find>default</find>
       <find>Components</find>
@@ -218,6 +213,7 @@
       <find>handleSave</find>
       <find>setState</find>
       <find>handleChange</find>
+      <find>onSave</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -233,10 +229,10 @@
         <option value="$PROJECT_DIR$/src/components/DatePicker/config.tsx" />
         <option value="$PROJECT_DIR$/src/components/index.ts" />
         <option value="$PROJECT_DIR$/src/components/RangePicker/config.tsx" />
+        <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/src/components/InputNumber/utils.ts" />
         <option value="$PROJECT_DIR$/src/components/InputNumber/index.tsx" />
         <option value="$PROJECT_DIR$/src/components/InputNumber/config.tsx" />
-        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -416,12 +412,12 @@
       <workItem from="1566963780274" duration="12341000" />
       <workItem from="1567149293483" duration="10429000" />
       <workItem from="1567585558055" duration="28000" />
-      <workItem from="1567675329405" duration="1417000" />
+      <workItem from="1567675329405" duration="4636000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32245000" />
+    <option name="totallyTimeSpent" value="35464000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
@@ -436,7 +432,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Terminal" order="10" visible="true" weight="0.32917705" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32917705" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="3" side_tool="true" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
@@ -711,26 +707,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/RangePicker/config.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3124">
-          <caret line="145" column="37" selection-start-line="145" selection-start-column="37" selection-end-line="145" selection-end-column="37" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/InputNumber/index.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="550">
-          <caret line="29" selection-start-line="29" selection-end-line="29" />
-          <folding>
-            <element signature="e#0#41#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/Radio/config.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="427">
@@ -741,10 +717,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/InputNumber/config.tsx">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3273">
-          <caret line="26" column="18" selection-start-line="26" selection-start-column="18" selection-end-line="26" selection-end-column="18" />
+        <state relative-caret-position="335">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/RangePicker/config.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="110" column="26" lean-forward="true" selection-start-line="108" selection-start-column="31" selection-end-line="110" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/InputNumber/index.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="280">
+          <caret line="30" column="14" lean-forward="true" selection-start-line="30" selection-start-column="14" selection-end-line="30" selection-end-column="14" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
@@ -753,15 +746,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/components/InputNumber/utils.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
-          <caret line="16" column="19" lean-forward="true" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+        <state relative-caret-position="330">
+          <caret line="15" column="19" selection-start-line="15" selection-start-column="19" selection-end-line="15" selection-end-column="19" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/components/InputNumber/config.tsx">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+        <state relative-caret-position="474">
+          <caret line="71" column="43" selection-start-line="71" selection-start-column="43" selection-end-line="71" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

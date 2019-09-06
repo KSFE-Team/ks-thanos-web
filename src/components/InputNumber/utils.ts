@@ -6,9 +6,9 @@ export const getInitJson = () => ({
     componentName: 'InputNumber',
     source: 'antd',
     default: false,
+    key: '', // 唯一
+    label: '数字框', // 名称
     props: {
-        keys: '', // 唯一
-        label: '数字框', // 名称
         min: 0, // 最小值
         max: 0, // 最大值
         defaultValue: 0, // 默认值
