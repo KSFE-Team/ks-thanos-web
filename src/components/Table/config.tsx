@@ -2,20 +2,15 @@ import React from 'react';
 import { actions } from 'kredux';
 import { Form, Input, Table, Button, Row, Col, Checkbox, Select, message } from 'antd';
 import { getUniqueID } from '../../utils';
-import * as Components from 'Components';
-
+import { DATA_ENTRY } from 'Components';
 const { Option } = Select;
-
 const FormItem = Form.Item;
-
 const EditableContext = React.createContext(null);
-
 const EditableRow = ({ form, index, ...props }: any) => (
     <EditableContext.Provider value={form}>
         <tr {...props} />
     </EditableContext.Provider>
 );
-
 const EditableFormRow = Form.create()(EditableRow);
 
 interface TableConfigProps {
@@ -182,7 +177,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
         if (e.target.checked) {
             const { currentComponentIdx, currentComponent } = this.state;
             const InputData = {
-                ...Components.Input.getInitJson(),
+                ...DATA_ENTRY.Input.getInitJson(),
                 id: getUniqueID(),
                 parentId: currentComponent.id
             };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { Icon, Modal } from 'antd';
 import { DND } from 'BizComponents';
-import * as Components from 'Components';
+import { ALL_TOOLS } from 'Components';
 import './style.scss';
 const Confirm = Modal.confirm;
 
@@ -19,17 +19,17 @@ export default class PageRender extends Component<PageRenderProps> {
      * 渲染组件
      */
     renderComponent = (component) => {
-        const ComponentName = Components[component.componentName].component;
+        const ComponentName = ALL_TOOLS[component.componentName].component;
         if (!ComponentName) {
             console.error('thanos：no present component');
             return null;
         }
 
-        const { key, label, props, ...otherProps } = component;
+        const { props, ...otherProps } = component;
 
         const componentProps = {
-            ...(component.props || {}),
-            ...otherProps
+            ...(props || {}),
+            config: otherProps
         };
         return <ComponentName {...componentProps} />;
     };
@@ -37,11 +37,11 @@ export default class PageRender extends Component<PageRenderProps> {
     /**
      * 显示配置界面
      */
-    showConfig = (index) => {
+    showConfig = (index: number) => {
         const { pageJSON } = this.props.generatePage;
         const { components } = pageJSON;
         components[index].configVisible = true;
-        components.map((item, idx) => {
+        components.map((item, idx: number) => {
             if (idx === index) {
                 item.configVisible = true;
             } else {

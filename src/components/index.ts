@@ -8,8 +8,10 @@ import * as TextArea from './TextArea/index';
 import * as Radio from './Radio/index';
 import * as CheckBox from './CheckBox';
 
-export {
-    Table,
+/**
+ * 展示类组件
+ */
+const DATA_ENTRY = {
     Input,
     Select,
     DatePicker,
@@ -18,4 +20,25 @@ export {
     TextArea,
     Radio,
     CheckBox
+};
+
+/**
+ * 展示类组件
+ */
+const DATA_DISPLAY = {
+    Table
+};
+
+/**
+ * 所有组件
+ */
+const ALL_TOOLS = {
+    ...DATA_DISPLAY,
+    ...DATA_ENTRY
+};
+
+export {
+    DATA_DISPLAY,
+    DATA_ENTRY,
+    ALL_TOOLS
 };

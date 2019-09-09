@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {actions} from 'kredux';
 import { Drawer } from 'antd';
-import * as Components from 'Components';
+import { ALL_TOOLS } from 'Components';
 
 interface ComponentConfigProps{
     generatePage: {pageJSON: any},
@@ -77,7 +77,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
     renderConfig = () => {
         const {pageJSON} = this.props.generatePage;
         const {components} = pageJSON;
-        const Component = Components[(components.find(({configVisible}) => configVisible) || {}).componentName];
+        const Component = ALL_TOOLS[(components.find(({configVisible}) => configVisible) || {}).componentName];
         if (Component) {
             const Config = Component.config;
             const commonProps = {

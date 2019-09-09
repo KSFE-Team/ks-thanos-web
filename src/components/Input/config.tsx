@@ -84,7 +84,7 @@ export default class InputConfig extends Component<InputConfigProps> {
         const { formData } = this.state;
         return <div>
             <FormItem
-                label={'表单项Key'}
+                label={'表单Key'}
                 {...formItemLayout}
             >
                 <Input
@@ -94,7 +94,7 @@ export default class InputConfig extends Component<InputConfigProps> {
                 />
             </FormItem>
             <FormItem
-                label={'表单项名称'}
+                label={'表单Label'}
                 {...formItemLayout}
             >
                 <Input
