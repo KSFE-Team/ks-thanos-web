@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
+import { ALIAS } from 'Src/utils/constans';
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -84,7 +85,7 @@ export default class InputConfig extends Component<InputConfigProps> {
         const { formData } = this.state;
         return <div>
             <FormItem
-                label={'表单Key'}
+                label={ALIAS.KEY}
                 {...formItemLayout}
             >
                 <Input
@@ -94,7 +95,7 @@ export default class InputConfig extends Component<InputConfigProps> {
                 />
             </FormItem>
             <FormItem
-                label={'表单Label'}
+                label={ALIAS.LABEL}
                 {...formItemLayout}
             >
                 <Input

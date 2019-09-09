@@ -14,3 +14,11 @@ export const FORMITEM_LAYOUT = {
         sm: { span: 16 },
     },
 };
+
+/**
+ * 表单配置常量定义
+ */
+export const ALIAS = {
+    KEY: '表单Key', // 表单绑定key
+    LABEL: '表单Label', // 表单对应展示名称
+};
