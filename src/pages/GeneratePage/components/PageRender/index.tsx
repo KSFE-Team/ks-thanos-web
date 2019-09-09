@@ -24,10 +24,14 @@ export default class PageRender extends Component<PageRenderProps> {
             console.error('thanos：no present component');
             return null;
         }
-        const props = {
-            ...(component.props || {})
+
+        const { key, label, props, ...otherProps } = component;
+
+        const componentProps = {
+            ...(component.props || {}),
+            ...otherProps
         };
-        return <ComponentName {...props} />;
+        return <ComponentName {...componentProps} />;
     };
 
     /**

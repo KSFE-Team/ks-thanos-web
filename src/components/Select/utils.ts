@@ -7,7 +7,13 @@ export const getInitJson = () => ({
     source: 'antd',
     default: false,
     key: '',
-    label: ''
+    label: '',
+    props: {
+        placeholder: '',
+        disabled: false,
+        allowClear: true,
+        showSearch: false
+    }
 });
 
 /**

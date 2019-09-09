@@ -5,7 +5,7 @@ export interface SelectProps {
   allowClear: boolean;
 }
 
-interface OptionData {
+export interface OptionData {
   props: {
     disabled: boolean;
     key: string;
@@ -13,12 +13,12 @@ interface OptionData {
     value: string | number;
     className: string;
   };
-  lable: string | number;
+  label: string | number;
 }
 
 interface OptGroupData {
   key: string;
-  laber: string;
+  label: string;
   options: OptionData[];
 }
 
