@@ -110,7 +110,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 break;
             case CHECK:
             case DISABLED:
-                options[CHECK_ITEM][index].props[VALUE] = value;
+                options[CHECK_ITEM][index].props[key] = value;
                 break;
             default:
                 options[CHECK_ITEM][index].props[key] = value;
