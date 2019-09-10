@@ -6,7 +6,7 @@ export const getInitJson = () => ({
     componentName: 'CheckBox',
     source: 'antd',
     default: false,
-    checkItem: [{
+    options: [{
         props: {
             disabled: false,
             checked: false,

@@ -5,7 +5,7 @@ import Config from './config';
 
 interface Props {
     config: {
-        checkItem: [{
+        options: [{
             props: {
                 disabled: boolean,
                 checked: boolean,
@@ -23,14 +23,13 @@ class KCheckBox extends React.Component<Props> {
 
     render() {
         const { config } = this.props;
-        console.log('config', this.props);
         return (
             <Form.Item
                 label={config && config.label ? config.label : '表单名称'}
             >
                 {
                     config.label
-                        ? config.checkItem.map((ele, index) => {
+                        ? config.options.map((ele, index) => {
                             return <Checkbox
                                 key={index}
                                 checked={ele.props.checked}
