@@ -1,22 +1,35 @@
 import React, { Component } from 'react';
-import { Input } from 'antd';
+import { Input, Form } from 'antd';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import InputConfig from './config';
+import { FORMITEM_LAYOUT } from 'Src/utils/constans';
 
-class KInput extends Component {
+interface KInputProps {
+    config: any
+}
+
+class KInput extends Component<KInputProps> {
     static propTypes = {
         props: PropTypes.object
     };
 
     render() {
+        const { config, ...OtherProps } = this.props;
+        const { label = '' } = config;
         return (
-            <Input
-                {...this.props}
-                style={{
-                    width: '300px'
-                }}
-            />
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                style={{ marginBottom: 0 }}
+                label={label}
+            >
+                <Input
+                    {...OtherProps}
+                    style={{
+                        width: '300px'
+                    }}
+                />
+            </Form.Item>
         );
     }
 }

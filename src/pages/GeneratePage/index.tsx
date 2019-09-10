@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Icon, Tooltip } from 'antd';
 import { connect, actions } from 'kredux';
 import Header from '../components/Header';
-import { PageRender, ComponentConfig } from './components';
+import { PageRender, ComponentConfig, ComponentsLib } from './components';
 import './index.scss';
 
 interface GeneratePageProps {
@@ -60,9 +60,9 @@ class GeneratePage extends Component<GeneratePageProps> {
                                 <div className="thanos-page-container">
                                     <PageRender {...this.props} />
                                 </div>
-                                {/* <div className="thanos-page-operation"> */}
-                                {/* <PageConfig {...this.props}/> */}
-                                {/* </div> */}
+                                <div className="thanos-page-operation">
+                                    <ComponentsLib {...this.props}/>
+                                </div>
                                 <ComponentConfig {...this.props} />
                             </div>
                         </div>

@@ -6,16 +6,25 @@ import TextAreaConfig from './config';
 
 const { TextArea } = Input;
 
-class KTextArea extends Component {
+interface KKTextArea {
+    label: string
+}
+
+class KTextArea extends Component<KKTextArea> {
     static propTypes = {
         props: PropTypes.object
-    };
+    }
+
+    static defaultProps = {
+        label: '备注信息'
+    }
 
     render() {
         return (
-            <TextArea style={{
-                width: '300px'
-            }} {...this.props} />
+            <div style={{display: 'flex', alignItems: 'center'}}>
+                <span>{`${this.props.label}:`}</span>
+                <TextArea style={{width: '300px', marginLeft: '10px'}} {...this.props}/>
+            </div>
         );
     }
 }

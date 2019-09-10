@@ -13,4 +13,49 @@
 
 .thanos-page-config-form {
     padding: 10px;
+
+    .ant-form-item {
+        margin-bottom: 4px;
+    }
+
+    .component-item {
+        text-align: center;
+        position: relative;
+        border-bottom: 1px solid #000;
+        // border: 1px solid rgb(0, 0, 0);
+        z-index: 5;
+        overflow: hidden;
+
+        &::after {
+            content: '';
+            border: 3px solid #000;
+            opacity: 0;
+            transform: translateX(-50%) translateY(-50%) rotate(-25deg);
+            position: absolute;
+            height: 0%;
+            left: 50%;
+            top: 50%;
+            width: 150%;
+            z-index: 1;
+            transition: all .75s ease-in-out 0s;
+        }
+        
+        &:hover {
+            cursor: pointer;
+            &::after {
+                height: 400%;
+                opacity: 1;
+                color: #FFF;
+            }
+        }
+
+        &:active {
+            font-weight: bold;
+        }
+    }
+
+    .component-type-title {
+        color: rgba(0, 0, 0, .5);
+        padding: 5px;
+    }
 }
