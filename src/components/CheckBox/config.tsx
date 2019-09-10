@@ -9,6 +9,8 @@ const TEXT = 'text';
 const CHECK = 'checked';
 const DISABLED = 'disabled';
 const CHECK_ITEM = 'checkItem';
+const KEY = 'key';
+const ROW_KEY = 'rowKey';
 
 interface CheckBoxConfigProps {
     onSave(pageJSON: any): void,
@@ -21,17 +23,17 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     };
 
     state = {
-        options: {
-            [CHECK_ITEM]: [{
-                props: {
-                    [DISABLED]: false,
-                    [CHECK]: false,
-                    [TEXT]: ''
-                },
+        [CHECK_ITEM]: [{
+            props: {
+                [DISABLED]: false,
+                [CHECK]: false,
                 [VALUE]: ''
-            }],
-            [LABEL]: ''
-        },
+            },
+            [TEXT]: '',
+            [ROW_KEY]: 0
+        }],
+        [LABEL]: '',
+        [KEY]: '',
         isTouch: false,
         errMessage: ''
     };
@@ -42,17 +44,22 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             const { components } = pageJSON;
             const current = components.find(({ configVisible }) => configVisible);
             return {
-                options: current.options || {
-                    [CHECK_ITEM]: [{
-                        props: {
-                            [DISABLED]: false,
-                            [CHECK]: false,
-                            [TEXT]: ''
-                        },
-                        [VALUE]: ''
-                    }],
-                    [LABEL]: ''
-                }
+                CHECK_ITEM: current[CHECK_ITEM],
+                LABEL: current[LABEL],
+                KEY: current[KEY]
+                // options: current.options || {
+                //     [CHECK_ITEM]: [{
+                //         props: {
+                //             [DISABLED]: false,
+                //             [CHECK]: false,
+                //             [VALUE]: ''
+                //         },
+                //         [TEXT]: '',
+                //         [ROW_KEY]: 0
+                //     }],
+                //     [LABEL]: '',
+                //     [KEY]: ''
+                // }
             };
         } else {
             return state;
@@ -63,17 +70,17 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 保存修改
      */
     handleSave = () => {
-        const { options } = this.state;
+        const { checkItem, label, key } = this.state;
         const { pageJSON, onSave } = this.props;
-        if (!options[LABEL]) {
+        if (!label) {
             this.setState({
                 errMessage: '请输入表单名称'
             });
             return;
         }
-        for (let i = 0; i < options[CHECK_ITEM].length; i++) {
-            const item = options[CHECK_ITEM][i];
-            if (!item.props[TEXT]) {
+        for (let i = 0; i < checkItem.length; i++) {
+            const item = checkItem[i];
+            if (!item[TEXT]) {
                 this.setState({
                     errMessage: '请输入表单项名称'
                 });
@@ -84,10 +91,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             if (component.configVisible) {
                 component = {
                     ...component,
-                    options,
-                    props: {
-                        options
-                    }
+                    checkItem,
+                    label,
+                    key
                 };
             }
             return component;
@@ -98,26 +104,31 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     /**
      * @desc    框内数据发生变化
      */
-    handleChange = (key, index: number, e) => {
-        const { options } = this.state;
+    handleChange = (itemKey, index: number, e) => {
+        let { checkItem, label, key } = this.state;
         const value = typeof e === 'boolean' ? e : e.target.value;
-        switch (key) {
+        switch (itemKey) {
             case LABEL:
-                options[LABEL] = value;
+                label = value;
                 break;
-            case VALUE:
-                options[CHECK_ITEM][index][key] = value;
+            case KEY:
+                key = value;
+                break;
+            case TEXT:
+                checkItem[index][itemKey] = value;
                 break;
             case CHECK:
             case DISABLED:
-                options[CHECK_ITEM][index].props[key] = value;
+                checkItem[index].props[itemKey] = value;
                 break;
             default:
-                options[CHECK_ITEM][index].props[key] = value;
+                checkItem[index].props[itemKey] = value;
                 break;
         }
         this.setState({
-            options,
+            checkItem,
+            label,
+            key,
             isTouch: true
         });
     };
@@ -126,17 +137,18 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 添加项
      */
     handleAddCheck = (): void => {
-        const { options } = this.state;
-        options[CHECK_ITEM].push({
+        const { checkItem } = this.state;
+        checkItem.push({
             props: {
                 [DISABLED]: false,
                 [CHECK]: false,
-                [TEXT]: ''
+                [VALUE]: ''
             },
-            [VALUE]: '',
+            [TEXT]: '',
+            [ROW_KEY]: checkItem[checkItem.length - 1][KEY] + 1
         });
         this.setState({
-            options,
+            checkItem,
             isTouch: true
         });
     }
@@ -145,10 +157,10 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 删除项
      */
     handleDeleteChekItem = (index) => {
-        const { options } = this.state;
-        options[CHECK_ITEM].splice(index, 1);
+        const { checkItem } = this.state;
+        checkItem.splice(index, 1);
         this.setState({
-            options
+            checkItem
         });
     }
 
@@ -162,32 +174,32 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     }
 
     render() {
-        const { options, errMessage } = this.state;
+        const { checkItem, label, key, errMessage } = this.state;
         const columns = [
             {
                 title: '表单项Key',
-                dataIndex: 'key',
-                key: 'key',
+                dataIndex: 'value',
+                key: 'value',
                 render: (item, record, index) => <Input
-                    value={record[VALUE]}
+                    value={record.props[VALUE]}
                     placeholder='例如： 选项'
                     onChange={this.handleChange.bind(this, VALUE, index)}
                 />
             },
             {
                 title: '表单项名称',
-                dataIndex: 'value',
-                key: 'value',
+                dataIndex: 'text',
+                key: 'text',
                 render: (item, record, index) => <Input
-                    value={record.props[TEXT]}
+                    value={record[TEXT]}
                     placeholder='例如： 姓名'
                     onChange={this.handleChange.bind(this, TEXT, index)}
                 />
             },
             {
                 title: '是否默认选中',
-                dataIndex: 'isCheck',
-                key: 'isCheck',
+                dataIndex: 'check',
+                key: 'check',
                 render: (item, record, index) =>
                     <Switch
                         defaultChecked={record[CHECK]}
@@ -198,8 +210,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             },
             {
                 title: '是否禁用',
-                dataIndex: 'isDisabled',
-                key: 'isDisabled',
+                dataIndex: 'disabled',
+                key: 'disabled',
                 render: (item, record, index) =>
                     <Switch
                         defaultChecked={record[DISABLED]}
@@ -213,7 +225,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 dataIndex: 'delete',
                 key: 'delete',
                 render: () =>
-                    options[CHECK_ITEM].length > 1
+                    checkItem.length > 1
                         ? <Col>
                             <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index); }} />
                         </Col>
@@ -236,12 +248,21 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 label='label'
             >
                 <Input
-                    value={options[LABEL]}
+                    value={label}
                     placeholder='例如： label'
                     onChange={this.handleChange.bind(this, LABEL, 0)}
                 />
             </Form.Item>
-            <Table dataSource={options[CHECK_ITEM]} columns={columns} bordered pagination={false} />
+            <Form.Item
+                label='表单key'
+            >
+                <Input
+                    value={key}
+                    placeholder='例如： key'
+                    onChange={this.handleChange.bind(this, KEY, 0)}
+                />
+            </Form.Item>
+            <Table rowKey="rowKey" dataSource={checkItem} columns={columns} bordered pagination={false} />
             <br />
             <Row type="flex" justify='space-between'>
                 <Col>

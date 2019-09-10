@@ -6,6 +6,17 @@ export const getInitJson = () => ({
     componentName: 'CheckBox',
     source: 'antd',
     default: false,
+    checkItem: [{
+        props: {
+            disabled: false,
+            checked: false,
+            value: ''
+        },
+        text: '',
+        rowKey: 0
+    }],
+    label: '',
+    key: '',
 });
 
 /**
