@@ -11,7 +11,7 @@ export default {
         }
     },
     reducers: {
-        insertComponent: (payload, getState, dispatch) => {
+        insertComponent: (payload, getState) => {
             const state = getState();
             const { generatePage } = state;
             let { pageJSON } = generatePage;
@@ -36,6 +36,39 @@ export default {
                 },
             });
         },
+        insertFormComponent: (payload, getState) => {
+            const state = getState();
+            const { generatePage } = state;
+            let { pageJSON } = generatePage;
+            const { components } = pageJSON;
+            const FormIndex = components.findIndex(({componentName, selected}) => componentName === 'Form' && selected);
+            components[FormIndex] = {
+                ...components[FormIndex],
+                children: [
+                    ...components[FormIndex].children || [],
+                    {
+                        ...payload,
+                        id: getUniqueID(),
+                    }
+                ]
+            };
+
+            pageJSON = {
+                ...pageJSON,
+                components: [
+                    ...components,
+                ]
+            };
+            actions.generatePage.setReducers({
+                pageJSON
+            });
+            actions.operate.save({
+                modelName: 'generatePage',
+                data: {
+                    pageJSON
+                },
+            });
+        }
     }
 }
 ;

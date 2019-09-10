@@ -7,6 +7,7 @@ import * as RangePicker from './RangePicker/index';
 import * as TextArea from './TextArea/index';
 import * as Radio from './Radio/index';
 import * as CheckBox from './CheckBox';
+import * as Form from './Form';
 
 /**
  * 展示类组件
@@ -30,15 +31,24 @@ const DATA_DISPLAY = {
 };
 
 /**
+ * 其他组件
+ */
+const OTHER_COMPONENTS = {
+    Form
+};
+
+/**
  * 所有组件
  */
 const ALL_TOOLS = {
     ...DATA_DISPLAY,
-    ...DATA_ENTRY
+    ...DATA_ENTRY,
+    ...OTHER_COMPONENTS
 };
 
 export {
     DATA_DISPLAY,
     DATA_ENTRY,
+    OTHER_COMPONENTS,
     ALL_TOOLS
 };

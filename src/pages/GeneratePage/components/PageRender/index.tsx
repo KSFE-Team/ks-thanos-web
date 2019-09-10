@@ -83,8 +83,8 @@ export default class PageRender extends Component<PageRenderProps> {
             >
                 <DND
                     onRender={(data, index) => {
+                        console.log('data', data);
                         return (
-
                             <div
                                 onClick={() => {
                                     this.showConfig(index);

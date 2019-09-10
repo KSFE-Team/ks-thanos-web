@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { Form, Input } from 'antd';
-import { DATA_DISPLAY, DATA_ENTRY } from 'Components';
+import { DATA_DISPLAY, DATA_ENTRY, OTHER_COMPONENTS, ALL_TOOLS } from 'Components';
 import ComponentType from './ComponentType';
 import './index.scss';
 const { Search } = Input;
@@ -17,8 +17,8 @@ const getTools = (components) => {
 const TOOLS = {
     DATA_DISPLAY: getTools(DATA_DISPLAY),
     DATA_ENTRY: getTools(DATA_ENTRY),
+    OTHER_COMPONENTS: getTools(OTHER_COMPONENTS),
 };
-const ALL_TOOLS = { ...DATA_DISPLAY, ...DATA_ENTRY };
 
 interface PageConfigProps{
     generatePage: {
@@ -40,6 +40,12 @@ export default class ComponentsLib extends Component<PageConfigProps> {
      * 插入组件事件
      */
     handleClick = (componentName: string) => {
+        const { pageJSON } = this.props.generatePage;
+        const { components } = pageJSON;
+        console.log('components', components);
+        if (components.some(({componentName, selected}) => componentName === 'Form' && selected)) {
+            actions.generatePage.insertFormComponent(ALL_TOOLS[componentName].getInitJson());
+        }
         actions.generatePage.insertComponent(ALL_TOOLS[componentName].getInitJson());
     }
 
@@ -63,6 +69,7 @@ export default class ComponentsLib extends Component<PageConfigProps> {
         const span = 24 / SPLIT_COUNT;
         const dataDisplayTools = this.fliterComponent(TOOLS.DATA_DISPLAY);
         const dataEntryTools = this.fliterComponent(TOOLS.DATA_ENTRY);
+        const otherTools = this.fliterComponent(TOOLS.OTHER_COMPONENTS);
         return (
             <div className='thanos-page-config'>
                 <div className='thanos-page-config-title'>组件库</div>
@@ -84,6 +91,12 @@ export default class ComponentsLib extends Component<PageConfigProps> {
                         span={span}
                         onClick={this.handleClick}
                         title={'展示组件'}
+                    />
+                    <ComponentType
+                        dataSource={otherTools}
+                        span={span}
+                        onClick={this.handleClick}
+                        title={'其他组件'}
                     />
                 </div>
             </div>
