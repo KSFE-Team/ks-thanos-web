@@ -51,7 +51,6 @@ export default class Config extends Component<ConfigProps> {
             }
             return component;
         });
-        console.log('pageJSON----------', pageJSON);
         onSave && onSave(pageJSON);
     };
 

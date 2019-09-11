@@ -76,7 +76,6 @@ export default class DnD extends React.PureComponent<DnDProps> {
     }
 
     render() {
-        console.log(DragDropContext,Droppable,Draggable);
         const { dataSource, direction, droppableId, interval, onRender, emptyNode } = this.props;
         return (
             <DragDropContext

@@ -164,7 +164,6 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             }
             return component;
         });
-        // console.log(pageJSON, 'pageJSON');
         onSave && onSave(pageJSON);
     }
 

@@ -107,7 +107,6 @@ class Config extends Component<ConfigProps, ConfigState> {
                     }
                     return component;
                 });
-                // console.log('pageJSON', JSON.stringify(pageJSON));
                 onSave && onSave(pageJSON);
             }
         });
