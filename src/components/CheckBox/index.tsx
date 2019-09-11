@@ -7,16 +7,16 @@ interface Props {
     config: {
         options: [{
             props: {
-                disabled: boolean,
-                checked: boolean,
-                value: string
-            },
-            text: string,
-            rowKey: number
-        }],
-        label: string,
-        key: string,
-    }
+                disabled: boolean;
+                checked: boolean;
+                value: string;
+            };
+            text: string;
+            rowKey: number;
+        }];
+        label: string;
+        key: string;
+    };
 }
 
 class KCheckBox extends React.Component<Props> {

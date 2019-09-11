@@ -18,8 +18,8 @@ const KEY = 'key';
 const LABEL = 'label';
 
 interface InputConfigProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 export default class InputConfig extends Component<InputConfigProps> {

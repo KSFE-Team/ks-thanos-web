@@ -19,9 +19,8 @@ const FORMAT = 'format';
 const SHOW_TIME = 'showTime';
 
 interface ConfigProps {
-    onSave(pageJSON: any): void,
-
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 export default class Config extends Component<ConfigProps> {

@@ -5,9 +5,9 @@ import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
 
 interface RadioProps {
-    configList: any,
-    label:string,
-    defaultValue:string
+    configList: any;
+    label: string;
+    defaultValue: string;
 };
 class KRadio extends Component<RadioProps> {
     static propTypes = {

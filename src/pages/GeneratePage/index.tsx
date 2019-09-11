@@ -6,11 +6,11 @@ import { PageRender, ComponentConfig, ComponentsLib } from './components';
 import './index.scss';
 
 interface GeneratePageProps {
-    generatePage: { pageJSON: any },
+    generatePage: { pageJSON: any };
     operate: {
-        undoDisable: any,
-        redoDisable: any
-    }
+        undoDisable: any;
+        redoDisable: any;
+    };
 }
 
 @connect(({ generatePage = {}, operate = {} }) => ({

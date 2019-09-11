@@ -7,8 +7,8 @@ const Option = Select.Option;
 
 interface KSelectProps extends SelectProps {
     config: {
-        options: OptionData[]
-    }
+        options: OptionData[];
+    };
 }
 
 class KSelect extends Component<KSelectProps> {

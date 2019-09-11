@@ -23,11 +23,10 @@ const ALL_TOOLS = { ...DATA_DISPLAY, ...DATA_ENTRY };
 interface PageConfigProps{
     generatePage: {
         pageJSON: {
-            components: any[],
-            name: string
-        }
-    },
-
+            components: any[];
+            name: string;
+        };
+    };
 }
 
 export default class ComponentsLib extends Component<PageConfigProps> {

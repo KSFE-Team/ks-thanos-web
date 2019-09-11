@@ -22,7 +22,7 @@ export function toTreeData(data, {
     parentId,
     rootId
 }) {
-    const resData:any[] = [...data]; const tree:any[] = [];
+    const resData: any[] = [...data]; const tree: any[] = [];
     function run(chiArr) {
         if (resData.length !== 0) {
             for (let i = 0; i < chiArr.length; i++) {

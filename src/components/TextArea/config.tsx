@@ -19,8 +19,8 @@ const Rows = 'rows';
 const Placeholder = 'placeholder';
 
 interface InputConfigProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 export default class TextAreaConfig extends Component<InputConfigProps> {

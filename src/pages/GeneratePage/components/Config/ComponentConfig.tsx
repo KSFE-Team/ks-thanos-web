@@ -4,8 +4,7 @@ import { Drawer } from 'antd';
 import { ALL_TOOLS } from 'Components';
 
 interface ComponentConfigProps{
-    generatePage: {pageJSON: any},
-
+    generatePage: {pageJSON: any};
 }
 export default class ComponentConfig extends Component<ComponentConfigProps> {
 

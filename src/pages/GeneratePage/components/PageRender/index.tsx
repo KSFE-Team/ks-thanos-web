@@ -8,9 +8,8 @@ const Confirm = Modal.confirm;
 
 interface PageRenderProps{
     generatePage: {
-        pageJSON: any
-    },
-
+        pageJSON: any;
+    };
 }
 
 export default class PageRender extends Component<PageRenderProps> {

@@ -6,7 +6,7 @@ import InputConfig from './config';
 import { FORMITEM_LAYOUT } from 'Src/utils/constans';
 
 interface KInputProps {
-    config: any
+    config: any;
 }
 
 class KInput extends Component<KInputProps> {

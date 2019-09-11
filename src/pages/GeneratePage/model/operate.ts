@@ -42,9 +42,9 @@ export default {
             }
 
             actions.operate.setReducers({
-                operateId: operateId + 1,
-                undoDisable: operateId + 2 <= 2,
-                redoDisable: operateId + 1 === history.length,
+                operateId: Number(operateId) + 1,
+                undoDisable: Number(operateId) + 2 <= 2,
+                redoDisable: Number(operateId) + 1 === history.length,
                 isRedo: true
             });
         },
@@ -82,7 +82,7 @@ export default {
         end: (action, getState, dispatch) => {
             const state = getState();
             const history = state.operate.history;
-            const operateId = state.operate.operateId + 1;
+            const operateId = Number(state.operate.operateId) + 1;
 
             actions.operate.setReducers({
                 operateId

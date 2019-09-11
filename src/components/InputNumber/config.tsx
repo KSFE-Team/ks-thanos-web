@@ -24,8 +24,8 @@ const STEP = 'step';
 const KEY = 'key';
 
 interface InputConfigProps extends FormComponentProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 class InputNumberConfig extends Component<InputConfigProps> {

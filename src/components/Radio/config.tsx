@@ -28,9 +28,9 @@ const LABEL = 'label';
 const VALUE = 'value';
 
 interface RadioConfigProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any,
-    isRequired:boolean
+    pageJSON: any;
+    isRequired: boolean;
+    onSave(pageJSON: any): void;
 }
 
 export default class RadioConfig extends Component<RadioConfigProps> {
@@ -89,14 +89,14 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             return;
         }
 
-        const length = choiceNodeList.filter((item:any, index:number) => {
+        const length = choiceNodeList.filter((item: any, index: number) => {
             return !this[`label${index}`].state.value || this[`value${index}`].state.value === undefined || this[`value${index}`].state.value === '';
         }).length;
         if (length > 0) {
             message.error('选项不可为空');
             return;
         }
-        const array:Array<any> = [];
+        const array: any[] = [];
         this.state.choiceNodeList.forEach((item, index) => {
             array.push({
                 id: item.id,
