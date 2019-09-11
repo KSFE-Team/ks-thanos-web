@@ -14,6 +14,7 @@ const formItemLayout = {
 };
 
 const KEY = 'key';
+const Label = 'label';
 const Rows = 'rows';
 const Placeholder = 'placeholder';
 
@@ -43,6 +44,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                 formData: {
                     [KEY]: current[KEY],
                     [Rows]: current[Rows],
+                    [Label]: current[Label],
                     [Placeholder]: current[Placeholder]
                 }
             };
@@ -96,7 +98,17 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                 />
             </FormItem>
             <FormItem
-                label={'默认显示信息'}
+                label={'Label'}
+                {...formItemLayout}
+            >
+                <Input
+                    value={formData[Label]}
+                    placeholder='例如： 奥'
+                    onChange={this.handleChange.bind(this, Label)}
+                />
+            </FormItem>
+            <FormItem
+                label={'placeholder'}
                 {...formItemLayout}
             >
                 <Input
