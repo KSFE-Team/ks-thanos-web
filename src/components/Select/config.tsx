@@ -19,8 +19,8 @@ const LABEL = 'label';
 
 interface ConfigProps {
     form: any;
-    onSave(pageJSON:any): void;
     pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 interface ConfigState {

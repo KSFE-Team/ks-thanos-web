@@ -22,8 +22,8 @@ const formItemLayout = {
     }
 };
 interface CheckBoxConfigProps {
-    onSave(pageJSON: any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {

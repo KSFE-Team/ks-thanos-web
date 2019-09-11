@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
 interface RadioProps {
-    config: any,
-    label:string,
-    defaultValue:string,
-};
+    config: any;
+    label: string;
+    defaultValue: string;
+}
 class KRadio extends Component<RadioProps> {
     static propTypes = {
         props: PropTypes.object,

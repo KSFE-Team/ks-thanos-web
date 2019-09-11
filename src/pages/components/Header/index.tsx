@@ -8,8 +8,8 @@ import './index.scss';
 const confirm = Modal.confirm;
 
 interface HeaderProps {
-    generatePage?: any,
-    showTopToolbar?: boolean
+    generatePage?: any;
+    showTopToolbar?: boolean;
 }
 
 @connect(({ generatePage = {}, operate = {} }) => ({

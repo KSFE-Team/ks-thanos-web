@@ -13,8 +13,8 @@ const KEY = 'key';
 const ROW_KEY = 'rowKey';
 
 interface CheckBoxConfigProps {
-    onSave(pageJSON: any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {

@@ -114,10 +114,10 @@ export default class TableConfig extends Component<TableConfigProps> {
      */
     handleTableRowDelete = (key) => {
         const dataSource = [...this.state.dataSource];
-        interface itemInterface {
+        interface ItemInterface {
             key: number | string;
         }
-        this.setState({ dataSource: dataSource.filter((item: itemInterface) => item.key !== key) });
+        this.setState({ dataSource: dataSource.filter((item: ItemInterface) => item.key !== key) });
     }
 
     /**

@@ -5,10 +5,10 @@ import './index.scss';
 const FormItem = Form.Item;
 
 interface PageConfigProps {
-    dataSource: any[],
-    onClick: Function,
-    span: number,
-    title: string
+    dataSource: any[];
+    onClick: Function;
+    span: number;
+    title: string;
 }
 
 export default class ComponentType extends Component<PageConfigProps> {
