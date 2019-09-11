@@ -16,7 +16,7 @@ class KSelect extends Component<KSelectProps> {
     };
 
     render() {
-        console.log(this.props);
+        // console.log(this.props);
         const { allowClear, disabled, placeholder, showSearch, options = [] } = this.props;
         const selectProps = {
             allowClear,

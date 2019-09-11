@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
-import { Form, Button, Row, Col, Input, message, Radio } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Alert, Table } from 'antd';
 import PropTypes from 'prop-types';
-const FormItem = Form.Item;
+import Form from 'antd/es/form';
+
+const VALUE = 'value';
+const LABEL = 'label';
+const TEXT = 'text';
+const CHECK = 'checked';
+const DISABLED = 'disabled';
+const OPTIONS = 'options';
+const KEY = 'key';
+const ROW_KEY = 'rowKey';
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -12,65 +21,112 @@ const formItemLayout = {
         sm: { span: 12 },
     }
 };
-const formItemLayoutRadio = {
-    labelCol: {
-        xs: { span: 12 },
-        sm: { span: 10 },
-    },
-    wrapperCol: {
-        xs: { span: 12 },
-        sm: { span: 8 },
-    }
-};
-
-const KEY = 'key';
-const LABEL = 'label';
-const VALUE = 'value';
-
-interface RadioConfigProps{
-    onSave(pageJSON:any): void,
-    pageJSON: any,
-    isRequired:boolean
+interface CheckBoxConfigProps {
+    onSave(pageJSON: any): void,
+    pageJSON: any
 }
 
-export default class RadioConfig extends Component<RadioConfigProps> {
+export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     static propTypes = {
-        onSave: PropTypes.func,
-        form: PropTypes.object
+        onSave: PropTypes.func
     };
 
-    state={
+    state = {
         formData: {
-
+            [OPTIONS]: [{
+                [DISABLED]: false,
+                [VALUE]: '',
+                [TEXT]: '',
+                [ROW_KEY]: 0
+            }],
+            [LABEL]: '',
+            [KEY]: '',
+            isRequired: true,
+            defaultValue: 1
         },
         isTouch: false,
-        choiceNodeList: [{ id: 1}, { id: 2}],
-        choiceNodeId: 2,
-        defaultValue: 1,
-        isRequired: true,
+        errMessage: '',
+        // isRequired: true,
+        // defaultValue: 1
     };
 
-    key: any;
-    label: any;
+    columns = [
+        {
+            title: '表单项Key',
+            dataIndex: 'value',
+            key: 'value',
+            render: (item, record, index) => <Input
+                value={record[VALUE]}
+                placeholder='例如： 选项'
+                onChange={this.handleChange.bind(this, VALUE, index)}
+            />
+        },
+        {
+            title: '表单项名称',
+            dataIndex: 'text',
+            key: 'text',
+            render: (item, record, index) => <Input
+                value={record[TEXT]}
+                placeholder='例如： 姓名'
+                onChange={this.handleChange.bind(this, TEXT, index)}
+            />
+        },
+        // {
+        //     title: '是否默认选中',
+        //     dataIndex: 'check',
+        //     key: 'check',
+        //     render: (item, record, index) =>
+        //         <Switch
+        //             defaultChecked={record[CHECK]}
+        //             checkedChildren="是"
+        //             unCheckedChildren="否"
+        //             onChange={this.handleChange.bind(this, CHECK, index)}
+        //         />
+        // },
+        {
+            title: '是否禁用',
+            dataIndex: 'disabled',
+            key: 'disabled',
+            render: (item, record, index) =>
+                <Switch
+                    defaultChecked={record[DISABLED]}
+                    checkedChildren="是"
+                    unCheckedChildren="否"
+                    onChange={this.handleChange.bind(this, DISABLED, index)}
+                />
+        },
+        {
+            title: '删除',
+            dataIndex: 'delete',
+            key: 'delete',
+            render: (item, record, index) =>
+                this.state.formData.options.length > 1
+                    ? <Col>
+                        <Icon type="close" onClick={() => { this.handleDeleteChekItem(index); }} />
+                    </Col>
+                    : <></>
+
+        }
+    ];
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = components.find(({ configVisible }) => configVisible);
-            const index = current.props.configList.length - 1;
-            if (!current.key) {
-                current.key = 'status';
-            }
-            if (!current.label) {
-                current.label = '状态';
-            }
             return {
-                choiceNodeList: [...current.props.configList],
-                choiceNodeId: current.props.configList[index].id,
                 formData: {
-                    [KEY]: current[KEY],
-                    [LABEL]: current[LABEL]
+                    [OPTIONS]: current.options || [{
+                        [DISABLED]: false,
+                        // [CHECK]: false,
+                        [VALUE]: '',
+                        [TEXT]: '',
+                        [ROW_KEY]: 0
+                    }],
+                    [LABEL]: current.label || '',
+                    [KEY]: current.key || '',
+                    isRequired: state.formData.isRequired,
+                    defaultValue: current.defaultValue || state.formData.defaultValue
                 }
             };
         } else {
@@ -78,209 +134,170 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         }
     }
 
+    /**
+     * @desc 保存修改
+     */
     handleSave = () => {
-        const { formData, choiceNodeList, isRequired, defaultValue } = this.state;
+        const { formData } = this.state;
         const { pageJSON, onSave } = this.props;
-        if (!this.key.state.value) {
-            message.error('表单项Key不可为空');
-            return;
-        } else if (!this.label.state.value) {
-            message.error('表单项名称不可为空');
-            return;
-        }
-
-        const length = choiceNodeList.filter((item:any, index:number) => {
-            return !this[`label${index}`].state.value || this[`value${index}`].state.value === undefined || this[`value${index}`].state.value === '';
-        }).length;
-        if (length > 0) {
-            message.error('选项不可为空');
-            return;
-        }
-        const array:Array<any> = [];
-        this.state.choiceNodeList.forEach((item, index) => {
-            array.push({
-                id: item.id,
-                label: this[`label${index}`].state.value,
-                value: isNaN(this[`value${index}`].state.value) ? this[`value${index}`].state.value : this[`value${index}`].state.value * 1
+        if (!formData.label) {
+            this.setState({
+                errMessage: '请输入表单名称'
             });
-        });
+            return;
+        }
+        for (let i = 0; i < formData.options.length; i++) {
+            const item = formData.options[i];
+            if (!item[TEXT]) {
+                this.setState({
+                    errMessage: '请输入表单项名称'
+                });
+                return;
+            }
+        }
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {
                     ...component,
                     ...formData,
-                    isRequired: isRequired,
-                    props: {
-                        ...component.props,
-                        configList: array,
-                        label: this.label.state.value,
-                        defaultValue: isRequired ? isNaN(defaultValue) ? defaultValue : defaultValue * 1 : undefined,
-                    }
                 };
             }
             return component;
         });
+        // console.log(pageJSON, 'pageJSON');
         onSave && onSave(pageJSON);
     }
 
-    handleChange = (key, e) => {
+    /**
+     * @desc    框内数据发生变化
+     */
+    handleChange = (itemKey, index: number, e) => {
         const { formData } = this.state;
-        const value = e.target.value;
+        const value = typeof e === 'boolean' ? e : e.target.value;
+        switch (itemKey) {
+            case LABEL:
+                formData.label = value;
+                break;
+            case KEY:
+                formData.key = value;
+                break;
+            case TEXT:
+                formData.options[index][itemKey] = value;
+                break;
+            case CHECK:
+            case DISABLED:
+                formData.options[index][itemKey] = value;
+                break;
+            default:
+                formData.options[index][itemKey] = value;
+                break;
+        }
         this.setState({
-            formData: {
-                ...formData,
-                [key]: value
-            },
+            formData,
             isTouch: true
         });
     };
 
-    handleChangeChoice = (key, index, e) => {
-        const { choiceNodeList } = this.state;
-        const value = e.target.value;
-        choiceNodeList[index][key] = value;
-        this.setState({
-            choiceNodeList
+    /**
+     * @desc 添加项
+     */
+    handleAddCheck = (): void => {
+        const { formData } = this.state;
+        formData.options.push({
+            [DISABLED]: false,
+            // [CHECK]: false,
+            [VALUE]: '',
+            [TEXT]: '',
+            [ROW_KEY]: formData.options[formData.options.length - 1][ROW_KEY] + 1
         });
-    };
+        this.setState({
+            formData,
+            isTouch: true
+        });
+    }
+
+    /**
+     * @desc 删除项
+     */
+    handleDeleteChekItem = (index) => {
+        const { formData } = this.state;
+        formData.options.splice(index, 1);
+        this.setState({
+            formData
+        });
+    }
+
+    /**
+     * @desc    错误提示关闭
+     */
+    handleAlertClose = () => {
+        this.setState({
+            errMessage: ''
+        });
+    }
 
     render() {
-        const { formData, choiceNodeId, choiceNodeList, isRequired } = this.state;
-        return <div>
-            <FormItem
-                label={'表单项Key'}
+        const { formData, errMessage } = this.state;
+        return <>
+            {
+                errMessage
+                    ? <Alert message={errMessage}
+                        type='error'
+                        closable
+                        onClose={this.handleAlertClose}
+                    ></Alert>
+                    : null
+            }
+            <br />
+            <Form.Item
                 {...formItemLayout}
+                label='label'
             >
                 <Input
-                    value={formData[KEY]}
-                    placeholder='例如: status'
-                    ref={(ref) => {
-                        this.key = ref;
-                    }}
-                    onChange={this.handleChange.bind(this, KEY)}
+                    value={formData.label}
+                    placeholder='例如： label'
+                    onChange={this.handleChange.bind(this, LABEL, 0)}
                 />
-            </FormItem>
-            <FormItem
-                label={'表单项名称'}
+            </Form.Item>
+            <Form.Item
                 {...formItemLayout}
+                label='表单key'
             >
                 <Input
-                    value={formData[LABEL]}
-                    placeholder='例如: 状态'
-                    ref={(ref) => {
-                        this.label = ref;
-                    }}
-                    onChange={this.handleChange.bind(this, LABEL)}
+                    value={formData.key}
+                    placeholder='例如： key'
+                    onChange={this.handleChange.bind(this, KEY, 0)}
                 />
-            </FormItem>
-            <div>
-                {
-                    choiceNodeList && choiceNodeList.map((item: any, index) => {
-                        return (
-                            <Row key={item.id} type='flex'>
-                                <Col span={10}>
-                                    <FormItem
-                                        label={`选项Label${index + 1}`}
-                                        {...formItemLayoutRadio}
-                                    >
-                                        <Input
-                                            value={item.label}
-                                            ref={(ref) => {
-                                                this[`label${index}`] = ref;
-                                            }}
-                                            placeholder='启用'
-                                            onChange={this.handleChangeChoice.bind(this, LABEL, index)}
-
-                                        />
-                                    </FormItem>
-                                </Col>
-                                <Col span={10}>
-                                    <FormItem
-                                        label={`选项value${index + 1}`}
-                                        {...formItemLayoutRadio}
-                                    >
-                                        <Input
-                                            value={item.value}
-                                            placeholder={'请填入值'}
-                                            ref={(ref) => {
-                                                this[`value${index}`] = ref;
-                                            }}
-                                            onChange={this.handleChangeChoice.bind(this, VALUE, index)}
-                                        />
-                                    </FormItem>
-
-                                </Col>
-                                {
-                                    (index + 1) !== choiceNodeList.length && choiceNodeList.length > 2 && <React.Fragment>
-                                        <Col span={2}>
-                                            <Button shape="circle" size='small' icon='minus' onClick={() => {
-                                                const tempNodeList = [...choiceNodeList];
-                                                tempNodeList.splice(index, 1);
-                                                this.setState({
-                                                    choiceNodeList: tempNodeList,
-                                                    isTouch: true
-                                                });
-                                            }}></Button>
-                                        </Col>
-                                    </React.Fragment>
-                                }
-                                {
-                                    (index + 1) === choiceNodeList.length && <React.Fragment>
-                                        <Col span={2}>
-                                            <Button shape="circle" size='small' icon='plus' onClick={() => {
-                                                // const tempNodeList = [...choiceNodeList, { id: choiceNodeId + 1 }];
-                                                this.setState({
-                                                    choiceNodeList: [...choiceNodeList, { id: choiceNodeId + 1 }],
-                                                    choiceNodeId: choiceNodeId + 1,
-                                                    isTouch: true
-                                                });
-                                            }}></Button>
-                                            {
-                                                choiceNodeList.length && choiceNodeList.length > 2 && <Button className='mar-l-4' shape="circle" size='small' icon='minus' onClick={() => {
-                                                    const tempNodeList = [...choiceNodeList];
-                                                    tempNodeList.splice(index, 1);
-                                                    this.setState({
-                                                        choiceNodeList: tempNodeList,
-                                                        isTouch: true
-                                                    });
-                                                }}></Button>
-                                            }
-                                        </Col>
-                                    </React.Fragment>
-                                }
-                            </Row>
-                        );
-                    })
-                }
-            </div>
-            <FormItem
-            >
-                <Row type='flex' align='middle'>
-                    <Col>
-                        <Button
-                            onClick={this.handleSave}
-                            type='primary'
-                        >确定</Button>
-                    </Col>
-                    <Col span={6} style={{marginLeft: '10px'}}>
-                        <Radio.Group style={{display: 'flex', alignItems: 'center'}} defaultValue={isRequired} onChange={(e) => {
-                            this.setState({
-                                isRequired: e.target.value
-                            });
-                        }}>
-                            <Radio value={true}>必填</Radio>
-                            <Radio value={false}>非必填</Radio>
-                        </Radio.Group>
-                    </Col>
-                    {isRequired && <Col span={5} style={{marginLeft: '10px'}}>
-                        <Input placeholder='默认选中value1' onChange={(e) => {
-                            this.setState({
-                                defaultValue: e.target.value
-                            });
-                        }}/>
-                    </Col>}
-                </Row>
-            </FormItem>
-        </div>;
+            </Form.Item>
+            <Table rowKey="rowKey" dataSource={formData.options} columns={this.columns} bordered pagination={false} />
+            <br />
+            <Row type="flex" justify='space-between'>
+                <Col>
+                    <Button onClick={this.handleAddCheck} type='primary' >添加项</Button>
+                </Col>
+                {/* <Col span={6} style={{marginLeft: '10px'}}>
+                    <Radio.Group style={{display: 'flex', alignItems: 'center'}} defaultValue={formData.isRequired} onChange={(e) => {
+                        const formData = Object.assign({}, this.state.formData, { isRequired: e.target.value });
+                        this.setState({
+                            formData
+                        });
+                    }}>
+                        <Radio value={true}>必填</Radio>
+                        <Radio value={false}>非必填</Radio>
+                    </Radio.Group>
+                </Col>
+                {formData.isRequired && <Col span={5} style={{marginLeft: '10px'}}>
+                    <Input placeholder={`默认选中value${formData.defaultValue}`} onChange={(e) => {
+                        const formData = Object.assign({}, this.state.formData, { defaultValue: e.target.value });
+                        this.setState({
+                            formData
+                        });
+                    }}/>
+                </Col>} */}
+                <Col>
+                    <Button onClick={this.handleSave} type='primary' >确定</Button>
+                </Col>
+            </Row>
+        </>;
     }
 }

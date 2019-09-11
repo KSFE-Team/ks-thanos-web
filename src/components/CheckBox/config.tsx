@@ -89,10 +89,10 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             title: '删除',
             dataIndex: 'delete',
             key: 'delete',
-            render: () =>
+            render: (text, record, index) =>
                 this.state.formData.options.length > 1
                     ? <Col>
-                        <Icon type="close" onClick={(index) => { this.handleDeleteChekItem(index); }} />
+                        <Icon type="close" onClick={() => { this.handleDeleteChekItem(index); }} />
                     </Col>
                     : <></>
 
@@ -104,7 +104,6 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = components.find(({ configVisible }) => configVisible);
-            console.log(current);
             return {
                 formData: {
                     [OPTIONS]: current.options || [{
