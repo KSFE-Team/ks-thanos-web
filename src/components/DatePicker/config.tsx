@@ -1,22 +1,15 @@
 import React, {Component} from 'react';
 import {Form, Radio, Button, Row, Col, Input} from 'antd';
 import PropTypes from 'prop-types';
+import {ALIAS, FORMITEM_LAYOUT} from "Src/utils/constans";
 
 const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: {span: 24},
-        sm: {span: 6},
-    },
-    wrapperCol: {
-        xs: {span: 24},
-        sm: {span: 12},
-    }
-};
 
 const PLACEHOLDER = 'placeholder';
 const FORMAT = 'format';
 const SHOW_TIME = 'showTime';
+const KEY = 'key';
+const LABEL = 'label';
 
 interface ConfigProps {
     pageJSON: any;
@@ -31,11 +24,13 @@ export default class Config extends Component<ConfigProps> {
     state = {
         showTime: true,
         format: 'YYYY-MM-DD',
-        placeholder: ''
+        placeholder: '',
+        key: '',
+        label: ''
     };
 
     handleSave = () => {
-        const {placeholder, showTime, format} = this.state;
+        const {placeholder, showTime, format, key, label} = this.state;
         const {pageJSON, onSave} = this.props;
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
@@ -45,13 +40,15 @@ export default class Config extends Component<ConfigProps> {
                         ...component.props,
                         [PLACEHOLDER]: placeholder,
                         [SHOW_TIME]: showTime,
-                        [FORMAT]: format
+                        [FORMAT]: format,
+                        [KEY]: key,
+                        [LABEL]: label
                     }
                 };
             }
             return component;
         });
-        onSave && onSave(pageJSON);
+        onSave && onSave(pageJSON)
     };
 
     handleChange = (key, e) => {
@@ -62,11 +59,31 @@ export default class Config extends Component<ConfigProps> {
     };
 
     render() {
-        const {placeholder, format, showTime} = this.state;
+        const {placeholder, format, showTime, key, label} = this.state;
         return <div>
             <FormItem
+                label={ALIAS.KEY}
+                {...FORMITEM_LAYOUT}
+            >
+                <Input
+                    value={key}
+                    placeholder='例如： name'
+                    onChange={this.handleChange.bind(this, KEY)}
+                />
+            </FormItem>
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label='label'
+            >
+                <Input
+                    value={label}
+                    placeholder='例如： label'
+                    onChange={this.handleChange.bind(this, LABEL)}
+                />
+            </Form.Item>
+            <FormItem
                 label='是否可选时间'
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 <Radio.Group onChange={this.handleChange.bind(this, SHOW_TIME)} value={showTime}>
                     <Radio value={true}>是</Radio>
@@ -74,8 +91,8 @@ export default class Config extends Component<ConfigProps> {
                 </Radio.Group>
             </FormItem>
             <FormItem
-                label={'输入框提示文字'}
-                {...formItemLayout}
+                label={ALIAS.PLACEHOLDER}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={placeholder}
@@ -83,8 +100,8 @@ export default class Config extends Component<ConfigProps> {
                 />
             </FormItem>
             <FormItem
-                label={'展示的日期格式'}
-                {...formItemLayout}
+                label={'日期格式'}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={format}

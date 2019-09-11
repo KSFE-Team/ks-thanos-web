@@ -1,22 +1,34 @@
-import React, { Component } from 'react';
-import { DatePicker } from 'antd';
+import React, {Component} from 'react';
+import {DatePicker} from 'antd';
 import PropTypes from 'prop-types';
-import { getInitJson, getTools } from './utils';
+import {getInitJson, getTools} from './utils';
 import Config from './config';
 
-class KDatePicker extends Component {
+interface KSDatePicker {
+    label: string;
+}
+
+class KDatePicker extends Component<KSDatePicker> {
     static propTypes = {
-        props: PropTypes.object
+        props: PropTypes.object,
     };
+
+    static defaultProps = {
+        label: '时间选择 '
+    }
 
     render() {
         return (
-            <DatePicker
-                {...this.props}
-                style={{
-                    width: '300px'
-                }}
-            />
+            <div style={{display: 'flex', alignItems: 'center'}}>
+                <span>{`${this.props.label}:`}</span>
+                <DatePicker
+                    {...this.props}
+                    style={{
+                        width: '300px',
+                        marginLeft: '10px'
+                    }}
+                />
+            </div>
         );
     }
 }
