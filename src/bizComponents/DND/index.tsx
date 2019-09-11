@@ -1,5 +1,5 @@
 import React from 'react';
-import {DragDropContext,Droppable,Draggable} from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 
 interface DnDProps {
@@ -76,7 +76,6 @@ export default class DnD extends React.PureComponent<DnDProps> {
     }
 
     render() {
-        console.log(DragDropContext,Droppable,Draggable);
         const { dataSource, direction, droppableId, interval, onRender, emptyNode } = this.props;
         return (
             <DragDropContext
