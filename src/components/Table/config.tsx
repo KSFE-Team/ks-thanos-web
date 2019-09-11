@@ -34,7 +34,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         tableCount: 0, // table key
     };
 
-    public getDerivedStateFromProps(props, state) {
+    static getDerivedStateFromProps(props, state) {
         const newState: any = {};
         if (!state.editDataFlag) {
             const currentComponent = props.pageJSON.components.find((item, index) => {
@@ -80,13 +80,13 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc Edit the table automatic save
      * @param { Object } row (current row data)
      */
-    public handleTableInputSave = (row) => {
+    handleTableInputSave = (row) => {
         interface ItemInterface {
             key: number | string;
         }
         const newData: any[] = [...this.state.dataSource];
         const index = newData.findIndex((item: ItemInterface) => row.key === item.key);
-        const item: object = newData[index];
+        const item = newData[index];
         const newItem = {...item, ...row};
         newData.splice(index, 1, newItem);
         this.setState({ dataSource: newData });
@@ -95,7 +95,7 @@ export default class TableConfig extends Component<TableConfigProps> {
     /**
      * @desc add one row to the table
      */
-    public handleAdd = () => {
+    handleAdd = () => {
         let { tableCount, dataSource } = this.state;
         const newData = {
             key: ++tableCount,
@@ -112,7 +112,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc delete one row to the table
      * @param { String } key (table key)
      */
-    public handleTableRowDelete = (key) => {
+    handleTableRowDelete = (key) => {
         const dataSource = [...this.state.dataSource];
         interface itemInterface {
             key: number | string;
@@ -123,7 +123,7 @@ export default class TableConfig extends Component<TableConfigProps> {
     /**
      * @desc save table data
      */
-    public saveTableData = () => {
+    saveTableData = () => {
         if (!this.checkData()) { return; }
         const pageJSON = this.props.pageJSON;
         const { currentComponent, api, method, dataSource } = this.state;
@@ -150,7 +150,7 @@ export default class TableConfig extends Component<TableConfigProps> {
     /**
      * @desc check require option
      */
-    public checkData = () => {
+    checkData = () => {
         const { api, method, dataSource, currentComponent } = this.state;
         if (!api) {
             message.error('api不可为空');
@@ -175,7 +175,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc add a search component
      * @param { Object } e event
      */
-    public addSearchComponent = (e) => {
+    addSearchComponent = (e) => {
         const pageJSON = this.props.pageJSON;
         if (e.target.checked) {
             const { currentComponentIdx, currentComponent } = this.state;
@@ -204,7 +204,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc method change event
      * @param { String } value
      */
-    public methodChange = (value) => {
+    methodChange = (value) => {
         this.setState({
             method: value,
         });
@@ -214,7 +214,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc api input change event
      * @param { Object } event
      */
-    public apiInputChange = (event) => {
+    apiInputChange = (event) => {
         const {value} = event.target;
         this.setState({
             api: value,
@@ -225,7 +225,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc state name input change event
      * @param { Object } event
      */
-    public stateNameInputChange = (event) => {
+    stateNameInputChange = (event) => {
         const {value} = event.target;
         const currentComponent = {
             ...this.state.currentComponent,
@@ -236,7 +236,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         });
     }
 
-    public render() {
+    render() {
         const formItemLayout = {
             labelCol: {span: 8},
             wrapperCol: {span: 16},
@@ -343,15 +343,15 @@ interface EditableCellProps {
 }
 
 class EditableCell extends React.Component<EditableCellProps> {
-    public state = {
+    state = {
         editing: false,
     };
 
-    public input: any;
+    input: any;
 
-    public form: any;
+    form: any;
 
-    public toggleEdit = () => {
+    toggleEdit = () => {
         const editing = !this.state.editing;
         this.setState({ editing }, () => {
             if (editing) {
@@ -360,7 +360,7 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     }
 
-    public save = (e) => {
+    save = (e) => {
         const { record, handleSave } = this.props;
         this.form.validateFields((error, values) => {
             if (error && error[e.currentTarget.id]) {
@@ -371,7 +371,7 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     }
 
-    public renderCell = (form) => {
+    renderCell = (form) => {
         this.form = form;
         const { children, dataIndex, record, title } = this.props;
         const { editing } = this.state;
@@ -398,7 +398,7 @@ class EditableCell extends React.Component<EditableCellProps> {
         );
     }
 
-    public render() {
+    render() {
         const {
             editable,
             children,
