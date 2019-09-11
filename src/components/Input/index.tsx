@@ -6,7 +6,10 @@ import InputConfig from './config';
 import { FORMITEM_LAYOUT } from 'Src/utils/constans';
 
 interface KInputProps {
-    config: any
+    config: any,
+    generatePage: {
+        pageJSON: any
+    }
 }
 
 class KInput extends Component<KInputProps> {
@@ -15,7 +18,7 @@ class KInput extends Component<KInputProps> {
     };
 
     render() {
-        const { config, ...OtherProps } = this.props;
+        const { config, generatePage, ...OtherProps } = this.props;
         const { label = '' } = config;
         return (
             <Form.Item

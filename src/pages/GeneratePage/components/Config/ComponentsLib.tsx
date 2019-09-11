@@ -42,9 +42,9 @@ export default class ComponentsLib extends Component<PageConfigProps> {
     handleClick = (componentName: string) => {
         const { pageJSON } = this.props.generatePage;
         const { components } = pageJSON;
-        console.log('components', components);
-        if (components.some(({componentName, selected}) => componentName === 'Form' && selected)) {
+        if (components.some(({ componentName, componentSelected }) => componentName === 'Form' && componentSelected)) {
             actions.generatePage.insertFormComponent(ALL_TOOLS[componentName].getInitJson());
+            return;
         }
         actions.generatePage.insertComponent(ALL_TOOLS[componentName].getInitJson());
     }
@@ -52,7 +52,7 @@ export default class ComponentsLib extends Component<PageConfigProps> {
     /**
      * 过滤组件
      */
-    fliterComponent = (tools) => {
+    fliterComponent = (tools: any) => {
         const { search } = this.state;
         return tools.filter(({ name }) => name.includes(search)).reduce((prev, record) => {
             const lastItem = prev[prev.length - 1];

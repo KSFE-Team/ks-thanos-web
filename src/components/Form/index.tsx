@@ -2,10 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import FormConfig from './config';
+import PageRender from 'Src/pages/GeneratePage/components/PageRender';
 import './index.scss';
 
 interface KFormProps {
-    config: any
+    config: any,
+    generatePage: {
+        pageJSON: any
+    }
 }
 
 class KForm extends Component<KFormProps> {
@@ -13,14 +17,26 @@ class KForm extends Component<KFormProps> {
         props: PropTypes.object
     };
 
-    render() {
+    renderChildren = () => {
         const { config } = this.props;
-        const { selected } = config;
+        if (config.components && config.components.length) {
+            return <PageRender
+                dataSource={config.components}
+                generatePage={this.props.generatePage}
+            />;
+        } else {
+            return null;
+        }
+    }
+
+    render() {
         return (
             <div
-                className={selected ? 'form-container form-selected' : 'form-container'}
+                className={'form-container'}
             >
-                <div className='form-container-background'></div>
+                <div className='form-container-background'>
+                    {this.renderChildren()}
+                </div>
             </div>
         );
     }

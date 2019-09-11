@@ -54,4 +54,42 @@ export function toTreeData(data, {
     }
     run(tree);
     return tree;
-}
+};
+
+/**
+     * 修改配置显隐藏
+     */
+export const changeConfig = (id: string, components: any[], config: any) => {
+    return components.map((item) => {
+        if (item.id === id) {
+            item = {
+                ...item,
+                ...config
+            };
+        } else if (item.components) {
+            item.components = changeConfig(id, item.components, config);
+        }
+        return item;
+    });
+};
+
+/**
+ * 找到当前显示的
+ * @param components
+ */
+export const findComponent = (components: any[]) => {
+    let result: any;
+    components.forEach((item: any) => {
+        if (!result) {
+            if (item.configVisible) {
+                result = item;
+            } else if (item.components) {
+                const tempResult = findComponent(item.components);
+                if (tempResult) {
+                    result = tempResult;
+                }
+            }
+        }
+    });
+    return result;
+};

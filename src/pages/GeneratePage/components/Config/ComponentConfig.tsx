@@ -2,12 +2,27 @@ import React, {Component} from 'react';
 import {actions} from 'kredux';
 import { Drawer } from 'antd';
 import { ALL_TOOLS } from 'Components';
+import { changeConfig } from 'Src/utils';
 
 interface ComponentConfigProps{
     generatePage: {pageJSON: any},
 
 }
 export default class ComponentConfig extends Component<ComponentConfigProps> {
+
+    state = {
+        visible: false,
+        component: {
+            id: '',
+            componentName: ''
+        }
+    }
+
+    componentDidMount() {
+        this.setState({
+            ...this.getShowConfig()
+        });
+    }
 
     /**
      * 获取显示配置的组件
@@ -17,20 +32,27 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
             const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
         }
-        let visible = false;
-        components.forEach((component) => {
+        let visible = false,
+            component;
+        components.forEach((item: any) => {
             if (!visible) {
-                let childVisible = false;
-                if (component.components) {
-                    childVisible = this.getShowConfig(component.components).visible;
-                }
-                if (component.configVisible || childVisible) {
+                if (item.configVisible) {
                     visible = true;
+                    component = item;
+                    return;
+                }
+                if (item.components) {
+                    const config = this.getShowConfig(item.components);
+                    if (config.visible) {
+                        visible = true;
+                        component = config.component;
+                    }
                 }
             }
         });
         return {
             visible,
+            component
         };
     };
 
@@ -39,13 +61,11 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
             const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
         }
-        components.forEach((component) => {
-            if ('configVisible' in component) {
-                component.configVisible = false;
-            }
-        });
+        const { component } = this.state;
         this.setJSON({
-            components
+            components: changeConfig(component.id, components, {
+                configVisible: false
+            })
         });
     };
 
@@ -75,9 +95,9 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
     };
 
     renderConfig = () => {
-        const {pageJSON} = this.props.generatePage;
-        const {components} = pageJSON;
-        const Component = ALL_TOOLS[(components.find(({configVisible}) => configVisible) || {}).componentName];
+        const { pageJSON } = this.props.generatePage;
+        const { component } = this.state;
+        const Component = ALL_TOOLS[(component || {}).componentName];
         if (Component) {
             const Config = Component.config;
             const commonProps = {
@@ -94,6 +114,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
     };
 
     render() {
+        const { visible } = this.state;
         return (
             <Drawer
                 width={700}
@@ -103,7 +124,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
                 onClose={() => {
                     this.onClose();
                 }}
-                visible={this.getShowConfig().visible}
+                visible={visible}
             >
                 {this.renderConfig()}
             </Drawer>

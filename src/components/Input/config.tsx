@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS } from 'Src/utils/constans';
+import {findComponent} from 'Src/utils';
+
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -31,19 +33,21 @@ export default class InputConfig extends Component<InputConfigProps> {
         formData: {
 
         },
-        isTouch: false
+        isTouch: false,
+        current: {}
     };
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL]
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -69,7 +73,7 @@ export default class InputConfig extends Component<InputConfigProps> {
         onSave && onSave(pageJSON);
     }
 
-    handleChange = (key, e) => {
+    handleChange = (key: string, e: any) => {
         const { formData } = this.state;
         const value = e.target.value;
         this.setState({

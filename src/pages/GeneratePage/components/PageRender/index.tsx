@@ -3,6 +3,7 @@ import { actions } from 'kredux';
 import { Icon, Modal } from 'antd';
 import { DND } from 'BizComponents';
 import { ALL_TOOLS } from 'Components';
+import { changeConfig } from 'Src/utils';
 import './style.scss';
 const Confirm = Modal.confirm;
 
@@ -10,7 +11,7 @@ interface PageRenderProps{
     generatePage: {
         pageJSON: any
     },
-
+    dataSource?: any[]
 }
 
 export default class PageRender extends Component<PageRenderProps> {
@@ -29,42 +30,54 @@ export default class PageRender extends Component<PageRenderProps> {
 
         const componentProps = {
             ...(props || {}),
-            config: otherProps
+            config: otherProps,
+            generatePage: this.props.generatePage
         };
         return <ComponentName {...componentProps} />;
     };
 
     /**
-     * 显示配置界面
+     * 点击事件
      */
-    showConfig = (index: number) => {
+    handleClick = (item: any, e: any) => {
+        e.stopPropagation();
+        const { id } = item;
         const { pageJSON } = this.props.generatePage;
         const { components } = pageJSON;
-        components[index].configVisible = true;
-        components.map((item, idx: number) => {
-            if (idx === index) {
-                item.configVisible = true;
-            } else {
-                item.configVisible = false;
-            }
-            return item;
-        });
+        const config = {
+            componentSelected: true,
+            configVisible: true
+        };
         this.setJSON({
-            components
+            components: changeConfig(id, components, config)
         });
-    };
+    }
+
+    /**
+     * 删除组件
+     */
+    filterComponent = (id: string, components: any[]) => {
+        return components.filter((item) => {
+            if (id === item.id) {
+                return false;
+            } else if (item.components) {
+                item.components = this.filterComponent(id, item.components);
+            }
+            return true;
+        });
+    }
 
     /**
      * 设置redux
      */
-    setRedux = (redux) => {
+    setRedux = (redux: any) => {
         actions.generatePage.setReducers(redux);
     };
 
     /**
      * 设置页面配置
      */
-    setJSON = (json) => {
+    setJSON = (json: any) => {
         const { pageJSON } = this.props.generatePage;
         this.setRedux({
             pageJSON: {
@@ -76,20 +89,20 @@ export default class PageRender extends Component<PageRenderProps> {
 
     render() {
         const { pageJSON } = this.props.generatePage;
-        const { components: dataSource } = pageJSON;
+        const { components } = pageJSON;
+        const dataSource = this.props.dataSource || components;
         return (
             <div
                 className='render-page'
             >
                 <DND
-                    onRender={(data, index) => {
-                        console.log('data', data);
+                    onRender={(data) => {
                         return (
                             <div
-                                onClick={() => {
-                                    this.showConfig(index);
+                                onClick={(e) => {
+                                    this.handleClick(data, e);
                                 }}
-                                className='page-item'
+                                className={data.componentSelected ? 'page-item component-selected' : 'page-item'}
                             >
                                 {this.renderComponent(data)}
                                 <div className='item-close'
@@ -100,7 +113,7 @@ export default class PageRender extends Component<PageRenderProps> {
                                             content: '删除后其配置会消失，请谨慎操作',
                                             onOk: () => {
                                                 this.setJSON({
-                                                    components: dataSource.filter((record, idx) => idx !== index)
+                                                    components: this.filterComponent(data.id, components)
                                                 });
                                             }
                                         });

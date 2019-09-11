@@ -1,3 +1,5 @@
+import { FORM_TYPES } from './constants';
+const [{ key: NORMAL_FORM }] = FORM_TYPES;
 /**
  * 获取初始化JSON
  */
@@ -6,6 +8,7 @@ export const getInitJson = () => ({
     componentName: 'Form',
     source: 'antd',
     default: false,
+    type: NORMAL_FORM,
     key: '',
     label: ''
 });

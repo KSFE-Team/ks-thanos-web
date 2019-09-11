@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Checkbox } from 'antd';
+import { Form, Input, Button, Row, Col, Radio } from 'antd';
+import { FORM_TYPES } from './constants';
 import PropTypes from 'prop-types';
 const FormItem = Form.Item;
+const RadioGroup = Radio.Group;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -14,7 +16,7 @@ const formItemLayout = {
 };
 
 const STATE_NAME = 'stateName';
-const SELECTED = 'selected';
+const TYPE = 'type';
 
 interface FormConfigProps{
     onSave(pageJSON:any): void,
@@ -41,7 +43,7 @@ export default class FormConfig extends Component<FormConfigProps> {
             return {
                 formData: {
                     [STATE_NAME]: current[STATE_NAME],
-                    [SELECTED]: current[SELECTED]
+                    [TYPE]: current[TYPE]
                 }
             };
         } else {
@@ -98,13 +100,21 @@ export default class FormConfig extends Component<FormConfigProps> {
                 label={'是否选中'}
                 {...formItemLayout}
             >
-                <Checkbox
-                    checked={formData[SELECTED]}
+                <RadioGroup
+                    value={formData[TYPE]}
                     onChange={(e) => {
-                        const value = e.target.checked;
-                        this.handleChange(SELECTED, value);
+                        const value = e.target.value;
+                        this.handleChange(TYPE, value);
                     }}
-                />
+                >
+                    {
+                        FORM_TYPES.map(({key, name}) => {
+                            return (
+                                <Radio key={key} value={key}>{name}</Radio>
+                            );
+                        })
+                    }
+                </RadioGroup>
             </FormItem>
             <FormItem>
                 <Row>

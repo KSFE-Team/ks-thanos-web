@@ -36,23 +36,22 @@ export default {
                 },
             });
         },
-        insertFormComponent: (payload, getState) => {
+        insertFormComponent: (payload: any, getState) => {
             const state = getState();
             const { generatePage } = state;
             let { pageJSON } = generatePage;
             const { components } = pageJSON;
-            const FormIndex = components.findIndex(({componentName, selected}) => componentName === 'Form' && selected);
+            const FormIndex = components.findIndex(({ componentName, componentSelected }) => componentName === 'Form' && componentSelected);
             components[FormIndex] = {
                 ...components[FormIndex],
-                children: [
-                    ...components[FormIndex].children || [],
+                components: [
+                    ...components[FormIndex].components || [],
                     {
                         ...payload,
                         id: getUniqueID(),
                     }
                 ]
             };
-
             pageJSON = {
                 ...pageJSON,
                 components: [

@@ -28,9 +28,41 @@ class GeneratePage extends Component<GeneratePageProps> {
         });
     }
 
+    /**
+     * 获取显示配置的组件
+     */
+    getShowConfig = (components?) => {
+        if (!components) {
+            const { pageJSON } = this.props.generatePage;
+            components = pageJSON.components;
+        }
+        let visible = false,
+            component;
+        components.forEach((item: any) => {
+            if (!visible) {
+                if (item.configVisible) {
+                    visible = true;
+                    component = item;
+                    return;
+                }
+                if (item.components) {
+                    const config = this.getShowConfig(item.components);
+                    if (config.visible) {
+                        visible = true;
+                        component = config.component;
+                    }
+                }
+            }
+        });
+        return {
+            visible,
+            component
+        };
+    };
+
     render() {
         const { undoDisable, redoDisable } = this.props.operate;
-
+        const visible = this.getShowConfig().visible;
         return (
             <div className="thanos-generate-page-container">
                 <Header showTopToolbar={true} />
@@ -57,13 +89,15 @@ class GeneratePage extends Component<GeneratePageProps> {
                     <div className="page-shower">
                         <div className="canvas">
                             <div className="thanos-page">
+                                <div className="thanos-page-operation">
+                                    <ComponentsLib {...this.props} />
+                                </div>
                                 <div className="thanos-page-container">
                                     <PageRender {...this.props} />
                                 </div>
-                                <div className="thanos-page-operation">
-                                    <ComponentsLib {...this.props}/>
-                                </div>
-                                <ComponentConfig {...this.props} />
+                                {
+                                    visible && <ComponentConfig {...this.props} />
+                                }
                             </div>
                         </div>
                     </div>
