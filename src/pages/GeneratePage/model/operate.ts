@@ -11,7 +11,7 @@ export default {
         redoDisable: true
     },
     reducers: {
-        undo: (action, getState, dispatch) => {
+        undo: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { history, operateId } = operate;
@@ -31,7 +31,7 @@ export default {
                 redoDisable: operateId > history.length,
             });
         },
-        redo: (action, getState, dispatch) => {
+        redo: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { history, operateId } = operate;
@@ -48,7 +48,7 @@ export default {
                 isRedo: true
             });
         },
-        save: (action, getState, dispatch) => {
+        save: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { operateId } = operate;
@@ -58,7 +58,7 @@ export default {
             });
             actions.operate.end();
         },
-        saveWithOperateId: (action, getState, dispatch) => {
+        saveWithOperateId: (action, getState) => {
             const { operateId, modelName, data } = action;
             const state = getState();
 
@@ -79,7 +79,7 @@ export default {
                 history
             });
         },
-        end: (action, getState, dispatch) => {
+        end: (action, getState) => {
             const state = getState();
             const history = state.operate.history;
             const operateId = Number(state.operate.operateId) + 1;

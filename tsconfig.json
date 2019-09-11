@@ -11,12 +11,13 @@
     "alwaysStrict": true,
     "outDir": "output",
     "rootDir": "./",
-    "noUnusedLocals": true,
     "allowJs": true,
     "experimentalDecorators": true,
     "baseUrl": "./src",
     "jsx": "react",
     "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
     "paths": {
       "Src/*": [
         "./*"
