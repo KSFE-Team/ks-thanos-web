@@ -322,6 +322,11 @@ export default class TableConfig extends Component<TableConfigProps> {
                 </Row>
                 <Row style={{marginTop: '20px'}} type="flex" justify="end" gutter={1}>
                     <Col>
+                        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                            Add a row
+                        </Button>
+                    </Col>
+                    <Col offset={1}>
                         <Button type="primary" onClick={this.saveTableData}>
                             确定
                         </Button>
