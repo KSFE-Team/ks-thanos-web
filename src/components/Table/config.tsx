@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { actions } from 'kredux';
-import { Form, Input, Table, Button, Row, Col, Checkbox, Select, message } from 'antd';
-import { getUniqueID } from '../../utils';
 import { DATA_ENTRY } from 'Components';
+import { Form, Input, Table, Button, Row, Col, Checkbox, Select, message } from 'antd';
+import { getUniqueID } from 'Src/utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -14,31 +14,33 @@ const EditableRow = ({ form, index, ...props }: any) => (
 const EditableFormRow = Form.create()(EditableRow);
 
 interface TableConfigProps {
-    pageJSON: any,
-    onSave(pageJSON:any): any,
+    pageJSON: any;
+    onSave(pageJSON: any): any;
 }
 
-export default class TableConfig extends React.Component<TableConfigProps> {
+export default class TableConfig extends Component<TableConfigProps> {
 
     state = {
-        dataSource: [], // table data
-        tableCount: 0, // table key
-        searchComponentChecked: false, // checkbox search component check flag
         api: '', // api path
-        method: 'GET', // request method
         currentComponent: {
+            id: '',
             stateName: '',
-            id: ''
         }, // current component info
-        currentComponentIdx: '' // current component index
+        currentComponentIdx: '', // current component index
+        dataSource: [], // table data
+        editDataFlag: false,
+        method: 'GET', // request method
+        searchComponentChecked: false, // checkbox search component check flag
+        tableCount: 0, // table key
     };
 
-    static getDerivedStateFromProps(props, state) {
+    public getDerivedStateFromProps(props, state) {
         const newState: any = {};
-        if (state.dataSource.length === 0 || !state.api) {
+        if (!state.editDataFlag) {
             const currentComponent = props.pageJSON.components.find((item, index) => {
                 if (item.configVisible) {
                     newState.currentComponentIdx = index;
+                    newState.editDataFlag = true;
                 }
                 return item.configVisible;
             });
@@ -53,9 +55,9 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                 if (state.dataSource.length === 0) {
                     const dataSource = currentComponent.props.columns.map((item, index) => {
                         return {
-                            key: index,
                             dataKey: item.dataIndex,
-                            tableName: item.title
+                            key: index,
+                            tableName: item.title,
                         };
                     });
                     newState.dataSource = dataSource;
@@ -78,21 +80,22 @@ export default class TableConfig extends React.Component<TableConfigProps> {
      * @desc Edit the table automatic save
      * @param { Object } row (current row data)
      */
-    handleTableInputSave = (row) => {
-        interface itemInterface{
-            key: number|string
+    public handleTableInputSave = (row) => {
+        interface ItemInterface {
+            key: number | string;
         }
-        const newData = [...this.state.dataSource];
-        const index = newData.findIndex((item:itemInterface) => row.key === item.key);
-        const item = newData[index];
-        newData.splice(index, 1, Object.assign({}, item, row));
+        const newData: any[] = [...this.state.dataSource];
+        const index = newData.findIndex((item: ItemInterface) => row.key === item.key);
+        const item: object = newData[index];
+        const newItem = {...item, ...row};
+        newData.splice(index, 1, newItem);
         this.setState({ dataSource: newData });
-    };
+    }
 
     /**
      * @desc add one row to the table
      */
-    handleAdd = () => {
+    public handleAdd = () => {
         let { tableCount, dataSource } = this.state;
         const newData = {
             key: ++tableCount,
@@ -103,25 +106,25 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             dataSource: [...dataSource, newData],
             tableCount,
         });
-    };
+    }
 
     /**
      * @desc delete one row to the table
      * @param { String } key (table key)
      */
-    handleTableRowDelete = (key) => {
+    public handleTableRowDelete = (key) => {
         const dataSource = [...this.state.dataSource];
-        interface itemInterface{
-            key: number|string
+        interface itemInterface {
+            key: number | string;
         }
-        this.setState({ dataSource: dataSource.filter((item:itemInterface) => item.key !== key) });
-    };
+        this.setState({ dataSource: dataSource.filter((item: itemInterface) => item.key !== key) });
+    }
 
     /**
      * @desc save table data
      */
-    saveTableData = () => {
-        if (!this.checkData()) return;
+    public saveTableData = () => {
+        if (!this.checkData()) { return; }
         const pageJSON = this.props.pageJSON;
         const { currentComponent, api, method, dataSource } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
@@ -129,25 +132,25 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                 item.stateName = currentComponent.stateName;
                 item.props.columns = dataSource.map((item: any) => ({
                     title: item.tableName,
-                    dataIndex: item.dataKey
+                    dataIndex: item.dataKey,
                 }));
 
                 item.dependencies = {
                     type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
                     responseType: 'list', // 接口返回类型， // list 列表， object 对象
                     api, // 接口地址
-                    method
+                    method,
                 };
             }
             return item;
         });
         this.props.onSave(pageJSON);
-    };
+    }
 
     /**
      * @desc check require option
      */
-    checkData = () => {
+    public checkData = () => {
         const { api, method, dataSource, currentComponent } = this.state;
         if (!api) {
             message.error('api不可为空');
@@ -166,20 +169,20 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             return false;
         }
         return true;
-    };
+    }
 
     /**
      * @desc add a search component
      * @param { Object } e event
      */
-    addSearchComponent = (e) => {
+    public addSearchComponent = (e) => {
         const pageJSON = this.props.pageJSON;
         if (e.target.checked) {
             const { currentComponentIdx, currentComponent } = this.state;
             const InputData = {
                 ...DATA_ENTRY.Input.getInitJson(),
                 id: getUniqueID(),
-                parentId: currentComponent.id
+                parentId: currentComponent.id,
             };
 
             pageJSON.components.splice(currentComponentIdx, 0, InputData);
@@ -193,46 +196,47 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             actions.generatePage.setReducers(pageJSON);
         }
         this.setState({
-            searchComponentChecked: e.target.checked
+            searchComponentChecked: e.target.checked,
         });
-    };
+    }
 
     /**
      * @desc method change event
      * @param { String } value
      */
-    methodChange = (value) => {
+    public methodChange = (value) => {
         this.setState({
-            method: value
+            method: value,
         });
-    };
+    }
 
     /**
      * @desc api input change event
      * @param { Object } event
      */
-    apiInputChange = (event) => {
+    public apiInputChange = (event) => {
         const {value} = event.target;
         this.setState({
-            api: value
+            api: value,
         });
-    };
+    }
 
     /**
      * @desc state name input change event
      * @param { Object } event
      */
-    stateNameInputChange = (event) => {
+    public stateNameInputChange = (event) => {
         const {value} = event.target;
+        const currentComponent = {
+            ...this.state.currentComponent,
+            stateName: value,
+        };
         this.setState({
-            currentComponent: {
-                ...this.state.currentComponent,
-                stateName: value
-            }
+            currentComponent,
         });
-    };
+    }
 
-    render() {
+    public render() {
         const formItemLayout = {
             labelCol: {span: 8},
             wrapperCol: {span: 16},
@@ -243,24 +247,28 @@ export default class TableConfig extends React.Component<TableConfigProps> {
             {
                 title: '表头名称',
                 dataIndex: 'tableName',
-                editable: true
+                editable: true,
             },
             {
                 title: '接口字段',
                 dataIndex: 'dataKey',
-                editable: true
+                editable: true,
             },
             {
                 title: 'operation',
                 dataIndex: 'operation',
                 render: (text, record) => {
+                    console.log(text, record);
                     return this.state.dataSource.length >= 2 ? (
-                        <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
+                        <div>
+                            <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
                                 Delete
-                        </Button>
+                            </Button>
+                        </div>
+
                     ) : null;
-                }
-            }
+                },
+            },
         ];
         const components = {
             body: {
@@ -306,7 +314,7 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                 <Table
                     components={components}
                     dataSource={dataSource}
-                    bordered
+                    bordered={true}
                     columns={columns}
                     pagination={false}
                 />
@@ -315,11 +323,6 @@ export default class TableConfig extends React.Component<TableConfigProps> {
                 </Row>
                 <Row style={{marginTop: '20px'}} type="flex" justify="end" gutter={1}>
                     <Col>
-                        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
-                            Add a row
-                        </Button>
-                    </Col>
-                    <Col offset={1}>
                         <Button type="primary" onClick={this.saveTableData}>
                             确定
                         </Button>
@@ -330,34 +333,34 @@ export default class TableConfig extends React.Component<TableConfigProps> {
     }
 }
 
-interface EditableCellProps{
-    record: any,
-    handleSave(params: any): void,
-    dataIndex: number,
-    title: string,
-    editable: boolean,
-    index: number
+interface EditableCellProps {
+    record: any;
+    dataIndex: number;
+    title: string;
+    editable: boolean;
+    index: number;
+    handleSave(params: any): void;
 }
 
 class EditableCell extends React.Component<EditableCellProps> {
-    state = {
+    public state = {
         editing: false,
     };
 
-    input: any;
+    public input: any;
 
-    form: any;
+    public form: any;
 
-    toggleEdit = () => {
+    public toggleEdit = () => {
         const editing = !this.state.editing;
         this.setState({ editing }, () => {
             if (editing) {
                 this.input.focus();
             }
         });
-    };
+    }
 
-    save = (e) => {
+    public save = (e) => {
         const { record, handleSave } = this.props;
         this.form.validateFields((error, values) => {
             if (error && error[e.currentTarget.id]) {
@@ -366,9 +369,9 @@ class EditableCell extends React.Component<EditableCellProps> {
             this.toggleEdit();
             handleSave({ ...record, ...values });
         });
-    };
+    }
 
-    renderCell = (form) => {
+    public renderCell = (form) => {
         this.form = form;
         const { children, dataIndex, record, title } = this.props;
         const { editing } = this.state;
@@ -393,9 +396,9 @@ class EditableCell extends React.Component<EditableCellProps> {
                 {children}
             </div>
         );
-    };
+    }
 
-    render() {
+    public render() {
         const {
             editable,
             children,

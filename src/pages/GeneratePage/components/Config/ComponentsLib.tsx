@@ -46,9 +46,9 @@ export default class ComponentsLib extends Component<PageConfigProps> {
     /**
      * 过滤组件
      */
-    fliterComponent = (tools) => {
+    filterComponent = (tools) => {
         const { search } = this.state;
-        return tools.filter(({ name }) => name.includes(search)).reduce((prev, record) => {
+        return tools.filter(({ name }) => name.toLocaleLowerCase().includes(search.toLocaleLowerCase())).reduce((prev, record) => {
             const lastItem = prev[prev.length - 1];
             if (!lastItem || lastItem.length === SPLIT_COUNT) {
                 prev.push([record]);
@@ -61,8 +61,8 @@ export default class ComponentsLib extends Component<PageConfigProps> {
 
     render() {
         const span = 24 / SPLIT_COUNT;
-        const dataDisplayTools = this.fliterComponent(TOOLS.DATA_DISPLAY);
-        const dataEntryTools = this.fliterComponent(TOOLS.DATA_ENTRY);
+        const dataDisplayTools = this.filterComponent(TOOLS.DATA_DISPLAY);
+        const dataEntryTools = this.filterComponent(TOOLS.DATA_ENTRY);
         return (
             <div className='thanos-page-config'>
                 <div className='thanos-page-config-title'>组件库</div>
