@@ -21,4 +21,5 @@ export const FORMITEM_LAYOUT = {
 export const ALIAS = {
     KEY: '表单Key', // 表单绑定key
     LABEL: '表单Label', // 表单对应展示名称
+    PLACEHOLDER: 'placeholder',
 };
