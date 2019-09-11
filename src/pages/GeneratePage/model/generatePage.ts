@@ -11,7 +11,7 @@ export default {
         }
     },
     reducers: {
-        insertComponent: (payload, getState, dispatch) => {
+        insertComponent: (payload, getState) => {
             const state = getState();
             const { generatePage } = state;
             let { pageJSON } = generatePage;
