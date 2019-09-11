@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
+import {ALIAS} from 'Src/utils/constans';
 
 const FormItem = Form.Item;
 const formItemLayout = {
@@ -16,6 +17,7 @@ const formItemLayout = {
 };
 const LABEL = 'label';
 const DEFAULT_VALUE = 'defaultValue';
+const PLACEHOLDER = 'placeholder';
 const MIN_VALUE = 'min';
 const MAX_VALUE = 'max';
 const DISABLED = 'disabled';
@@ -92,7 +94,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         const { formData } = this.state;
         return <div>
             <FormItem
-                label={'key'}
+                label={ALIAS.KEY}
                 {...formItemLayout}
             >
                 {
@@ -109,12 +111,26 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 }
             </FormItem>
             <FormItem
-                label={'label'}
+                label={ALIAS.LABEL}
                 {...formItemLayout}
             >
                 {
                     getFieldDecorator(LABEL, {
                         initialValue: formData[LABEL]
+                    })(
+                        <Input
+                            placeholder='例如:inputnumber'
+                        />
+                    )
+                }
+            </FormItem>
+            <FormItem
+                label={ALIAS.PLACEHOLDER}
+                {...formItemLayout}
+            >
+                {
+                    getFieldDecorator(PLACEHOLDER, {
+                        initialValue: formData[PLACEHOLDER]
                     })(
                         <Input
                             placeholder='例如:inputnumber'

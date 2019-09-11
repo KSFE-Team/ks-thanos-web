@@ -7,6 +7,8 @@ import { FORMITEM_LAYOUT } from 'Src/utils/constans';
 
 interface KInputNumberProps {
     label: string;
+    config: any;
+    defaultValue: number;
 }
 
 class KInputNumber extends Component<KInputNumberProps> {
@@ -19,13 +21,21 @@ class KInputNumber extends Component<KInputNumberProps> {
     };
 
     render() {
+        const {config, ...other} = this.props;
+        const { label = '' } = config;
+        let props: { value?: number; [name: string]: any } = {};
+        props = other;
+        if ('defaultValue' in other) {
+            props.value = other.defaultValue;
+            delete props.defaultValue;
+        }
         return (
             <Form.Item
                 {...FORMITEM_LAYOUT}
                 style={{marginBottom: 0}}
-                label={this.props.label}>
+                label={label}>
                 <InputNumber
-                    {...this.props}
+                    {...props}
                 />
             </Form.Item>
 
