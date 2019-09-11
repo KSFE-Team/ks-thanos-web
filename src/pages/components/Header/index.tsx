@@ -20,7 +20,7 @@ class Header extends Component<HeaderProps> {
     render() {
         const { showTopToolbar = false, generatePage } = this.props;
         const { pageJSON } = generatePage;
-        // console.log(JSON.stringify(formatJSON(pageJSON)));
+        console.log(pageJSON ? JSON.stringify(formatJSON(pageJSON)) : 'home');
         return (
             <div className="thanos-common">
                 <div className="header">

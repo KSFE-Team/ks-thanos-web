@@ -148,6 +148,24 @@ class Config extends Component<ConfigProps, ConfigState> {
                 }
 
             </FormItem>
+            <FormItem
+                label={'表单项名称'}
+                {...formItemLayout}
+            >
+                {
+                    getFieldDecorator('label', {
+                        rules: [
+                            {required: true, message: '请输入表单项名称'}
+                        ],
+                        initialValue: formData[LABEL]
+                    })(
+                        <Input
+                            placeholder='例如： 订单类型'
+                        />
+                    )
+                }
+
+            </FormItem>
             <Card title="Select Props 配置">
                 {
                     selectProps.map((item, index) => {
