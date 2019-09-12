@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Form, Radio, Button, Row, Col, Input} from 'antd';
 import PropTypes from 'prop-types';
-import {ALIAS, FORMITEM_LAYOUT} from "Src/utils/constans";
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constans';
 
 const FormItem = Form.Item;
 
@@ -48,7 +48,7 @@ export default class Config extends Component<ConfigProps> {
             }
             return component;
         });
-        onSave && onSave(pageJSON)
+        onSave && onSave(pageJSON);
     };
 
     handleChange = (key, e) => {
