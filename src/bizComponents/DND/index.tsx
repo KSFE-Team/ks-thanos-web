@@ -3,14 +3,14 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 
 interface DnDProps {
-    onDragStart(): void,
-    onDragEnd(dataSource: any, result: any): void,
-    dataSource: any[],
-    direction: string,
-    droppableId: string,
-    interval: string | number,
-    onRender(dataItem: any, index: number): void,
-    emptyNode: any,
+    dataSource: any[];
+    direction: string;
+    droppableId: string;
+    interval: string|number;
+    emptyNode: any;
+    onRender(dataItem: any, index: number): void;
+    onDragStart(): void;
+    onDragEnd(dataSource: any, result: any): void;
 }
 export default class DnD extends React.PureComponent<DnDProps> {
 

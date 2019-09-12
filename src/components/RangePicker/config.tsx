@@ -26,8 +26,8 @@ const SHOWTIME = 'showTime';
 // const SHOWTIMEFORMAT = 'showTimeFormat';
 
 interface RangePickerConfigProps extends FormComponentProps {
-    onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 class RangePickerConfig extends Component<RangePickerConfigProps> {
@@ -90,7 +90,6 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                     }
                     return component;
                 });
-                // console.log('pageJSON', JSON.stringify(pageJSON));
                 onSave && onSave(pageJSON);
             }
         });

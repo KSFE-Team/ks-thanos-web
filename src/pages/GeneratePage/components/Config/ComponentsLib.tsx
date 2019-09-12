@@ -23,11 +23,10 @@ const TOOLS = {
 interface PageConfigProps{
     generatePage: {
         pageJSON: {
-            components: any[],
-            name: string
-        }
-    },
-
+            components: any[];
+            name: string;
+        };
+    };
 }
 
 export default class ComponentsLib extends Component<PageConfigProps> {
@@ -54,7 +53,7 @@ export default class ComponentsLib extends Component<PageConfigProps> {
      */
     fliterComponent = (tools: any) => {
         const { search } = this.state;
-        return tools.filter(({ name }) => name.includes(search)).reduce((prev, record) => {
+        return tools.filter(({ name }) => name.toLocaleLowerCase().includes(search.toLocaleLowerCase())).reduce((prev, record) => {
             const lastItem = prev[prev.length - 1];
             if (!lastItem || lastItem.length === SPLIT_COUNT) {
                 prev.push([record]);

@@ -7,7 +7,7 @@ import TextAreaConfig from './config';
 const { TextArea } = Input;
 
 interface KKTextArea {
-    label: string
+    label: string;
 }
 
 class KTextArea extends Component<KKTextArea> {

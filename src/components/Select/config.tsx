@@ -19,8 +19,8 @@ const LABEL = 'label';
 
 interface ConfigProps {
     form: any;
-    onSave(pageJSON:any): void;
     pageJSON: any;
+    onSave(pageJSON: any): void;
 }
 
 interface ConfigState {
@@ -107,7 +107,6 @@ class Config extends Component<ConfigProps, ConfigState> {
                     }
                     return component;
                 });
-                // console.log('pageJSON', JSON.stringify(pageJSON));
                 onSave && onSave(pageJSON);
             }
         });
@@ -143,6 +142,24 @@ class Config extends Component<ConfigProps, ConfigState> {
                     })(
                         <Input
                             placeholder='例如： orderType'
+                        />
+                    )
+                }
+
+            </FormItem>
+            <FormItem
+                label={'表单项名称'}
+                {...formItemLayout}
+            >
+                {
+                    getFieldDecorator('label', {
+                        rules: [
+                            {required: true, message: '请输入表单项名称'}
+                        ],
+                        initialValue: formData[LABEL]
+                    })(
+                        <Input
+                            placeholder='例如： 订单类型'
                         />
                     )
                 }

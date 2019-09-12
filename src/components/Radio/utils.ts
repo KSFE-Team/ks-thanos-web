@@ -6,14 +6,13 @@ export const getInitJson = () => ({
     componentName: 'Radio',
     source: 'antd',
     default: false,
+    defaultValue: 1,
+    isRequired: true,
     key: 'status',
     label: '状态',
-    isRequired: true,
-    props: {
-        configList: [{ id: 1, label: '启用', value: 1 }, { id: 2, label: '禁用', value: 0 }],
-        label: '状态',
-        defaultValue: 1
-    },
+    options: [{value: 1, disabled: false, rowKey: 1, text: '启用' },
+        { value: 0, disabled: false, rowKey: 2, text: '禁用' }
+    ],
 });
 
 /**

@@ -1,10 +1,10 @@
 interface FormChildren {
-    components?: any,
-    stateName?: string,
-    activeEvent?: {},
-    componentName?: string,
-    source?: string,
-    default?: boolean
+    components?: any;
+    stateName?: string;
+    activeEvent?: {};
+    componentName?: string;
+    source?: string;
+    default?: boolean;
 }
 
 /**
@@ -12,7 +12,7 @@ interface FormChildren {
  */
 export const formatJSON = (JSON) => {
     const { components } = JSON;
-    const result:any[] = [];
+    const result: any[] = [];
 
     let formChildren: FormChildren = {};
 

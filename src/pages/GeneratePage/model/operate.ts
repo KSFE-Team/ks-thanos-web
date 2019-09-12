@@ -11,7 +11,7 @@ export default {
         redoDisable: true
     },
     reducers: {
-        undo: (action, getState, dispatch) => {
+        undo: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { history, operateId } = operate;
@@ -31,7 +31,7 @@ export default {
                 redoDisable: operateId > history.length,
             });
         },
-        redo: (action, getState, dispatch) => {
+        redo: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { history, operateId } = operate;
@@ -42,13 +42,13 @@ export default {
             }
 
             actions.operate.setReducers({
-                operateId: operateId + 1,
-                undoDisable: operateId + 2 <= 2,
-                redoDisable: operateId + 1 === history.length,
+                operateId: Number(operateId) + 1,
+                undoDisable: Number(operateId) + 2 <= 2,
+                redoDisable: Number(operateId) + 1 === history.length,
                 isRedo: true
             });
         },
-        save: (action, getState, dispatch) => {
+        save: (action, getState) => {
             const state = getState();
             const { operate } = state;
             const { operateId } = operate;
@@ -58,7 +58,7 @@ export default {
             });
             actions.operate.end();
         },
-        saveWithOperateId: (action, getState, dispatch) => {
+        saveWithOperateId: (action, getState) => {
             const { operateId, modelName, data } = action;
             const state = getState();
 
@@ -79,10 +79,10 @@ export default {
                 history
             });
         },
-        end: (action, getState, dispatch) => {
+        end: (action, getState) => {
             const state = getState();
             const history = state.operate.history;
-            const operateId = state.operate.operateId + 1;
+            const operateId = Number(state.operate.operateId) + 1;
 
             actions.operate.setReducers({
                 operateId

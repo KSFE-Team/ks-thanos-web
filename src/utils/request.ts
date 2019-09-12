@@ -53,7 +53,7 @@ function checkStatus(response, customerError) {
             description: errortext,
         });
     }
-    const error:any = new Error(errortext);
+    const error: any = new Error(errortext);
     error.name = status;
     error.response = response;
     throw error;

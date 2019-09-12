@@ -5,8 +5,7 @@ import { ALL_TOOLS } from 'Components';
 import { changeConfig } from 'Src/utils';
 
 interface ComponentConfigProps{
-    generatePage: {pageJSON: any},
-
+    generatePage: {pageJSON: any};
 }
 export default class ComponentConfig extends Component<ComponentConfigProps> {
 

@@ -9,9 +9,10 @@ export const getInitJson = () => ({
     key: '', // 唯一
     label: '数字框', // 名称
     props: {
-        min: 0, // 最小值
-        max: 0, // 最大值
-        defaultValue: 0, // 默认值
+        min: '', // 最小值
+        max: '', // 最大值
+        defaultValue: '', // 默认值
+        placeholder: '',
         disabled: false, // 是否禁用
         precision: 0, // 精度
         step: 1 // 步数
