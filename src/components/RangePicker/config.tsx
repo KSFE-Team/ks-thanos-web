@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col, Switch } from 'antd';
 import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
+import {ALIAS} from 'Src/utils/constans';
 
 const FormItem = Form.Item;
 
@@ -100,25 +101,25 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
         const { formData, formData: {props: stateProps} } = this.state;
         return <div>
             <FormItem
-                label={'表单项Key'}
+                label={ALIAS.KEY}
                 {...formItemLayout}
             >
                 {
                     getFieldDecorator('key', {
                         rules: [
-                            {required: true, message: '请输入表单字段名'}
+                            {required: true, message: `请输入${ALIAS.KEY}`}
                         ],
                         initialValue: formData[KEY]
                     })(
                         <Input
-                            placeholder='例如： name'
+                            placeholder='例如： rangePicker'
                         />
                     )
                 }
 
             </FormItem>
             <FormItem
-                label={'表单项名称'}
+                label={ALIAS.LABEL}
                 {...formItemLayout}
             >
                 {
@@ -126,13 +127,13 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                         initialValue: formData[LABEL]
                     })(
                         <Input
-                            placeholder='例如： 姓名'
+                            placeholder='例如： 时间区间'
                         />
                     )
                 }
             </FormItem>
             <FormItem
-                label={'表单项placeholder'}
+                label={ALIAS.PLACEHOLDER}
                 {...formItemLayout}
             >
                 {
@@ -160,7 +161,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                 }
             </FormItem>
             <FormItem
-                label={'日期格式'}
+                label={ALIAS.DATE_FORMAT}
                 {...formItemLayout}
             >
                 {
@@ -176,7 +177,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                                     }
                                     callback();
                                 },
-                                message: '时间格式化不正确'
+                                message: '日期格式化不正确'
                             }
                         ],
                         initialValue: stateProps[FORMAT] || `${DATE_FORMAT} ${TIME_FORMAT}`
@@ -188,7 +189,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                 }
             </FormItem>
             <FormItem
-                label={'是否有选择时间功能'}
+                label={ALIAS.SHOW_TIME}
                 {...formItemLayout}
             >
                 {
@@ -210,7 +211,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             </FormItem>
             {
                 getFieldValue('props.showTime') && <FormItem
-                    label={'时间格式'}
+                    label={ALIAS.TIME_FORMAT}
                     {...formItemLayout}
                 >
                     {

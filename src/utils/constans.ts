@@ -22,4 +22,7 @@ export const ALIAS = {
     KEY: '表单Key', // 表单绑定key
     LABEL: '表单Label', // 表单对应展示名称
     PLACEHOLDER: 'Placeholder',
+    DATE_FORMAT: '日期格式',
+    SHOW_TIME: '是否有选择时间功能',
+    TIME_FORMAT: '时间格式',
 };
