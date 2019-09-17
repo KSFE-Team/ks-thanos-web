@@ -1,5 +1,5 @@
 import history from './history';
-import { PROJECT_NAME } from './constans';
+import { PROJECT_NAME } from './constants';
 
 /**
  * @desc 路由跳转方法

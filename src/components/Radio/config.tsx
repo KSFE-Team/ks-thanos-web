@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Alert, Table } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form } from 'antd';
 import PropTypes from 'prop-types';
-import Form from 'antd/es/form';
+import { ALIAS } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
 const VALUE = 'value';
 const LABEL = 'label';
@@ -48,6 +49,10 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         errMessage: '',
         // isRequired: true,
         // defaultValue: 1
+        current: {
+            id: '',
+            props: {}
+        }
     };
 
     columns = [
@@ -113,7 +118,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     [OPTIONS]: current.options || [{
@@ -127,7 +132,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     [KEY]: current.key || '',
                     isRequired: state.formData.isRequired,
                     defaultValue: current.defaultValue || state.formData.defaultValue
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -138,7 +144,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      * @desc 保存修改
      */
     handleSave = () => {
-        const { formData } = this.state;
+        const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
         if (!formData.label) {
             this.setState({
@@ -155,15 +161,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 return;
             }
         }
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    ...formData,
-                };
-            }
-            return component;
-        });
+        pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
         onSave && onSave(pageJSON);
     }
 
@@ -250,7 +248,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             <br />
             <Form.Item
                 {...formItemLayout}
-                label='label'
+                label={ALIAS.LABEL}
             >
                 <Input
                     value={formData.label}
@@ -260,7 +258,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             </Form.Item>
             <Form.Item
                 {...formItemLayout}
-                label='表单key'
+                label={ALIAS.KEY}
             >
                 <Input
                     value={formData.key}

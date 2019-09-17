@@ -2,6 +2,7 @@ import React from 'react';
 import { Checkbox, Form } from 'antd';
 import { getInitJson, getTools } from './utils';
 import Config from './config';
+import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 interface Props {
     config: {
@@ -26,6 +27,8 @@ class KCheckBox extends React.Component<Props> {
         return (
             <Form.Item
                 label={config && config.label ? config.label : '表单名称'}
+                {...FORMITEM_LAYOUT}
+                style={{ marginBottom: 0 }}
             >
                 {
                     config.label

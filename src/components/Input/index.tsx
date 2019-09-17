@@ -3,7 +3,7 @@ import { Input, Form } from 'antd';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import InputConfig from './config';
-import { FORMITEM_LAYOUT } from 'Src/utils/constans';
+import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 interface KInputProps {
     config: any,

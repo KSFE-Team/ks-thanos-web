@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'kredux';
 import { Button, Modal, message } from 'antd';
-import { formatJSON } from './utils';
+// import { formatComponents } from './utils';
 // import { request } from 'Src/utils';
 // import { API } from 'Src/api';
 import './index.scss';
@@ -34,11 +34,13 @@ class Header extends Component<HeaderProps> {
                                         title: '确认提交配置？',
                                         content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
                                         onOk: async() => {
-                                            console.log('JSON', formatJSON(pageJSON));
+                                            console.log('pageJSON', pageJSON);
                                             // const response = await request(API.page.save, {
                                             //     method: 'post',
                                             //     body: {
-                                            //         pageData: JSON.stringify(formatJSON(pageJSON)),
+                                            //         pageData: JSON.stringify({
+                                            //             components: formatComponents(pageJSON.components)
+                                            //         }),
                                             //         pageName: 'demo'
                                             //     }
                                             // });

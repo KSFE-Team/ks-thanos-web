@@ -1,21 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS } from 'Src/utils/constans';
-import {findComponent} from 'Src/utils';
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
 const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
-
 const KEY = 'key';
 const LABEL = 'label';
 
@@ -34,7 +23,10 @@ export default class InputConfig extends Component<InputConfigProps> {
 
         },
         isTouch: false,
-        current: {}
+        current: {
+            id: '',
+            props: {}
+        }
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -55,20 +47,14 @@ export default class InputConfig extends Component<InputConfigProps> {
     }
 
     handleSave = () => {
-        const { formData } = this.state;
+        const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    ...formData,
-                    props: {
-                        ...component.props,
-                        placeholder: formData[LABEL]
-                    }
-                };
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            ...formData,
+            props: {
+                ...current.props,
+                placeholder: formData[LABEL]
             }
-            return component;
         });
         onSave && onSave(pageJSON);
     }
@@ -90,7 +76,7 @@ export default class InputConfig extends Component<InputConfigProps> {
         return <div>
             <FormItem
                 label={ALIAS.KEY}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[KEY]}
@@ -100,7 +86,7 @@ export default class InputConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={ALIAS.LABEL}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[LABEL]}

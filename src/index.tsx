@@ -4,7 +4,7 @@ import history from 'Src/utils/history';
 import 'antd/dist/antd.css';
 import './index.scss';
 import router from './router';
-import { PROJECT_NAME } from './utils/constans';
+import { PROJECT_NAME } from './utils/constants';
 
 const app = kredux({ history });
 

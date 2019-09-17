@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {DatePicker} from 'antd';
+import {DatePicker, Form} from 'antd';
 import PropTypes from 'prop-types';
 import {getInitJson, getTools} from './utils';
+import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 import Config from './config';
 
 interface KSDatePicker {
@@ -19,16 +20,18 @@ class KDatePicker extends Component<KSDatePicker> {
 
     render() {
         return (
-            <div style={{display: 'flex', alignItems: 'center'}}>
-                <span>{`${this.props.label}:`}</span>
+            <Form.Item
+                label={this.props.label}
+                {...FORMITEM_LAYOUT}
+                style={{ marginBottom: 0 }}
+            >
                 <DatePicker
                     {...this.props}
                     style={{
                         width: '300px',
-                        marginLeft: '10px'
                     }}
                 />
-            </div>
+            </Form.Item>
         );
     }
 }

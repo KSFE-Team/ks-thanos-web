@@ -2,20 +2,10 @@ import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col, Switch } from 'antd';
 import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
 const FormItem = Form.Item;
-
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
-
 const DATE_FORMAT = 'YYYY-MM-DD';
 const TIME_FORMAT = 'HH:mm:ss';
 const KEY = 'key';
@@ -39,20 +29,25 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
         formData: {
             props: {}
         },
-        isTouch: false
+        isTouch: false,
+        current: {
+            id: '',
+            props: {}
+        }
     };
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
                     props: current.props
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -68,28 +63,23 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                     },
                     isTouch: true
                 });
-
+                const { current } = this.state;
                 const {props: fieldProps} = fieldValues;
                 const { pageJSON, onSave } = this.props;
-                pageJSON.components = pageJSON.components.map((component) => {
-                    if (component.configVisible) {
-                        component = {
-                            ...component,
-                            key: fieldValues.key,
-                            label: fieldValues.label || '',
-                            props: {
-                                ...component.props,
-                                format: fieldProps.format,
-                                showTime: fieldProps.showTimeFormat ? {format: fieldProps.showTimeFormat} : fieldProps.showTime,
-                                // showTimeFormat: fieldProps.showTimeFormat
-                            }
-                        };
-                        if (fieldProps.placeholder) {
-                            component.props.placeholder = fieldProps.placeholder.split('/');
-                        }
+                const formData = {
+                    key: fieldValues.key,
+                    label: fieldValues.label || '',
+                    props: {
+                        ...current.props,
+                        placeholder: [],
+                        format: fieldProps.format,
+                        showTime: fieldProps.showTimeFormat ? { format: fieldProps.showTimeFormat } : fieldProps.showTime,
                     }
-                    return component;
-                });
+                };
+                if (fieldProps.placeholder) {
+                    formData.props.placeholder = fieldProps.placeholder.split('/');
+                }
+                pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
                 onSave && onSave(pageJSON);
             }
         });
@@ -100,8 +90,8 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
         const { formData, formData: {props: stateProps} } = this.state;
         return <div>
             <FormItem
-                label={'表单项Key'}
-                {...formItemLayout}
+                label={ALIAS.KEY}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('key', {
@@ -118,8 +108,8 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
 
             </FormItem>
             <FormItem
-                label={'表单项名称'}
-                {...formItemLayout}
+                label={ALIAS.LABEL}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('label', {
@@ -132,8 +122,8 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                 }
             </FormItem>
             <FormItem
-                label={'表单项placeholder'}
-                {...formItemLayout}
+                label={ALIAS.PLACEHOLDER}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('props.placeholder', {
@@ -161,7 +151,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             </FormItem>
             <FormItem
                 label={'日期格式'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('props.format', {
@@ -189,7 +179,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             </FormItem>
             <FormItem
                 label={'是否有选择时间功能'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('props.showTime', {
@@ -211,7 +201,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             {
                 getFieldValue('props.showTime') && <FormItem
                     label={'时间格式'}
-                    {...formItemLayout}
+                    {...FORMITEM_LAYOUT}
                 >
                     {
                         getFieldDecorator('props.showTimeFormat', {

@@ -10,46 +10,17 @@ interface FormChildren {
 /**
  * 整理JSON
  */
-export const formatJSON = (JSON) => {
-    const { components } = JSON;
-    const result: any[] = [];
-
-    let formChildren: FormChildren = {};
-
-    components.forEach((component) => {
-        const { parentId } = component;
-        if (parentId) {
-            const parent = components.find(({id}) => id === parentId);
-            if (parent) {
-                formChildren = {
-                    ...formChildren,
-                    components: [...(formChildren.components || []), {
-                        ...component,
-                        stateName: parent.stateName,
-                    }],
-                    stateName: parent.stateName,
-                    activeEvent: {
-                        eventType: 'api',
-                        dependencies: parent.dependencies
-                    }
-                };
-            } else {
-                result.push(component);
-            }
-        } else {
-            result.push(component);
+export const formatComponents = (components: any[]): Array<any> => {
+    return components.map((item: any,) => {
+        const { components: children = [], componentName } = item;
+        if (componentName === 'Form' && children.length) {
+            const { type, stateName } = item;
+            item.components = formatComponents(children).map((item) => ({
+                ...item,
+                formType: type,
+                stateName: stateName
+            }));
         }
+        return item;
     });
-    if (Object.keys(formChildren).length > 0) {
-        formChildren = {
-            ...formChildren,
-            componentName: 'Form',
-            source: 'antd',
-            default: false,
-        };
-        result.unshift(formChildren);
-    }
-    return {
-        components: result
-    };
 };

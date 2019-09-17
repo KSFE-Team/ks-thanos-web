@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {Form, Radio, Button, Row, Col, Input} from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constans';
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
 const FormItem = Form.Item;
 
@@ -26,35 +27,48 @@ export default class Config extends Component<ConfigProps> {
         format: 'YYYY-MM-DD',
         placeholder: '',
         key: '',
-        label: ''
+        label: '',
+        current: {
+            id: '',
+            props: {}
+        },
+        isTouch: false,
     };
 
+    static getDerivedStateFromProps(props, state) {
+        if (!state.isTouch) {
+            const { pageJSON } = props;
+            const { components } = pageJSON;
+            const current = findComponent(components);
+            return {
+                current
+            };
+        } else {
+            return state;
+        }
+    }
+
     handleSave = () => {
-        const {placeholder, showTime, format, key, label} = this.state;
+        const { placeholder, showTime, format, key, label, current } = this.state;
         const {pageJSON, onSave} = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    props: {
-                        ...component.props,
-                        [PLACEHOLDER]: placeholder,
-                        [SHOW_TIME]: showTime,
-                        [FORMAT]: format,
-                        [KEY]: key,
-                        [LABEL]: label
-                    }
-                };
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            props: {
+                ...current.props,
+                [PLACEHOLDER]: placeholder,
+                [SHOW_TIME]: showTime,
+                [FORMAT]: format,
+                [KEY]: key,
+                [LABEL]: label
             }
-            return component;
         });
         onSave && onSave(pageJSON);
     };
 
-    handleChange = (key, e) => {
+    handleChange = (key: string, e: any) => {
         const value = e.target.value;
         this.setState({
             [key]: value,
+            isTouch: true
         });
     };
 
@@ -73,7 +87,7 @@ export default class Config extends Component<ConfigProps> {
             </FormItem>
             <Form.Item
                 {...FORMITEM_LAYOUT}
-                label='label'
+                label={ALIAS.LABEL}
             >
                 <Input
                     value={label}

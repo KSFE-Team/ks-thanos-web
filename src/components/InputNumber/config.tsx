@@ -2,19 +2,10 @@ import React, { Component } from 'react';
 import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
-import {ALIAS} from 'Src/utils/constans';
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
 const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
 const LABEL = 'label';
 const DEFAULT_VALUE = 'defaultValue';
 const PLACEHOLDER = 'placeholder';
@@ -38,20 +29,25 @@ class InputNumberConfig extends Component<InputConfigProps> {
     state={
         formData: {
         },
-        isTouch: false
+        isTouch: false,
+        current: {
+            id: '',
+            props: {}
+        }
     };
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     ...current.props,
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -65,24 +61,19 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     message.error('最小值不能大于最大值！');
                     return;
                 }
+                const { current } = this.state;
                 const { pageJSON, onSave } = this.props;
                 const key = fieldValues[KEY];
                 const label = fieldValues[LABEL];
                 delete fieldValues[KEY];
                 delete fieldValues[LABEL];
-                pageJSON.components = pageJSON.components.map((component) => {
-                    if (component.configVisible) {
-                        component = {
-                            ...component,
-                            [KEY]: key,
-                            [LABEL]: label,
-                            props: {
-                                ...component.props,
-                                ...fieldValues,
-                            }
-                        };
+                pageJSON.components = saveComponent(current.id, pageJSON.components, {
+                    [KEY]: key,
+                    [LABEL]: label,
+                    props: {
+                        ...current.props,
+                        ...fieldValues,
                     }
-                    return component;
                 });
                 onSave && onSave(pageJSON);
             }
@@ -95,7 +86,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         return <div>
             <FormItem
                 label={ALIAS.KEY}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(KEY, {
@@ -112,7 +103,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={ALIAS.LABEL}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(LABEL, {
@@ -126,7 +117,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={ALIAS.PLACEHOLDER}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(PLACEHOLDER, {
@@ -140,7 +131,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'默认值'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(DEFAULT_VALUE, {
@@ -154,7 +145,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'最小值'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(MIN_VALUE, {
@@ -168,7 +159,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'最大值'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(MAX_VALUE, {
@@ -182,7 +173,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'是否禁用'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(DISABLED, {
@@ -197,7 +188,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'数值精度'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator(PRECISION, {
@@ -212,9 +203,8 @@ class InputNumberConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'每次改变步数'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
-
                 {
                     getFieldDecorator(STEP, {
                         initialValue: formData[STEP]

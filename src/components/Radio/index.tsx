@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Radio } from 'antd';
+import { Radio, Form } from 'antd';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import RadioConfig from './config';
+import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 interface RadioProps {
     config: any;
     label: string;
@@ -27,22 +28,25 @@ class KRadio extends Component<RadioProps> {
 
     render() {
         return (
-            <div style={{display: 'flex'}}>
-                <span style={{marginRight: '10px'}}>{this.props.config.label}:</span>
-                <Radio.Group style={{display: 'flex'}} value={this.state.defaultValue} onChange={(e) => {
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                style={{ marginBottom: 0 }}
+                label={this.props.config.label}
+            >
+                <Radio.Group value={this.state.defaultValue} onChange={(e) => {
                     this.setState({
                         defaultValue: e.target.value
                     });
                 }}>
                     {
-                        this.props.config.options.map((item) => {
-                            return <div key={item.rowKey} onClick={(e) => {
+                        this.props.config.options.map((item: any) => {
+                            return <div style={{display: 'inline-block'}} key={item.rowKey} onClick={(e) => {
                                 e.stopPropagation();
                             }}><Radio value={item.value} disabled={item.disabled}>{item.text}</Radio></div>;
                         })
                     }
                 </Radio.Group>
-            </div>
+            </Form.Item>
 
         );
     }

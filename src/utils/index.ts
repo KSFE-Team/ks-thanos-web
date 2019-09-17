@@ -93,3 +93,21 @@ export const findComponent = (components: any[]) => {
     });
     return result;
 };
+
+/**
+ * 找到当前的组件并且更改配置
+ */
+export const saveComponent = (targetId: string, components: any[], config: any) => {
+    return components.map((item) => {
+        const { id: currentId, components: children } = item;
+        if (currentId === targetId) {
+            item = {
+                ...item,
+                ...config
+            };
+        } else if (children && children.length) {
+            item.components = saveComponent(targetId, children, config);
+        }
+        return item;
+    });
+};
