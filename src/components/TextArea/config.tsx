@@ -1,17 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
+
 const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
 
 const KEY = 'key';
 const Label = 'label';
@@ -32,21 +25,26 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
         formData: {
 
         },
-        isTouch: false
+        isTouch: false,
+        current: {
+            id: '',
+            props: {}
+        }
     };
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [Rows]: current[Rows],
                     [Label]: current[Label],
                     [Placeholder]: current[Placeholder]
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -54,20 +52,14 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
     }
 
     handleSave = () => {
-        const { formData } = this.state;
+        const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
-            if (component.configVisible) {
-                component = {
-                    ...component,
-                    ...formData,
-                    props: {
-                        ...component.props,
-                        ...formData,
-                    }
-                };
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            ...formData,
+            props: {
+                ...current.props,
+                ...formData,
             }
-            return component;
         });
         onSave && onSave(pageJSON);
     }
@@ -88,8 +80,8 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
         const { formData } = this.state;
         return <div>
             <FormItem
-                label={'Key'}
-                {...formItemLayout}
+                label={ALIAS.KEY}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[KEY]}
@@ -98,18 +90,18 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                 />
             </FormItem>
             <FormItem
-                label={'Label'}
-                {...formItemLayout}
+                label={ALIAS.LABEL}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[Label]}
-                    placeholder='例如： 奥'
+                    placeholder='例如： 备注'
                     onChange={this.handleChange.bind(this, Label)}
                 />
             </FormItem>
             <FormItem
-                label={'placeholder'}
-                {...formItemLayout}
+                label={ALIAS.PLACEHOLDER}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[Placeholder]}
@@ -119,7 +111,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
             </FormItem>
             <FormItem
                 label={'设置高度'}
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
             >
                 <Input
                     value={formData[Rows]}

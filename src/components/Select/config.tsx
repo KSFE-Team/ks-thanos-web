@@ -2,18 +2,10 @@ import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col, Card } from 'antd';
 import ConfigItem from './ConfigItem';
 import DynamicConfigItem from './DynamicConfigItem';
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
+import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 
+const FormItem = Form.Item;
 const KEY = 'key';
 const LABEL = 'label';
 
@@ -26,14 +18,15 @@ interface ConfigProps {
 interface ConfigState {
     formData: any;
     isTouch: boolean;
+    current: any;
 }
 
 const selectProps = [
     {
         name: 'placeholder',
-        label: 'placeholder',
+        label: ALIAS.PLACEHOLDER,
         type: 'input',
-        placeholder: '请选择订单类型'
+        placeholder: '例如：请选择订单类型'
     },
     {
         name: 'allowClear',
@@ -59,7 +52,11 @@ class Config extends Component<ConfigProps, ConfigState> {
 
         this.state = {
             formData: {},
-            isTouch: false
+            isTouch: false,
+            current: {
+                id: '',
+                props: {}
+            }
         };
     }
 
@@ -67,14 +64,15 @@ class Config extends Component<ConfigProps, ConfigState> {
         if (!state.isTouch) {
             const { pageJSON } = props;
             const { components } = pageJSON;
-            const current = components.find(({ configVisible }) => configVisible);
+            const current = findComponent(components);
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
                     props: current.props,
                     options: current.options
-                }
+                },
+                current
             };
         } else {
             return state;
@@ -90,22 +88,16 @@ class Config extends Component<ConfigProps, ConfigState> {
                     },
                     isTouch: true
                 });
-
+                const { current } = this.state;
                 const { options, props: fieldProps } = fieldValues;
                 const { pageJSON, onSave } = this.props;
-                pageJSON.components = pageJSON.components.map((component) => {
-                    if (component.configVisible) {
-                        component = {
-                            ...component,
-                            key: fieldValues.key,
-                            label: fieldValues.label || '',
-                            props: {
-                                ...fieldProps
-                            },
-                            options
-                        };
-                    }
-                    return component;
+                pageJSON.components = saveComponent(current.id, pageJSON.components, {
+                    key: fieldValues.key,
+                    label: fieldValues.label || '',
+                    props: {
+                        ...fieldProps
+                    },
+                    options
                 });
                 onSave && onSave(pageJSON);
             }
@@ -130,8 +122,8 @@ class Config extends Component<ConfigProps, ConfigState> {
         const { getFieldDecorator } = form;
         return <div>
             <FormItem
-                label={'表单项Key'}
-                {...formItemLayout}
+                label={ALIAS.KEY}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('key', {
@@ -148,8 +140,8 @@ class Config extends Component<ConfigProps, ConfigState> {
 
             </FormItem>
             <FormItem
-                label={'表单项名称'}
-                {...formItemLayout}
+                label={ALIAS.LABEL}
+                {...FORMITEM_LAYOUT}
             >
                 {
                     getFieldDecorator('label', {
@@ -178,7 +170,7 @@ class Config extends Component<ConfigProps, ConfigState> {
                                 label={label}
                                 defaultValue={formData.props ? formData.props[item.name] : undefined}
                                 form={form}
-                                formItemLayout={formItemLayout}
+                                formItemLayout={FORMITEM_LAYOUT}
                                 {...otherProps}
                             />
                         );

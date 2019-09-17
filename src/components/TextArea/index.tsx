@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
-import { Input } from 'antd';
+import { Input, Form } from 'antd';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import TextAreaConfig from './config';
+import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 const { TextArea } = Input;
 
 interface KKTextArea {
     label: string;
+    generatePage: {
+        pageJSON: any
+    }
 }
 
 class KTextArea extends Component<KKTextArea> {
@@ -20,11 +24,15 @@ class KTextArea extends Component<KKTextArea> {
     }
 
     render() {
+        const { label, generatePage, ...OtherProps } = this.props;
         return (
-            <div style={{display: 'flex', alignItems: 'center'}}>
-                <span>{`${this.props.label}:`}</span>
-                <TextArea style={{width: '300px', marginLeft: '10px'}} {...this.props}/>
-            </div>
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={label}
+                style={{ marginBottom: 0 }}
+            >
+                <TextArea style={{ width: '300px' }} {...OtherProps} />
+            </Form.Item>
         );
     }
 }
