@@ -6,7 +6,7 @@ import InputConfig from './config';
 import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 interface KInputProps {
-    config: any,
+    config: any;
     generatePage: {
         pageJSON: any
     }

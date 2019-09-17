@@ -52,13 +52,13 @@ export default class Config extends Component<ConfigProps> {
         const { placeholder, showTime, format, key, label, current } = this.state;
         const {pageJSON, onSave} = this.props;
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            [KEY]: key,
+            [LABEL]: label,
             props: {
                 ...current.props,
                 [PLACEHOLDER]: placeholder,
                 [SHOW_TIME]: showTime,
                 [FORMAT]: format,
-                [KEY]: key,
-                [LABEL]: label
             }
         });
         onSave && onSave(pageJSON);

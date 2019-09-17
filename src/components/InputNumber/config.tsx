@@ -7,7 +7,7 @@ import { findComponent, saveComponent } from 'Src/utils';
 
 const FormItem = Form.Item;
 const LABEL = 'label';
-const DEFAULT_VALUE = 'defaultValue';
+const DEFAULT_VALUE = 'initialValue';
 const PLACEHOLDER = 'placeholder';
 const MIN_VALUE = 'min';
 const MAX_VALUE = 'max';
@@ -44,6 +44,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
             return {
                 formData: {
                     ...current.props,
+                    [DEFAULT_VALUE]: current[DEFAULT_VALUE],
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
                 },
@@ -65,11 +66,14 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 const { pageJSON, onSave } = this.props;
                 const key = fieldValues[KEY];
                 const label = fieldValues[LABEL];
+                const initialValue = fieldValues[DEFAULT_VALUE];
                 delete fieldValues[KEY];
                 delete fieldValues[LABEL];
+                delete fieldValues[DEFAULT_VALUE];
                 pageJSON.components = saveComponent(current.id, pageJSON.components, {
                     [KEY]: key,
                     [LABEL]: label,
+                    [DEFAULT_VALUE]: initialValue,
                     props: {
                         ...current.props,
                         ...fieldValues,

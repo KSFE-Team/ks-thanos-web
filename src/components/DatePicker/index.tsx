@@ -7,6 +7,10 @@ import Config from './config';
 
 interface KSDatePicker {
     label: string;
+    config: any;
+    generatePage: {
+        pageJSON: any
+    }
 }
 
 class KDatePicker extends Component<KSDatePicker> {
@@ -19,14 +23,16 @@ class KDatePicker extends Component<KSDatePicker> {
     }
 
     render() {
+        const { config, generatePage, ...OtherProps } = this.props;
+        const { label } = config;
         return (
             <Form.Item
-                label={this.props.label}
+                label={label || '时间选择'}
                 {...FORMITEM_LAYOUT}
                 style={{ marginBottom: 0 }}
             >
                 <DatePicker
-                    {...this.props}
+                    {...OtherProps}
                     style={{
                         width: '300px',
                     }}
