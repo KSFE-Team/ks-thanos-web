@@ -7,9 +7,11 @@ export const getInitJson = () => ({
     source: 'antd',
     default: false,
     key: '',
-    label: '',
+    label: '时间区间',
     parentComponentName: 'DatePicker',
-    props: {}
+    props: {
+        placeholder: ['开始时间', '截止时间']
+    }
 });
 
 /**
