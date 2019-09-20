@@ -140,6 +140,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                     responseType: 'list', // 接口返回类型， // list 列表， object 对象
                     api, // 接口地址
                     method,
+                    actionType: 'get'
                 };
             }
             return item;

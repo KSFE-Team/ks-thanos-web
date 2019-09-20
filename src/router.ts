@@ -2,7 +2,7 @@ export default [
     {
         path: '/',
         exact: true,
-        component: () => import('./pages/SelectTemplate')
+        component: () => import('./pages/TempLateMgt')
     },
     {
         path: '/generatePage',

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Form, Input, Button, Row, Col, Radio } from 'antd';
 import { FORM_TYPES } from './constants';
 import PropTypes from 'prop-types';
+const [{key: NORMAL}, {key: SEARCH}] = FORM_TYPES;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const formItemLayout = {
@@ -17,6 +18,9 @@ const formItemLayout = {
 
 const STATE_NAME = 'stateName';
 const TYPE = 'type';
+const LINK = 'link';
+const SAVE_API = 'saveApi';
+const UPDATE_API = 'updateApi';
 
 interface FormConfigProps{
     onSave(pageJSON:any): void,
@@ -43,7 +47,10 @@ export default class FormConfig extends Component<FormConfigProps> {
             return {
                 formData: {
                     [STATE_NAME]: current[STATE_NAME],
-                    [TYPE]: current[TYPE]
+                    [TYPE]: current[TYPE],
+                    [LINK]: current[LINK],
+                    [SAVE_API]: current[SAVE_API],
+                    [UPDATE_API]: current[UPDATE_API],
                 }
             };
         } else {
@@ -80,6 +87,57 @@ export default class FormConfig extends Component<FormConfigProps> {
         });
     };
 
+    getTypeForm = () => {
+        const { formData } = this.state;
+        switch (formData[TYPE]) {
+            case SEARCH:
+                return <Fragment>
+                    {/* <FormItem
+                        label={'新增/修改跳转地址'}
+                        {...formItemLayout}
+                    >
+                        <Input
+                            placeholder='新增/修改跳转地址'
+                            value={formData[LINK]}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                this.handleChange(LINK, value);
+                            }}
+                        />
+                    </FormItem> */}
+                </Fragment>;
+            case NORMAL:
+                return <Fragment>
+                    <FormItem
+                        label={'新增API'}
+                        {...formItemLayout}
+                    >
+                        <Input
+                            placeholder='新增API'
+                            value={formData[SAVE_API]}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                this.handleChange(SAVE_API, value);
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={'修改API'}
+                        {...formItemLayout}
+                    >
+                        <Input
+                            placeholder='修改API'
+                            value={formData[UPDATE_API]}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                this.handleChange(UPDATE_API, value);
+                            }}
+                        />
+                    </FormItem>
+                </Fragment>;
+        }
+    }
+
     render() {
         const { formData } = this.state;
         return <div>
@@ -108,7 +166,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     }}
                 >
                     {
-                        FORM_TYPES.map(({key, name}) => {
+                        FORM_TYPES.map(({ key, name }) => {
                             return (
                                 <Radio key={key} value={key}>{name}</Radio>
                             );
@@ -116,6 +174,9 @@ export default class FormConfig extends Component<FormConfigProps> {
                     }
                 </RadioGroup>
             </FormItem>
+            {
+                this.getTypeForm()
+            }
             <FormItem>
                 <Row>
                     <Col>
