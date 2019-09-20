@@ -2,10 +2,13 @@ export default [
     {
         path: '/',
         exact: true,
+        modelList: [
+            () => import('./pages/TempLateMgt/model/myTemplate')
+        ],
         component: () => import('./pages/TempLateMgt')
     },
     {
-        path: '/generatePage',
+        path: '/generatePage/:name',
         exact: true,
         modelList: [
             () => import('./pages/GeneratePage/model/generatePage'),

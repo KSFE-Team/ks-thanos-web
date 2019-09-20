@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { connect } from 'kredux';
-import { Button, Modal, message } from 'antd';
+import { connect, actions } from 'kredux';
+import { Button, Modal } from 'antd';
 import { formatComponents } from './utils';
-import { request } from 'Src/utils';
-import { API } from 'Src/api';
 import './index.scss';
+import { goto } from 'Src/utils/commonFunc';
+
 const confirm = Modal.confirm;
+const error = Modal.error;
 
 interface HeaderProps {
     generatePage?: any;
@@ -17,9 +18,35 @@ interface HeaderProps {
     operate
 }))
 class Header extends Component<HeaderProps> {
+
+    handleSubmit = () => {
+        const { generatePage } = this.props;
+        const { pageJSON, pageName } = generatePage;
+        if (!pageName) {
+            error({
+                title: '配置错误',
+                content: '请填写页面模板名称！'
+            });
+            return;
+        }
+
+        confirm({
+            title: '确认提交配置？',
+            content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
+            onOk: async() => {
+                // console.log('components', formatComponents(pageJSON.components));
+                actions.generatePage.addTemplateItem({
+                    pageData: JSON.stringify({
+                        components: formatComponents(pageJSON.components)
+                    }),
+                    pageName
+                });
+            }
+        });
+    }
+
     render() {
-        const { showTopToolbar = false, generatePage } = this.props;
-        const { pageJSON } = generatePage;
+        const { showTopToolbar = false } = this.props;
         return (
             <div className="thanos-common">
                 <div className="header">
@@ -27,29 +54,15 @@ class Header extends Component<HeaderProps> {
                     <span className="sub-title">打个响指，页面就好了</span>
                     {
                         showTopToolbar && <span className="user">
+                            <Button className='mar-l-4' onClick={() => {
+                                goto('');
+                            }}>
+                                返回
+                            </Button>
                             <Button
+                                className='mar-l-4'
                                 type='primary'
-                                onClick={() => {
-                                    confirm({
-                                        title: '确认提交配置？',
-                                        content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
-                                        onOk: async() => {
-                                            // console.log('components', formatComponents(pageJSON.components));
-                                            const response = await request(API.page.save, {
-                                                method: 'post',
-                                                body: {
-                                                    pageData: JSON.stringify({
-                                                        components: formatComponents(pageJSON.components)
-                                                    }),
-                                                    pageName: 'demo'
-                                                }
-                                            });
-                                            if (response && response.errcode === 0) {
-                                                message.success('提交配置成功');
-                                            }
-                                        }
-                                    });
-                                }}
+                                onClick={this.handleSubmit}
                             >
                                 打响指
                             </Button>

@@ -1,8 +1,14 @@
 // const server = process.env.BABEL_ENV === 'production' ? 'http://kaishufe.kaishustory.com' : 'http://10.0.23.7:3000/api';
-const server = 'http://kaishufe.kaishustory.com';
+const server = 'http://localhost:3012';
 
 export const API = {
     page: {
-        save: server + '/api/ks-thanos/v1/obtainJson', // 保存JSON
+        query: server + '/api/ks-thanos/v1/page/get',
+        save: server + '/api/ks-thanos/v1/page/add', // 保存JSON
+        update: server + '/api/ks-thanos/v1/page/add', // 更新JSON
+        delete: server + '/api/ks-thanos/v1/page/delete'
+    },
+    pageList: {
+        query: server + '/api/ks-thanos/v1/page/list'
     }
 };

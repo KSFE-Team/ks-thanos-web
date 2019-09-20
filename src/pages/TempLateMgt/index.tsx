@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import Header from '../components/Header';
 import { goto } from 'Src/utils/commonFunc';
-// import { Table } from 'antd';
+// import { Table, Card } from 'antd';
 import './index.scss';
+import MyTemplate from 'Src/pages/TempLateMgt/components/MyTemplate';
 
 const titles = ['列表模板', '表单模板', '图表模板', 'H5活动模板'];
 
@@ -15,13 +16,14 @@ export default class TempLateMgt extends Component {
                     {
                         titles.map((title, index) => {
                             return (
-                                <li onClick={() => goto('generatePage')} key={index}>
+                                <li onClick={() => goto('generatePage/-1')} key={index}>
                                     <div className="title">{title}</div>
                                 </li>
                             );
                         })
                     }
                 </ul>
+                <MyTemplate />
                 {/* <Table
                     columns={[
                         {

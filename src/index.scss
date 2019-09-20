@@ -8,11 +8,23 @@ body {
 }
 
 ul {
-    list-style: none;
-    margin: 0;
+  list-style: none;
+  margin: 0;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.mar-l-4 {
+  margin-left: 4px
+}
+
+.mar-l-10 {
+  margin-left: 10px
+}
+
+.mar-t-8 {
+  margin-top: 8px
 }

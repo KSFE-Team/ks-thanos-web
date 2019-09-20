@@ -4,6 +4,7 @@ import { connect, actions } from 'kredux';
 import Header from '../components/Header';
 import { PageRender, ComponentConfig, ComponentsLib } from './components';
 import './index.scss';
+import PageConfig from 'Src/pages/GeneratePage/components/Config/PageConfig';
 
 interface GeneratePageProps {
     generatePage: { pageJSON: any };
@@ -11,6 +12,11 @@ interface GeneratePageProps {
         undoDisable: any;
         redoDisable: any;
     };
+    match: {
+        params: {
+            name: string;
+        }
+    }
 }
 
 @connect(({ generatePage = {}, operate = {} }) => ({
@@ -26,6 +32,15 @@ class GeneratePage extends Component<GeneratePageProps> {
                 count: 0
             },
         });
+        if (this.props.match.params.name !== '-1') {
+            actions.generatePage.getTemplateItem({
+                pageName: this.props.match.params.name
+            });
+        } else {
+            actions.generatePage.setReducers({
+                pageName: ''
+            });
+        }
     }
 
     /**
@@ -90,6 +105,7 @@ class GeneratePage extends Component<GeneratePageProps> {
                         <div className="canvas">
                             <div className="thanos-page">
                                 <div className="thanos-page-operation">
+                                    <PageConfig />
                                     <ComponentsLib {...this.props} />
                                 </div>
                                 <div className="thanos-page-container">
