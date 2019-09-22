@@ -2,6 +2,7 @@ export default [
     {
         path: '/',
         exact: true,
+        title: '我的模版',
         modelList: [
             () => import('./pages/TempLateMgt/model/myTemplate')
         ],

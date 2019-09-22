@@ -9,17 +9,22 @@ export default {
         page: 1,
         limit: 15,
         totalPage: 0,
-        total: 0
+        total: 0,
+        pageName: {
+            value: ''
+        }, // 模版名称
     },
     effects: {
-        async getTemplateList(payload, getState) {
+        async getTemplateList(payload: any, getState: any) {
             const templateState = getState().myTemplate;
+            const postData = {
+                page: templateState.page,
+                limit: templateState.limit,
+                pageName: templateState.pageName.value
+            };
             const response = await request(API.pageList.query, {
                 method: 'GET',
-                body: {
-                    page: templateState.page,
-                    limit: templateState.limit
-                }
+                body: postData
             });
             if (response && !response.errcode) {
                 const result = response.result;
@@ -30,7 +35,7 @@ export default {
                 });
             }
         },
-        async deleteTemplateItem(payload) {
+        async deleteTemplateItem(payload: any) {
             const response = await request(API.page.delete, {
                 method: 'GET',
                 body: {

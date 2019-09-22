@@ -1,0 +1,36 @@
+.thanos-layout {
+    min-height: 100vh;
+    background: #ffffff;
+
+    .thanos-logo {
+        height: 64px;
+        padding: 10px;
+        line-height: 44px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 22px;
+
+        .thanos-logo-img {
+            max-width: 30px;
+            height: 100%;
+            margin-right: 10px;
+        }
+    }
+
+    .thanos-title {
+        background: #ffffff;
+        box-shadow: 0 2px 8px #f0f1f2;
+        position: relative;
+    }
+
+    .thanos-breadcrumb {
+        padding: 8px 10px;
+        border-bottom: 1px solid #e8e8e8;
+    }
+
+    .thanos-content {
+        height: calc(100% - 102px);
+        overflow-y: auto;
+        padding: 5px;
+    }
+}

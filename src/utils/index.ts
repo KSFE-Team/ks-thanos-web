@@ -111,3 +111,11 @@ export const saveComponent = (targetId: string, components: any[], config: any) 
         return item;
     });
 };
+
+/**
+ * 匹配当前路由
+ */
+export const matchRouter = (path: string, routerList: any[]) => {
+    const currentPath = path;
+    return routerList.find(({path}) => path === currentPath) || {};
+};

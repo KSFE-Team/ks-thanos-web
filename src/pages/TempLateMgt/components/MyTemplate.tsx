@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect, actions } from 'kredux';
-import { Table, Button, Modal } from 'antd';
+import { Table, Button, Modal, Form, Input } from 'antd';
 import './style.scss';
 import { goto } from 'Src/utils/commonFunc';
+import { SearchForm } from 'Src/bizComponents';
 
 interface MyTemplateProps {
     myTemplate: {
@@ -11,20 +12,24 @@ interface MyTemplateProps {
         page: number;
         total: number;
         totalPage: number;
-    }
+        pageName: {
+            value: string
+        }
+    },
+    form: any,
+    listLoading: boolean
 }
 
 class MyTemplate extends Component<MyTemplateProps> {
+
     columns = [
         {
             title: '模板名称',
             dataIndex: 'pageName',
-            key: 'pageName'
         },
         {
             title: '操作',
-            key: 'action',
-            render: (text, record) => (
+            render: (text: string, record: any) => (
                 <span>
                     <Button type="primary" onClick={() => {
                         goto(`generatePage/${record.pageName}`);
@@ -48,22 +53,56 @@ class MyTemplate extends Component<MyTemplateProps> {
         actions.myTemplate.setReducers({
             page,
         });
+        this.loadList();
+    }
+
+    loadList = () => {
         actions.myTemplate.getTemplateList();
+    }
+
+    resetPage = () => {
+        this.handlePageChange(1);
     }
 
     componentDidMount() {
-        actions.myTemplate.getTemplateList();
+        this.loadList();
     }
 
     render() {
+        const { listLoading } = this.props;
         const { list = [], page, limit, total } = this.props.myTemplate;
         return (
             <div className="my-template-container">
-                <div className="my-template-title">我的模板</div>
+                <SearchForm
+                    form={this.props.form}
+                    components={[
+                        {
+                            title: '模版名称',
+                            key: 'pageName',
+                            component: <Input
+                                placeholder={'请输入模版名称'}
+                                onPressEnter={this.resetPage}
+                            />
+                        }
+                    ]}
+                    actions={<Fragment>
+                        <Button
+                            onClick={this.resetPage}
+                        >查询</Button>
+                        <Button
+                            className='mar-l-4'
+                            type='primary'
+                            onClick={() => {
+                                goto(`generatePage/-1`);
+                            }}
+                        >创建模版</Button>
+                    </Fragment>}
+                />
                 <Table
                     columns={this.columns}
                     dataSource={list}
                     rowKey="id"
+                    loading={listLoading}
                     pagination={{
                         defaultCurrent: 1,
                         current: page,
@@ -78,7 +117,24 @@ class MyTemplate extends Component<MyTemplateProps> {
 }
 
 export default connect(({
-    myTemplate
+    myTemplate,
+    loading
 }) => ({
-    myTemplate
-}))(MyTemplate);
+    myTemplate,
+    listLoading: loading.effects['myTemplate/getTemplateList']
+}))(Form.create({
+    mapPropsToFields(props: MyTemplateProps) {
+        return {
+            pageName: Form.createFormField({
+                ...props.myTemplate.pageName,
+                value: props.myTemplate.pageName.value
+            }),
+        };
+    },
+    onFieldsChange(props: MyTemplateProps, fields) {
+        actions.myTemplate.setReducers({
+            ...props.myTemplate,
+            ...fields
+        });
+    }
+})(MyTemplate));
