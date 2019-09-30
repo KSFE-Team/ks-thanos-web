@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {actions} from 'kredux';
 import { Drawer } from 'antd';
-import { ALL_TOOLS } from 'Components';
+import { ALL_TOOLS } from 'Src/components';
 import { changeConfig } from 'Src/utils';
 
 interface ComponentConfigProps{

@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { Form, Input } from 'antd';
-import { DATA_DISPLAY, DATA_ENTRY, OTHER_COMPONENTS, ALL_TOOLS } from 'Components';
+import { DATA_DISPLAY, DATA_ENTRY, OTHER_COMPONENTS, ALL_TOOLS } from 'Src/components';
 import ComponentType from './ComponentType';
 import './index.scss';
 const { Search } = Input;

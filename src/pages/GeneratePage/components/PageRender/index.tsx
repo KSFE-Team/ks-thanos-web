@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { Icon, Modal } from 'antd';
 import { DND } from 'BizComponents';
-import { ALL_TOOLS } from 'Components';
+import { ALL_TOOLS } from 'Src/components';
 import { changeConfig } from 'Src/utils';
 import './style.scss';
 const Confirm = Modal.confirm;
