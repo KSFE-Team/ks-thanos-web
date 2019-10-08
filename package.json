@@ -161,5 +161,6 @@
     "typescript": "~3.2.1",
     "typescript-eslint-parser": "^22.0.0"
   },
-  "proxy": "http://localhost:3012"
+  "proxy": "http://localhost:3012",
+  "homepage": "/h5/ks-thanos"
 }
