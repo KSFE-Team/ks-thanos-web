@@ -1,4 +1,4 @@
-const server = '/thanos-api';
+const server = window.location.origin;
 export const API = {
     page: {
         query: server + '/api/ks-thanos/v1/page/get',
