@@ -7,7 +7,10 @@ import './index.scss';
 import PageConfig from 'Src/pages/GeneratePage/components/Config/PageConfig';
 
 interface GeneratePageProps {
-    generatePage: { pageJSON: any };
+    generatePage: {
+        pageJSON: any;
+        selectedComponentId: string;
+     };
     operate: {
         undoDisable: any;
         redoDisable: any;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { actions } from 'kredux';
+import { actions, connect } from 'kredux';
 import { Icon, Modal } from 'antd';
 import { DND } from 'Src/bizComponents';
 import { ALL_TOOLS } from 'Src/components';
@@ -12,9 +12,10 @@ interface PageRenderProps{
         pageJSON: any
     },
     dataSource?: any[]
+    selectedComponentId: string;
 }
 
-export default class PageRender extends Component<PageRenderProps> {
+class PageRender extends Component<PageRenderProps> {
 
     /**
      * 渲染组件
@@ -50,6 +51,9 @@ export default class PageRender extends Component<PageRenderProps> {
         };
         this.setJSON({
             components: changeConfig(id, components, config)
+        });
+        actions.generatePage.selectComponent({
+            id
         });
     }
 
@@ -102,7 +106,7 @@ export default class PageRender extends Component<PageRenderProps> {
                                 onClick={(e) => {
                                     this.handleClick(data, e);
                                 }}
-                                className={data.componentSelected ? 'page-item component-selected' : 'page-item'}
+                                className={this.props.selectedComponentId === data.id ? 'page-item component-selected' : 'page-item'}
                             >
                                 {this.renderComponent(data)}
                                 <div className='item-close'
@@ -136,3 +140,7 @@ export default class PageRender extends Component<PageRenderProps> {
         );
     }
 }
+
+export default connect(({ generatePage }) => ({
+    selectedComponentId: generatePage.selectedComponentId
+}))(PageRender);
