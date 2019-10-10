@@ -46,6 +46,12 @@ class GeneratePage extends Component<GeneratePageProps> {
         }
     }
 
+    componentWillUnmount() {
+        actions.generatePage.selectComponent({
+            id: ''
+        });
+    }
+
     /**
      * 获取显示配置的组件
      */
