@@ -12,6 +12,7 @@ export default {
             components: [] // 子组件
         },
         pageName: '', // 页面名称
+        selectedComponentId: '',
     },
     effects: {
         getTemplateItem: async(payload) => {
@@ -118,6 +119,11 @@ export default {
         changeTemplateName: (payload: { name: string }) => {
             return {
                 pageName: payload.name
+            };
+        },
+        selectComponent: (payload) => {
+            return {
+                selectedComponentId: payload.id
             };
         }
     }

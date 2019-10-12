@@ -5,37 +5,25 @@ import { ALL_TOOLS } from 'Src/components';
 import { changeConfig } from 'Src/utils';
 
 interface ComponentConfigProps{
-    generatePage: {pageJSON: any};
+    generatePage: {
+        pageJSON: any;
+        selectedComponentId: string;
+    };
 }
 export default class ComponentConfig extends Component<ComponentConfigProps> {
-
-    state = {
-        visible: false,
-        component: {
-            id: '',
-            componentName: ''
-        }
-    }
-
-    componentDidMount() {
-        this.setState({
-            ...this.getShowConfig()
-        });
-    }
-
     /**
      * 获取显示配置的组件
      */
     getShowConfig = (components?) => {
+        const {pageJSON, selectedComponentId} = this.props.generatePage;
         if (!components) {
-            const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
         }
         let visible = false,
             component;
         components.forEach((item: any) => {
             if (!visible) {
-                if (item.configVisible) {
+                if (item.id === selectedComponentId) {
                     visible = true;
                     component = item;
                     return;
@@ -60,11 +48,14 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
             const {pageJSON} = this.props.generatePage;
             components = pageJSON.components;
         }
-        const { component } = this.state;
+        const { component } = this.getShowConfig();
         this.setJSON({
             components: changeConfig(component.id, components, {
                 configVisible: false
             })
+        });
+        actions.generatePage.selectComponent({
+            id: ''
         });
     };
 
@@ -95,7 +86,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
 
     renderConfig = () => {
         const { pageJSON } = this.props.generatePage;
-        const { component } = this.state;
+        const { component } = this.getShowConfig();
         const Component = ALL_TOOLS[(component || {}).componentName];
         if (Component) {
             const Config = Component.config;
@@ -113,7 +104,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
     };
 
     render() {
-        const { visible } = this.state;
+        const { selectedComponentId } = this.props.generatePage;
         return (
             <Drawer
                 width={700}
@@ -123,7 +114,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
                 onClose={() => {
                     this.onClose();
                 }}
-                visible={visible}
+                visible={!!selectedComponentId}
             >
                 {this.renderConfig()}
             </Drawer>
