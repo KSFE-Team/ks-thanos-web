@@ -1,7 +1,12 @@
 import { actions } from 'kredux';
 import { getUniqueID, request } from 'Src/utils';
 import { API } from 'Src/api';
+import { goto } from 'Src/utils/commonFunc';
 import { message } from 'antd';
+
+const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
+
+// const [TABLE, FORM] = ONLY_ONCE_COMPONENTS;
 
 export default {
     namespace: 'generatePage',
@@ -33,8 +38,7 @@ export default {
                 });
             }
         },
-        addTemplateItem: async(payload) => {
-            // console.log('components', formatComponents(pageJSON.components));
+        addTemplateItem: async(payload?) => {
             const response = await request(API.page.save, {
                 method: 'post',
                 body: {
@@ -43,10 +47,10 @@ export default {
             });
             if (response && response.errcode === 0) {
                 message.success('提交配置成功');
+                goto('');
             }
         },
         updateTemplateItem: async(payload) => {
-            // console.log('components', formatComponents(pageJSON.components));
             const response = await request(API.page.update, {
                 method: 'post',
                 body: {
@@ -59,11 +63,15 @@ export default {
         }
     },
     reducers: {
-        insertComponent: (payload, getState) => {
+        insertComponent: (payload: any, getState: any) => {
             const state = getState();
             const { generatePage } = state;
             let { pageJSON } = generatePage;
             const { components } = pageJSON;
+            if (ONLY_ONCE_COMPONENTS.includes(payload.componentName) && components.some(({ componentName }) => componentName === payload.componentName)) {
+                message.warn('该组件只能配置一次');
+                return;
+            }
             pageJSON = {
                 ...pageJSON,
                 components: [
@@ -89,7 +97,7 @@ export default {
             const { generatePage } = state;
             let { pageJSON } = generatePage;
             const { components } = pageJSON;
-            const FormIndex = components.findIndex(({ componentName, componentSelected }) => componentName === 'Form' && componentSelected);
+            const FormIndex = components.findIndex(({ componentName, configVisible }) => componentName === 'Form' && configVisible);
             components[FormIndex] = {
                 ...components[FormIndex],
                 components: [

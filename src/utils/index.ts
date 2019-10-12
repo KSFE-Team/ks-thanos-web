@@ -119,3 +119,11 @@ export const matchRouter = (path: string, routerList: any[]) => {
     const currentPath = path;
     return routerList.find(({path}) => path === currentPath) || {};
 };
+
+/**
+ * 获取组件配置
+ * @param components Object
+ */
+export const getTools = (components: any) => {
+    return Object.keys(components).map((key) => components[key].getTools());
+};

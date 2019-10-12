@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Icon, Tooltip } from 'antd';
+// import { Icon, Tooltip } from 'antd';
 import { connect, actions } from 'kredux';
 import Header from '../components/Header';
 import { PageRender, ComponentConfig, ComponentsLib } from './components';
@@ -85,13 +85,13 @@ class GeneratePage extends Component<GeneratePageProps> {
     };
 
     render() {
-        const { undoDisable, redoDisable } = this.props.operate;
+        // const { undoDisable, redoDisable } = this.props.operate;
         const visible = this.getShowConfig().visible;
         return (
             <div className="thanos-generate-page-container">
                 <Header showTopToolbar={true} />
                 <div className="page-wrapper">
-                    <div className="left-toolbar">
+                    {/* <div className="left-toolbar">
                         <Tooltip placement="right" title="撤销" >
                             <Icon type="undo" style={undoDisable ? { color: '#ccc', cursor: 'not-allowed' } : {}} onClick={undoDisable ? () => { } : () => {
                                 actions.operate.undo();
@@ -109,7 +109,7 @@ class GeneratePage extends Component<GeneratePageProps> {
                         <Tooltip placement="right" title="缩小" >
                             <Icon type="minus" />
                         </Tooltip>
-                    </div>
+                    </div> */}
                     <div className="page-shower">
                         <div className="canvas">
                             <div className="thanos-page">

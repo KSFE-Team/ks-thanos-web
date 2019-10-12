@@ -46,9 +46,15 @@ const ALL_TOOLS = {
     ...OTHER_COMPONENTS
 };
 
+/**
+ * 获取录入组件
+ */
+const getDataEntry = () => DATA_ENTRY;
+
 export {
     DATA_DISPLAY,
     DATA_ENTRY,
     OTHER_COMPONENTS,
-    ALL_TOOLS
+    ALL_TOOLS,
+    getDataEntry
 };

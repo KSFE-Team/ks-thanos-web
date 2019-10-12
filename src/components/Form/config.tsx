@@ -1,10 +1,15 @@
 import React, { Component, Fragment } from 'react';
-import { Form, Input, Button, Row, Col, Radio } from 'antd';
+import { Form, Input, Button, Row, Col, Radio, Tabs } from 'antd';
+import { actions } from 'kredux';
 import { FORM_TYPES } from './constants';
 import PropTypes from 'prop-types';
+import { getDataEntry, ALL_TOOLS } from 'Src/components';
+import { getTools } from 'Src/utils';
+import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
 const [{key: NORMAL}, {key: SEARCH}] = FORM_TYPES;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
+const { TabPane } = Tabs;
 const formItemLayout = {
     labelCol: {
         xs: { span: 24 },
@@ -58,10 +63,17 @@ export default class FormConfig extends Component<FormConfigProps> {
         }
     }
 
+    /**
+     * 插入组件事件
+     */
+    handleClick = (componentName: string) => {
+        actions.generatePage.insertFormComponent(ALL_TOOLS[componentName].getInitJson());
+    }
+
     handleSave = () => {
         const { formData } = this.state;
         const { pageJSON, onSave } = this.props;
-        pageJSON.components = pageJSON.components.map((component) => {
+        pageJSON.components = pageJSON.components.map((component: any) => {
             if (component.configVisible) {
                 component = {
                     ...component,
@@ -140,53 +152,74 @@ export default class FormConfig extends Component<FormConfigProps> {
 
     render() {
         const { formData } = this.state;
+        const dataSource = getTools(getDataEntry());
         return <div>
-            <FormItem
-                label={'绑定redux的Key'}
-                {...formItemLayout}
+            <Tabs
+                defaultActiveKey={'1'}
+                tabPosition={'left'}
             >
-                <Input
-                    value={formData[STATE_NAME]}
-                    placeholder='例如： userSearchForm / userInfo'
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        this.handleChange(STATE_NAME, value);
-                    }}
-                />
-            </FormItem>
-            <FormItem
-                label={'是否选中'}
-                {...formItemLayout}
-            >
-                <RadioGroup
-                    value={formData[TYPE]}
-                    onChange={(e) => {
-                        const value = e.target.value;
-                        this.handleChange(TYPE, value);
-                    }}
-                >
+                <TabPane tab={`组件配置`} key={'1'}>
+                    <FormItem
+                        label={'绑定redux的Key'}
+                        {...formItemLayout}
+                    >
+                        <Input
+                            value={formData[STATE_NAME]}
+                            placeholder='例如： userSearchForm / userInfo'
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                this.handleChange(STATE_NAME, value);
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={'是否选中'}
+                        {...formItemLayout}
+                    >
+                        <RadioGroup
+                            value={formData[TYPE]}
+                            onChange={(e) => {
+                                const value = e.target.value;
+                                this.handleChange(TYPE, value);
+                            }}
+                        >
+                            {
+                                FORM_TYPES.map(({ key, name }) => {
+                                    return (
+                                        <Radio key={key} value={key}>{name}</Radio>
+                                    );
+                                })
+                            }
+                        </RadioGroup>
+                    </FormItem>
                     {
-                        FORM_TYPES.map(({ key, name }) => {
-                            return (
-                                <Radio key={key} value={key}>{name}</Radio>
-                            );
-                        })
+                        this.getTypeForm()
                     }
-                </RadioGroup>
-            </FormItem>
-            {
-                this.getTypeForm()
-            }
-            <FormItem>
-                <Row>
-                    <Col>
-                        <Button
-                            onClick={this.handleSave}
-                            type='primary'
-                        >确定</Button>
-                    </Col>
-                </Row>
-            </FormItem>
+                    <FormItem>
+                        <Row>
+                            <Col>
+                                <Button
+                                    onClick={this.handleSave}
+                                    type='primary'
+                                >确定</Button>
+                            </Col>
+                        </Row>
+                    </FormItem>
+                </TabPane>
+                <TabPane tab={`子组件`} key={'2'}>
+                    <FormItem
+                        label={'可配置组件'}
+                        {...formItemLayout}
+                    >
+                        <ComponentType
+                            dataSource={[dataSource] || []}
+                            span={12}
+                            onClick={this.handleClick}
+                            title={''}
+                        />
+                    </FormItem>
+                </TabPane>
+            </Tabs>
         </div>;
     }
 }
