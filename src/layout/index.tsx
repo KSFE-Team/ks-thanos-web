@@ -90,7 +90,7 @@ export default class BasicLayout extends Component<BasicLayoutProps> {
                         <div className='thanos-logo'>
                             <img
                                 className='thanos-logo-img'
-                                src='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1569153260453&di=97a30bec36febfd87e9387b33cf069f4&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F0149935b84224da80120577da9d458.jpg%401280w_1l_2o_100sh.jpg'
+                                src={'http://kms.kaishustory.com/logo.png'}
                             />
                             灭霸
                         </div>
