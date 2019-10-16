@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { connect, actions } from 'kredux';
 import Header from '../components/Header';
 import { PageRender, ComponentConfig, ComponentsLib } from './components';
+import { STATE } from './model/generatePage';
 import './index.scss';
 import PageConfig from 'Src/pages/GeneratePage/components/Config/PageConfig';
 
@@ -41,7 +42,8 @@ class GeneratePage extends Component<GeneratePageProps> {
             });
         } else {
             actions.generatePage.setReducers({
-                pageName: ''
+                pageJSON: STATE.pageJSON,
+                pageName: STATE.pageName
             });
         }
     }

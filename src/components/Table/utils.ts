@@ -7,7 +7,7 @@ export const getInitJson = () => ({
     source: 'antd',
     default: false,
     props: {
-        columns: [{title: '示例', dataIndex: 'example'}]
+        columns: [{title: '序号', dataIndex: 'sortNum'}]
     },
     dependencies: {},
     components: []

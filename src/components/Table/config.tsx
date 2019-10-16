@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
-import { Form, Input, Table, Button, Row, Col, Checkbox, Select, message } from 'antd';
+import { Form, Input, Table, Button, Row, Col, Select, message } from 'antd';
 import { getUniqueID } from 'Src/utils';
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -30,7 +30,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         dataSource: [], // table data
         editDataFlag: false,
         method: 'GET', // request method
-        searchComponentChecked: false, // checkbox search component check flag
+        // searchComponentChecked: false, // checkbox search component check flag
         tableCount: 0, // table key
     };
 
@@ -53,7 +53,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                     }
                 });
                 if (state.dataSource.length === 0) {
-                    const dataSource = currentComponent.props.columns.map((item, index) => {
+                    const dataSource = currentComponent.props.columns.filter(({ component }) => !component).map((item, index) => {
                         return {
                             dataKey: item.dataIndex,
                             key: index,
@@ -64,8 +64,8 @@ export default class TableConfig extends Component<TableConfigProps> {
                     newState.tableCount = dataSource.length;
                 }
 
-                if (!state.api && currentComponent.dependencies) {
-                    newState.api = currentComponent.dependencies.api || '';
+                if (!state.api && currentComponent.dependencies && currentComponent.dependencies.api) {
+                    newState.api = currentComponent.dependencies.api.value || '';
                 }
 
                 if (currentComponent.dependencies.method) {
@@ -138,7 +138,10 @@ export default class TableConfig extends Component<TableConfigProps> {
                 item.dependencies = {
                     type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
                     responseType: 'list', // 接口返回类型， // list 列表， object 对象
-                    api, // 接口地址
+                    api: {
+                        key: 'query',
+                        value: api
+                    }, // 接口地址
                     method,
                     actionType: 'get'
                 };
@@ -243,7 +246,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             wrapperCol: {span: 16},
         };
 
-        const { dataSource, searchComponentChecked } = this.state;
+        const { dataSource } = this.state;
         let columns = [
             {
                 title: '表头名称',
@@ -257,8 +260,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             },
             {
                 title: 'operation',
-                dataIndex: 'operation',
-                render: (text, record) => {
+                render: (text: string, record: any) => {
                     return this.state.dataSource.length >= 2 ? (
                         <div>
                             <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
@@ -297,7 +299,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             <React.Fragment>
                 <FormItem {...formItemLayout} label="接口地址">
                     <Input value={this.state.api}
-                        placeholder="例：/userservice/media/upload"
+                        placeholder="例：/user/list"
                         onChange={this.apiInputChange}/>
                 </FormItem>
                 <FormItem {...formItemLayout} label="请求方式">
@@ -318,9 +320,9 @@ export default class TableConfig extends Component<TableConfigProps> {
                     columns={columns}
                     pagination={false}
                 />
-                <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
+                {/* <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
                     <Checkbox checked={searchComponentChecked} onChange={this.addSearchComponent}>是否拥有条件搜索</Checkbox>
-                </Row>
+                </Row> */}
                 <Row style={{marginTop: '20px'}} type="flex" justify="end" gutter={1}>
                     <Col>
                         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>

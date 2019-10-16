@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
-import { formatComponents } from './utils';
+import { formatComponents, findParamKey } from './utils';
 import './index.scss';
 import { goto } from 'Src/utils/commonFunc';
 
@@ -36,7 +36,8 @@ class Header extends Component<HeaderProps> {
             onOk: async() => {
                 actions.generatePage.addTemplateItem({
                     pageData: JSON.stringify({
-                        components: formatComponents(pageJSON.components)
+                        components: formatComponents(pageJSON.components),
+                        paramKey: findParamKey(pageJSON.components),
                     }),
                     pageName
                 });

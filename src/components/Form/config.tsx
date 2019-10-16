@@ -26,6 +26,8 @@ const TYPE = 'type';
 const LINK = 'link';
 const SAVE_API = 'saveApi';
 const UPDATE_API = 'updateApi';
+const GET_API = 'getApi';
+const PARAM_KEY = 'paramKey';
 
 interface FormConfigProps{
     onSave(pageJSON:any): void,
@@ -56,6 +58,8 @@ export default class FormConfig extends Component<FormConfigProps> {
                     [LINK]: current[LINK],
                     [SAVE_API]: current[SAVE_API],
                     [UPDATE_API]: current[UPDATE_API],
+                    [GET_API]: current[GET_API],
+                    [PARAM_KEY]: current[PARAM_KEY],
                 }
             };
         } else {
@@ -123,6 +127,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     <FormItem
                         label={'新增API'}
                         {...formItemLayout}
+                        required={true}
                     >
                         <Input
                             placeholder='新增API'
@@ -136,6 +141,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     <FormItem
                         label={'修改API'}
                         {...formItemLayout}
+                        required={true}
                     >
                         <Input
                             placeholder='修改API'
@@ -143,6 +149,34 @@ export default class FormConfig extends Component<FormConfigProps> {
                             onChange={(e) => {
                                 const { value } = e.target;
                                 this.handleChange(UPDATE_API, value);
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={'查询API'}
+                        {...formItemLayout}
+                        required={true}
+                    >
+                        <Input
+                            placeholder='查询API'
+                            value={formData[GET_API]}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                this.handleChange(GET_API, value);
+                            }}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={'路由参数'}
+                        {...formItemLayout}
+                        required={true}
+                    >
+                        <Input
+                            placeholder='路由参数'
+                            value={formData[PARAM_KEY]}
+                            onChange={(e) => {
+                                const { value } = e.target;
+                                this.handleChange(PARAM_KEY, value);
                             }}
                         />
                     </FormItem>

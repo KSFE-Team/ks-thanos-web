@@ -4,21 +4,24 @@ import { API } from 'Src/api';
 import { goto } from 'Src/utils/commonFunc';
 import { message } from 'antd';
 
+/**
+ * 只能配置一次的组件
+ */
 const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
 
-// const [TABLE, FORM] = ONLY_ONCE_COMPONENTS;
+export const STATE = {
+    count: 0,
+    pageJSON: {
+        name: '', // 页面名称
+        components: [] // 子组件
+    },
+    pageName: '', // 页面名称
+    selectedComponentId: '',
+};
 
 export default {
     namespace: 'generatePage',
-    initialState: {
-        count: 0,
-        pageJSON: {
-            name: '', // 页面名称
-            components: [] // 子组件
-        },
-        pageName: '', // 页面名称
-        selectedComponentId: '',
-    },
+    initialState: {...STATE},
     effects: {
         getTemplateItem: async(payload) => {
             const response = await request(API.page.query, {

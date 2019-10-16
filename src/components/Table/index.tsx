@@ -2,12 +2,21 @@ import React from 'react';
 import { Table } from 'antd';
 import { getInitJson, getTools } from './utils';
 import tableConfig from './config';
-class KTable extends React.Component {
+
+interface KTableProps {
+    columns: any[],
+}
+
+class KTable extends React.Component<KTableProps> {
 
     render() {
+        const { columns, ...OTHER_PROPS } = this.props;
+        let showColumns = [...columns];
+        showColumns = showColumns.filter(({ component }) => !component);
         return (
             <Table
-                {...this.props}
+                {...OTHER_PROPS}
+                columns={showColumns}
             />
         );
     }

@@ -70,6 +70,11 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 delete fieldValues[KEY];
                 delete fieldValues[LABEL];
                 delete fieldValues[DEFAULT_VALUE];
+                for (const key in fieldValues) {
+                    if (!fieldValues[key] && fieldValues[key] !== 0) {
+                        delete fieldValues[key];
+                    }
+                }
                 pageJSON.components = saveComponent(current.id, pageJSON.components, {
                     [KEY]: key,
                     [LABEL]: label,
