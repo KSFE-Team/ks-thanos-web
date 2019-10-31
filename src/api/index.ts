@@ -1,4 +1,5 @@
-const server = window.location.origin;
+// const server = window.location.origin;
+const server = 'http://kaishufe.kaishustory.com';
 export const API = {
     page: {
         query: server + '/api/ks-thanos/v1/page/get',

@@ -87,7 +87,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
 
     render() {
         const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
-        const { formData, formData: {props: stateProps} } = this.state;
+        const { formData, formData: {props: stateProps = {}} } = this.state;
         return <div>
             <FormItem
                 label={ALIAS.KEY}
