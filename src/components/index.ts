@@ -8,6 +8,7 @@ import * as TextArea from './TextArea/index';
 import * as Radio from './Radio/index';
 import * as CheckBox from './CheckBox';
 import * as Form from './Form';
+import * as Fragment from './Fragment';
 
 /**
  * 展示类组件
@@ -20,7 +21,8 @@ const DATA_ENTRY = {
     RangePicker,
     TextArea,
     Radio,
-    CheckBox
+    CheckBox,
+    Fragment
 };
 
 /**

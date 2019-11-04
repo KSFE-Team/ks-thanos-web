@@ -100,17 +100,37 @@ export default {
             const { generatePage } = state;
             let { pageJSON } = generatePage;
             const { components } = pageJSON;
-            const FormIndex = components.findIndex(({ componentName, configVisible }) => componentName === 'Form' && configVisible);
-            components[FormIndex] = {
-                ...components[FormIndex],
-                components: [
-                    ...components[FormIndex].components || [],
-                    {
-                        ...payload,
-                        id: getUniqueID(),
-                    }
-                ]
-            };
+
+            // from 组件可配置时
+            const FormVisibleIndex = components.findIndex(({ componentName, configVisible }) => componentName === 'Form' && configVisible);
+            if (FormVisibleIndex >= 0) {
+                components[FormVisibleIndex] = {
+                    ...components[FormVisibleIndex],
+                    components: [
+                        ...components[FormVisibleIndex].components || [],
+                        {
+                            ...payload,
+                            id: getUniqueID(),
+                        }
+                    ]
+                };
+            } else {
+                const FormIndex = components.findIndex(({ componentName }) => componentName === 'Form');
+                if (FormIndex >= 0) {
+                    const FragmentVisibleIndex = components[FormIndex].components.findIndex(({ componentName, configVisible }) => componentName === 'Fragment' && configVisible);
+                    components[FormIndex].components[FragmentVisibleIndex] = {
+                        ...components[FormIndex].components[FragmentVisibleIndex],
+                        components: [
+                            ...components[FormIndex].components[FragmentVisibleIndex].components,
+                            {
+                                ...payload,
+                                id: getUniqueID()
+                            }
+                        ]
+                    };
+                }
+            }
+
             pageJSON = {
                 ...pageJSON,
                 components: [
