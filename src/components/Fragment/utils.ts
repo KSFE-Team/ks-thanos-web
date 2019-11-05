@@ -4,12 +4,14 @@
 export const getInitJson = () => ({
     stateName: '',
     componentName: 'Fragment',
-    source: 'antd',
+    source: '',
     default: false,
-    blockName: '', // 区域块名称
     key: '',
     label: '',
-    components: []
+    components: [], // 区域块内的组件
+    fragmentName: '', // 区域块名称
+    showKey: '',
+    showValue: ''
 });
 
 /**

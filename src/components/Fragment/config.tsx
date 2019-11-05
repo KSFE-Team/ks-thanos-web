@@ -18,7 +18,7 @@ const formItemLayout = {
     }
 };
 
-const BLOCK_NAME = 'blockName';
+const FRAGMENT_NAME = 'fragmentName';
 
 interface FragmentConfigProps{
     onSave(pageJSON:any): void,
@@ -57,7 +57,7 @@ export default class FragmentConfig extends Component<FragmentConfigProps, Fragm
             const current = findComponent(components);
             return {
                 formData: {
-                    [BLOCK_NAME]: current[BLOCK_NAME],
+                    [FRAGMENT_NAME]: current[FRAGMENT_NAME],
                 }
             };
         } else {
@@ -117,11 +117,11 @@ export default class FragmentConfig extends Component<FragmentConfigProps, Fragm
                 {...formItemLayout}
             >
                 <Input
-                    value={formData[BLOCK_NAME]}
-                    placeholder='例如： blockName'
+                    value={formData[FRAGMENT_NAME]}
+                    placeholder='例如： fragmentName'
                     onChange={(e) => {
                         const value = e.target.value;
-                        this.handleChange(BLOCK_NAME, value);
+                        this.handleChange(FRAGMENT_NAME, value);
                     }}
                 />
             </FormItem>

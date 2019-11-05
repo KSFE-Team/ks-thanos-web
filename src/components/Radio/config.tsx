@@ -76,18 +76,16 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 onChange={this.handleChange.bind(this, TEXT, index)}
             />
         },
-        // {
-        //     title: '是否默认选中',
-        //     dataIndex: 'check',
-        //     key: 'check',
-        //     render: (item, record, index) =>
-        //         <Switch
-        //             defaultChecked={record[CHECK]}
-        //             checkedChildren="是"
-        //             unCheckedChildren="否"
-        //             onChange={this.handleChange.bind(this, CHECK, index)}
-        //         />
-        // },
+        {
+            title: '区域块',
+            dataIndex: 'fragmentName',
+            key: 'fragmentName',
+            render: (item, record, index) => <Input
+                value=''
+                placeholder='例如： 姓名'
+                onChange={this.handleChange.bind(this, TEXT, index)}
+            />
+        },
         {
             title: '是否禁用',
             dataIndex: 'disabled',
