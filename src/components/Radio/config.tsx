@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form } from 'antd';
+import { connect } from 'kredux';
+import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+const Option = Select.Option;
 
 const VALUE = 'value';
 const LABEL = 'label';
@@ -10,6 +12,7 @@ const TEXT = 'text';
 const CHECK = 'checked';
 const DISABLED = 'disabled';
 const OPTIONS = 'options';
+const SELECT = 'fragmentName';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
 const formItemLayout = {
@@ -26,6 +29,10 @@ interface CheckBoxConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
+@connect(({ generatePage = {}, operate = {} }) => ({
+    generatePage,
+    operate
+}))
 
 export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     static propTypes = {
@@ -52,7 +59,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         current: {
             id: '',
             props: {}
-        }
+        },
+        selectOption: []
     };
 
     columns = [
@@ -80,11 +88,18 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             title: '区域块',
             dataIndex: 'fragmentName',
             key: 'fragmentName',
-            render: (item, record, index) => <Input
-                value=''
-                placeholder='例如： 姓名'
-                onChange={this.handleChange.bind(this, TEXT, index)}
-            />
+            render: (item, record, index) => <Select
+                allowClear={true}
+                style={{ width: '100%' }}
+                value={record[SELECT]}
+                onChange={this.handleChange.bind(this, SELECT, index)}
+            >
+                {
+                    this.state.selectOption.length > 0 && this.state.selectOption.map((item:string, ind) => {
+                        return <Option key={ind}>{item}</Option>;
+                    })
+                }
+            </Select>
         },
         {
             title: '是否禁用',
@@ -138,6 +153,18 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         }
     }
 
+    componentDidMount() {
+        const Fragment = this.props.pageJSON.components[0].components.filter((item) => {
+            return item.componentName === 'Fragment';
+        });
+        if (Fragment.length > 0) {
+            const selectOption = Fragment.map((item) => {
+                return item.componentName;
+            });
+            this.setState({selectOption});
+        }
+    }
+
     /**
      * @desc 保存修改
      */
@@ -161,6 +188,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
         onSave && onSave(pageJSON);
+        console.log(pageJSON, 'pageJSON');
     }
 
     /**
@@ -168,7 +196,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
      */
     handleChange = (itemKey, index: number, e) => {
         const { formData } = this.state;
-        const value = typeof e === 'boolean' ? e : e.target.value;
+        const value = typeof e === 'object' ? e.target.value : e;
         switch (itemKey) {
             case LABEL:
                 formData.label = value;
@@ -182,6 +210,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             case CHECK:
             case DISABLED:
                 formData.options[index][itemKey] = value;
+                break;
+            case SELECT:
+                formData.options[index][itemKey] = e ? itemKey : '';
                 break;
             default:
                 formData.options[index][itemKey] = value;

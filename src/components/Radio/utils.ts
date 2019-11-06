@@ -12,7 +12,7 @@ export const getInitJson = () => ({
     label: '状态',
     options: [
         {value: 1, disabled: false, rowKey: 1, text: '启用', fragmentName: '' },
-        { value: 0, disabled: false, rowKey: 2, text: '禁用', fragmentName: '' }
+        {value: 0, disabled: false, rowKey: 2, text: '禁用', fragmentName: '' }
     ],
 });
 
