@@ -1,7 +1,7 @@
 import { actions } from 'kredux';
 import { getUniqueID, request, insertComponents } from 'Src/utils';
 import { API } from 'Src/api';
-// import { goto } from 'Src/utils/commonFunc';
+import { goto } from 'Src/utils/commonFunc';
 import { message } from 'antd';
 
 /**
@@ -42,17 +42,17 @@ export default {
             }
         },
         addTemplateItem: async(payload?) => {
-            console.log('addTemplateItem payload =>>', JSON.stringify(payload));
-            // const response = await request(API.page.save, {
-            //     method: 'post',
-            //     body: {
-            //         ...payload
-            //     }
-            // });
-            // if (response && response.errcode === 0) {
-            //     message.success('提交配置成功');
-            //     goto('');
-            // }
+            // console.log('addTemplateItem payload =>>', JSON.stringify(payload));
+            const response = await request(API.page.save, {
+                method: 'post',
+                body: {
+                    ...payload
+                }
+            });
+            if (response && response.errcode === 0) {
+                message.success('提交配置成功');
+                goto('');
+            }
         },
         updateTemplateItem: async(payload) => {
             const response = await request(API.page.update, {
