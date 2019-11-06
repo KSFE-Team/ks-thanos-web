@@ -190,10 +190,12 @@ export const getCorrelationFragment = (targetId: string, components: any[] = [],
 /**
  * 修改被关联区域块的属性值
  */
-export const modifyCorrelationFragment = (components: any[] = []) => {
+export const modifyCorrelationFragment = (components: any[] = [], stateName: string, type: string) => {
     components.forEach((item) => {
+        item.stateName = stateName;
+        item.formType = type;
         if (item.componentName === 'Fragment') {
-            modifyCorrelationFragment(item.components);
+            modifyCorrelationFragment(item.components, stateName, type);
         }
         // 单选关联区域块
         if (item.componentName === 'Radio') {

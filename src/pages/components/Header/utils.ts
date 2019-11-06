@@ -27,7 +27,7 @@ export const formatComponents = (components: any[]): Array<any> => {
             }));
 
             // Form 内部的组件
-            modifyCorrelationFragment(item.components);
+            modifyCorrelationFragment(item.components, stateName, type);
             // item.components.forEach((it) => {
             //     if (it.componentName === 'Radio') {
             //     //
