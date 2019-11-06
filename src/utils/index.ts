@@ -127,3 +127,26 @@ export const matchRouter = (path: string, routerList: any[]) => {
 export const getTools = (components: any) => {
     return Object.keys(components).map((key) => components[key].getTools());
 };
+
+/**
+ * 获取同级区域块
+ */
+export const getFragment = (targetId: string, components: any[] = []) => {
+    if (!targetId || !components.length) {
+        return [];
+    }
+    let fragment:any[] = [],
+        item;
+    for (item of components) {
+        if (fragment && fragment.length) {
+            return fragment;
+        }
+        const { id: currentId, components: children } = item;
+        if (currentId === targetId) {
+            fragment = components.filter((it) => it.componentName === 'Fragment');
+        } else if (children && children.length) {
+            fragment = getFragment(targetId, children);
+        }
+    }
+    return fragment;
+};

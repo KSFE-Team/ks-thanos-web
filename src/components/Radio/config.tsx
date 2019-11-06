@@ -1,15 +1,13 @@
 import React, { Component } from 'react';
-import { connect } from 'kredux';
 import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS } from 'Src/utils/constants';
-import { findComponent, saveComponent } from 'Src/utils';
+import { findComponent, saveComponent, getFragment } from 'Src/utils';
 const Option = Select.Option;
 
 const VALUE = 'value';
 const LABEL = 'label';
 const TEXT = 'text';
-const CHECK = 'checked';
 const DISABLED = 'disabled';
 const OPTIONS = 'options';
 const SELECT = 'fragmentName';
@@ -25,16 +23,12 @@ const formItemLayout = {
         sm: { span: 12 },
     }
 };
-interface CheckBoxConfigProps {
+
+interface RadioConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
-@connect(({ generatePage = {}, operate = {} }) => ({
-    generatePage,
-    operate
-}))
-
-export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
+export default class RadioConfig extends Component<RadioConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
@@ -45,7 +39,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 [DISABLED]: false,
                 [VALUE]: '',
                 [TEXT]: '',
-                [ROW_KEY]: 0
+                [ROW_KEY]: 0,
+                [SELECT]: ''
             }],
             [LABEL]: '',
             [KEY]: '',
@@ -88,6 +83,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             title: '区域块',
             dataIndex: 'fragmentName',
             key: 'fragmentName',
+            width: 100,
             render: (item, record, index) => <Select
                 allowClear={true}
                 style={{ width: '100%' }}
@@ -96,7 +92,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             >
                 {
                     this.state.selectOption.length > 0 && this.state.selectOption.map((item:string, ind) => {
-                        return <Option key={ind}>{item}</Option>;
+                        console.log(this.state.selectOption);
+                        return <Option key={ind} value={item}>{item}</Option>;
                     })
                 }
             </Select>
@@ -120,7 +117,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             render: (item, record, index) =>
                 this.state.formData.options.length > 1
                     ? <Col>
-                        <Icon type="close" onClick={() => { this.handleDeleteChekItem(index); }} />
+                        <Icon type="close" onClick={() => { this.handleDeleteRadioItem(index); }} />
                     </Col>
                     : <></>
 
@@ -132,36 +129,29 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = findComponent(components);
+
+            const fragment = getFragment(current.id, props.pageJSON.components);
             return {
                 formData: {
                     [OPTIONS]: current.options || [{
                         [DISABLED]: false,
-                        // [CHECK]: false,
                         [VALUE]: '',
                         [TEXT]: '',
-                        [ROW_KEY]: 0
+                        [ROW_KEY]: 0,
+                        [SELECT]: ''
                     }],
                     [LABEL]: current.label || '',
                     [KEY]: current.key || '',
                     isRequired: state.formData.isRequired,
                     defaultValue: current.defaultValue || state.formData.defaultValue
                 },
-                current
+                current,
+                selectOption: fragment.map((item) => {
+                    return item.fragmentName;
+                })
             };
         } else {
             return state;
-        }
-    }
-
-    componentDidMount() {
-        const Fragment = this.props.pageJSON.components[0].components.filter((item) => {
-            return item.componentName === 'Fragment';
-        });
-        if (Fragment.length > 0) {
-            const selectOption = Fragment.map((item) => {
-                return item.componentName;
-            });
-            this.setState({selectOption});
         }
     }
 
@@ -199,20 +189,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
         const value = typeof e === 'object' ? e.target.value : e;
         switch (itemKey) {
             case LABEL:
-                formData.label = value;
-                break;
             case KEY:
-                formData.key = value;
-                break;
-            case TEXT:
-                formData.options[index][itemKey] = value;
-                break;
-            case CHECK:
-            case DISABLED:
-                formData.options[index][itemKey] = value;
-                break;
-            case SELECT:
-                formData.options[index][itemKey] = e ? itemKey : '';
+                formData[itemKey] = value;
                 break;
             default:
                 formData.options[index][itemKey] = value;
@@ -227,14 +205,14 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     /**
      * @desc 添加项
      */
-    handleAddCheck = (): void => {
+    handleAddRadioItem = (): void => {
         const { formData } = this.state;
         formData.options.push({
             [DISABLED]: false,
-            // [CHECK]: false,
             [VALUE]: '',
             [TEXT]: '',
-            [ROW_KEY]: formData.options[formData.options.length - 1][ROW_KEY] + 1
+            [ROW_KEY]: formData.options[formData.options.length - 1][ROW_KEY] + 1,
+            [SELECT]: ''
         });
         this.setState({
             formData,
@@ -245,7 +223,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     /**
      * @desc 删除项
      */
-    handleDeleteChekItem = (index) => {
+    handleDeleteRadioItem = (index) => {
         const { formData } = this.state;
         formData.options.splice(index, 1);
         this.setState({
@@ -299,7 +277,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             <br />
             <Row type="flex" justify='space-between'>
                 <Col>
-                    <Button onClick={this.handleAddCheck} type='primary' >添加项</Button>
+                    <Button onClick={this.handleAddRadioItem} type='primary' >添加项</Button>
                 </Col>
                 {/* <Col span={6} style={{marginLeft: '10px'}}>
                     <Radio.Group style={{display: 'flex', alignItems: 'center'}} defaultValue={formData.isRequired} onChange={(e) => {
