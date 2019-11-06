@@ -1,4 +1,5 @@
 import { FORM_TYPES } from 'Src/components/Form/constants';
+import { modifyCorrelationFragment } from 'Src/utils';
 const [{ key: NORMAL_FORM }, { key: SEARCH_FORM }] = FORM_TYPES;
 
 interface FormChildren {
@@ -24,6 +25,15 @@ export const formatComponents = (components: any[]): Array<any> => {
                 formType: type,
                 stateName: stateName
             }));
+
+            // Form 内部的组件
+            modifyCorrelationFragment(item.components);
+            // item.components.forEach((it) => {
+            //     if (it.componentName === 'Radio') {
+            //     //
+            //     }
+            // })
+
             if (type === NORMAL_FORM) {
                 item.activeEvents = [
                     {

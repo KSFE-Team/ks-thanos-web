@@ -163,24 +163,71 @@ export const getFragments = (targetId: string, components: any[] = []) => {
     if (!targetId || !components.length) {
         return [];
     }
-    let fragment:any[] = [],
+    let fragments:any[] = [],
         item;
     for (item of components) {
-        if (fragment && fragment.length) {
-            return fragment;
+        if (fragments && fragments.length) {
+            return fragments;
         }
         const { id: currentId, components: children } = item;
         if (currentId === targetId) {
-            fragment = components.filter((it) => it.componentName === 'Fragment');
+            fragments = components.filter((it) => it.componentName === 'Fragment');
         } else if (children && children.length) {
-            fragment = getFragments(targetId, children);
+            fragments = getFragments(targetId, children);
         }
     }
-    return fragment;
+    return fragments;
 };
 
 /**
  * 通过 fragmentId 获取被关联区域块
  */
-export const getCorrelationFragment = () => {
+export const getCorrelationFragment = (targetId: string, components: any[] = [], fragmentId: string) => {
+    const fragments = getFragments(targetId, components);
+    return fragments.find((item) => fragmentId === item.id);
+};
+
+/**
+ * 修改被关联区域块的属性值
+ */
+export const modifyCorrelationFragment = (components: any[] = []) => {
+    components.forEach((item) => {
+        if (item.componentName === 'Fragment') {
+            modifyCorrelationFragment(item.components);
+        }
+        // 单选关联区域块
+        if (item.componentName === 'Radio') {
+            let fragment;
+            // 循环 Radio 的 Option
+            item.options.forEach((option) => {
+                // 如果 Option 关联了区域块
+                if (option.fragmentId) {
+                    // 找的被关联的同级区域块
+                    fragment = getCorrelationFragment(item.id, components, option.fragmentId);
+                    // 如果有的话，则给该区域块添加两个属性
+                    if (fragment) {
+                        fragment.showKey = item.key;
+                        fragment.showValue = option.value;
+                    }
+                }
+            });
+        }
+        // 多选关联区域块
+        if (item.componentName === 'Checkbox') {
+            // let fragment;
+            // // 循环 Radio 的 Option
+            // item.options.forEach((option) => {
+            //     // 如果 Option 关联了区域块
+            //     if (option.fragmentId) {
+            //         // 找的被关联的同级区域块
+            //         fragment = getCorrelationFragment(item.id, components, option.fragmentId);
+            //         // 如果有的话，则给该区域块添加两个属性
+            //         if (fragment) {
+            //             fragment.showKey = item.key;
+            //             fragment.showValue = option.value;
+            //         }
+            //     }
+            // });
+        }
+    });
 };
