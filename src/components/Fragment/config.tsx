@@ -69,19 +69,19 @@ export default class FragmentConfig extends Component<FragmentConfigProps, Fragm
      * 插入组件事件
      */
     handleClick = (componentName: string) => {
-        const insertComponents = ALL_TOOLS[componentName].getInitJson();
+        const insertComponent = ALL_TOOLS[componentName].getInitJson();
         let { current } = this.state;
         current = {
             ...current,
             components: [
                 ...current.components || [],
                 {
-                    ...insertComponents,
+                    ...insertComponent,
                     id: getUniqueID(),
                 }
             ]
         };
-        actions.generatePage.insertFormComponent(insertComponents);
+        actions.generatePage.insertFormComponent({insertComponent, targetId: current.id});
         this.setState({
             current
         });

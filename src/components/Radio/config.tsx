@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS } from 'Src/utils/constants';
-import { findComponent, saveComponent, getFragment } from 'Src/utils';
+import { findComponent, saveComponent, getFragments } from 'Src/utils';
 const Option = Select.Option;
 
 const VALUE = 'value';
@@ -10,7 +10,7 @@ const LABEL = 'label';
 const TEXT = 'text';
 const DISABLED = 'disabled';
 const OPTIONS = 'options';
-const SELECT = 'fragmentName';
+const SELECT = 'fragmentId';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
 const formItemLayout = {
@@ -91,9 +91,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 onChange={this.handleChange.bind(this, SELECT, index)}
             >
                 {
-                    this.state.selectOption.length > 0 && this.state.selectOption.map((item:string, ind) => {
-                        console.log(this.state.selectOption);
-                        return <Option key={ind} value={item}>{item}</Option>;
+                    this.state.selectOption.length > 0 && this.state.selectOption.map((item:any, ind) => {
+                        return <Option key={ind} value={item.fragmentId}>{item.fragmentName}</Option>;
                     })
                 }
             </Select>
@@ -130,7 +129,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             const { components } = pageJSON;
             const current = findComponent(components);
 
-            const fragment = getFragment(current.id, props.pageJSON.components);
+            const fragment = getFragments(current.id, props.pageJSON.components);
             return {
                 formData: {
                     [OPTIONS]: current.options || [{
@@ -147,7 +146,10 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 },
                 current,
                 selectOption: fragment.map((item) => {
-                    return item.fragmentName;
+                    return {
+                        fragmentName: item.fragmentName,
+                        fragmentId: item.id
+                    };
                 })
             };
         } else {

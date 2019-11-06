@@ -71,7 +71,9 @@ export default class FormConfig extends Component<FormConfigProps> {
      * 插入组件事件
      */
     handleClick = (componentName: string) => {
-        actions.generatePage.insertFormComponent(ALL_TOOLS[componentName].getInitJson());
+        const insertComponent = ALL_TOOLS[componentName].getInitJson();
+        const current = this.props.pageJSON.components.find(({ configVisible }) => configVisible);
+        actions.generatePage.insertFormComponent({insertComponent, targetId: current.id});
     }
 
     handleSave = () => {

@@ -129,9 +129,37 @@ export const getTools = (components: any) => {
 };
 
 /**
+ * 块域中插入组件
+ */
+export const insertComponents = (payload: any, components: any[] = []) => {
+    if (!payload.targetId || !components.length) {
+        return;
+    }
+    let item,
+        hadInsert:boolean = false;
+    for (item of components) {
+        if (hadInsert) {
+            break;
+        }
+        if (payload.targetId === item.id) {
+            item.components = [
+                ...item.components || [],
+                {
+                    id: getUniqueID(),
+                    ...payload.insertComponent
+                }
+            ];
+            hadInsert = true;
+        } else {
+            insertComponents(payload, item.components);
+        }
+    }
+};
+
+/**
  * 获取同级区域块
  */
-export const getFragment = (targetId: string, components: any[] = []) => {
+export const getFragments = (targetId: string, components: any[] = []) => {
     if (!targetId || !components.length) {
         return [];
     }
@@ -145,8 +173,14 @@ export const getFragment = (targetId: string, components: any[] = []) => {
         if (currentId === targetId) {
             fragment = components.filter((it) => it.componentName === 'Fragment');
         } else if (children && children.length) {
-            fragment = getFragment(targetId, children);
+            fragment = getFragments(targetId, children);
         }
     }
     return fragment;
+};
+
+/**
+ * 通过 fragmentId 获取被关联区域块
+ */
+export const getCorrelationFragment = () => {
 };

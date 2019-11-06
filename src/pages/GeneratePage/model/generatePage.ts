@@ -1,5 +1,5 @@
 import { actions } from 'kredux';
-import { getUniqueID, request } from 'Src/utils';
+import { getUniqueID, request, insertComponents } from 'Src/utils';
 import { API } from 'Src/api';
 import { goto } from 'Src/utils/commonFunc';
 import { message } from 'antd';
@@ -98,38 +98,42 @@ export default {
         insertFormComponent: (payload: any, getState) => {
             const state = getState();
             const { generatePage } = state;
-            let { pageJSON } = generatePage;
+            let pageJSON = {...generatePage.pageJSON};
             const { components } = pageJSON;
+            insertComponents(payload, components);
+            // console.log('had insert components =>', components);
 
-            // from 组件可配置时
-            const FormVisibleIndex = components.findIndex(({ componentName, configVisible }) => componentName === 'Form' && configVisible);
-            if (FormVisibleIndex >= 0) {
-                components[FormVisibleIndex] = {
-                    ...components[FormVisibleIndex],
-                    components: [
-                        ...components[FormVisibleIndex].components || [],
-                        {
-                            ...payload,
-                            id: getUniqueID(),
-                        }
-                    ]
-                };
-            } else {
-                const FormIndex = components.findIndex(({ componentName }) => componentName === 'Form');
-                if (FormIndex >= 0) {
-                    const FragmentVisibleIndex = components[FormIndex].components.findIndex(({ componentName, configVisible }) => componentName === 'Fragment' && configVisible);
-                    components[FormIndex].components[FragmentVisibleIndex] = {
-                        ...components[FormIndex].components[FragmentVisibleIndex],
-                        components: [
-                            ...components[FormIndex].components[FragmentVisibleIndex].components,
-                            {
-                                ...payload,
-                                id: getUniqueID()
-                            }
-                        ]
-                    };
-                }
-            }
+            // // from 组件可配置时
+            // const FormVisibleIndex = components.findIndex(({ componentName, configVisible }) => componentName === 'Form' && configVisible);
+            // // 配置 From 组件
+            // if (FormVisibleIndex >= 0) {
+            //     components[FormVisibleIndex] = {
+            //         ...components[FormVisibleIndex],
+            //         components: [
+            //             ...components[FormVisibleIndex].components || [],
+            //             {
+            //                 ...insertComponent,
+            //                 id: getUniqueID(),
+            //             }
+            //         ]
+            //     };
+            // } else {
+            //     // 配置 Fragment 组件
+            //     const FormIndex = components.findIndex(({ componentName }) => componentName === 'Form');
+            //     if (FormIndex >= 0) {
+            //         const FragmentVisibleIndex = components[FormIndex].components.findIndex(({ componentName, configVisible }) => componentName === 'Fragment' && configVisible);
+            //         components[FormIndex].components[FragmentVisibleIndex] = {
+            //             ...components[FormIndex].components[FragmentVisibleIndex],
+            //             components: [
+            //                 ...components[FormIndex].components[FragmentVisibleIndex].components,
+            //                 {
+            //                     ...insertComponents,
+            //                     id: getUniqueID()
+            //                 }
+            //             ]
+            //         };
+            //     }
+            // }
 
             pageJSON = {
                 ...pageJSON,
