@@ -7,7 +7,7 @@ import { message } from 'antd';
 /**
  * 只能配置一次的组件
  */
-const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
+// const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
 
 export const STATE = {
     count: 0,
@@ -72,10 +72,10 @@ export default {
             const { generatePage } = state;
             let { pageJSON } = generatePage;
             const { components } = pageJSON;
-            if (ONLY_ONCE_COMPONENTS.includes(payload.componentName) && components.some(({ componentName }) => componentName === payload.componentName)) {
-                message.warn('该组件只能配置一次');
-                return;
-            }
+            // if (ONLY_ONCE_COMPONENTS.includes(payload.componentName) && components.some(({ componentName }) => componentName === payload.componentName)) {
+            //     message.warn('该组件只能配置一次');
+            //     return;
+            // }
             pageJSON = {
                 ...pageJSON,
                 components: [

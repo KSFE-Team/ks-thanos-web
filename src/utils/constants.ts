@@ -26,3 +26,13 @@ export const ALIAS = {
     SHOW_TIME: '是否有选择时间功能',
     TIME_FORMAT: '时间格式',
 };
+
+/**
+ * Tale类型
+ */
+
+export const TABLE_TYPE = {
+    NORMAL: 1,
+    PARENT_TABLE: 2,
+    CHILDREN_TABLE: 3,
+};

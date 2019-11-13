@@ -1,4 +1,5 @@
 import * as Table from './Table/index';
+import * as RelationTable from './RelationTable/index';
 import * as Input from './Input/index';
 import * as Select from './Select/index';
 import * as DatePicker from './DatePicker/index';
@@ -40,12 +41,22 @@ const OTHER_COMPONENTS = {
 };
 
 /**
+ * 父子Table
+ */
+const RELATION_TABLE = {
+    RelationTable
+};
+
+/**
  * 所有组件
  */
 const ALL_TOOLS = {
     ...DATA_DISPLAY,
     ...DATA_ENTRY,
-    ...OTHER_COMPONENTS
+    ...OTHER_COMPONENTS,
+    ...RELATION_TABLE,
+    ...Form,
+    ...Table,
 };
 
 /**
@@ -55,6 +66,7 @@ const getDataEntry = () => DATA_ENTRY;
 
 export {
     DATA_DISPLAY,
+    RELATION_TABLE,
     DATA_ENTRY,
     OTHER_COMPONENTS,
     ALL_TOOLS,

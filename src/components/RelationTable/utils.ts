@@ -1,14 +1,11 @@
 /**
  * 获取初始化JSON
  */
-import {TABLE_TYPE} from 'utils/constants';
-
-export const getInitJson = (tableType: any = TABLE_TYPE.NORMAL) => ({
+export const getInitJson = () => ({
     stateName: '',
-    componentName: 'Table',
+    componentName: 'RelationTable',
     source: 'antd',
     default: false,
-    tableType: tableType,
     props: {
         columns: [{title: '序号', dataIndex: 'sortNum'}]
     },
@@ -20,7 +17,7 @@ export const getInitJson = (tableType: any = TABLE_TYPE.NORMAL) => ({
  * 获取组件Tools配置
  */
 export const getTools = () => ({
-    name: 'Table',
+    name: 'RelationTable',
     icon: 'table',
-    componentName: 'Table'
+    componentName: 'RelationTable'
 });
