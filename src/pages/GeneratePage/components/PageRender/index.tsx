@@ -97,7 +97,6 @@ class PageRender extends Component<PageRenderProps> {
         const {chooseTabName} = this.props;
         const { components } = pageJSON;
         const dataSource = this.props.dataSource || components;
-        console.log(chooseTabName);
         return (
             <div
                 className='render-page'
