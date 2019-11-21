@@ -2,6 +2,14 @@
     padding: 8px 10px;
     border: 1px dashed #000;
     border-radius: 5px;
+    position: relative;
+
+    .item-close {
+        position: absolute;
+        right: -8px;
+        top: -20px;
+        font-size: 18px;
+    }
 
     .page-item {
         padding: 10px 5px;

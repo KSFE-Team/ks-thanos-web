@@ -44,6 +44,8 @@ export default class ComponentsLib extends Component<PageConfigProps> {
         search: ''
     }
 
+    componentNameKey = ''
+
     /**
      * 插入组件事件
      */
@@ -51,6 +53,11 @@ export default class ComponentsLib extends Component<PageConfigProps> {
         const {generatePage} = this.props;
         const {pageJSON} = generatePage;
         const {components} = pageJSON;
+        // if(this.componentNameKey === componentName && componentName)
+        if (this.componentNameKey === 'RelationTable' && (components.length >= 1 && components.length < 4)) {
+            message.warn('请先清空当前页面组件');
+            return;
+        }
         if (componentName === 'RelationTable') {
             if (components.length !== 0) {
                 message.warn('请先清空当前页面组件');
@@ -76,6 +83,8 @@ export default class ComponentsLib extends Component<PageConfigProps> {
         } else {
             actions.generatePage.insertComponent(ALL_TOOLS[componentName].getInitJson());
         }
+        this.componentNameKey = componentName;
+        actions.generatePage.setReducers({chooseTabName: componentName});
     }
 
     /**

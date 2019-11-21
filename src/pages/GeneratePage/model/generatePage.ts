@@ -12,6 +12,7 @@ export const STATE = {
     },
     pageName: '', // 页面名称
     selectedComponentId: '',
+    chooseTabName: '',
 };
 
 export default {

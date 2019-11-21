@@ -12,7 +12,8 @@ interface PageRenderProps{
         pageJSON: any
     },
     dataSource?: any[]
-    selectedComponentId: string;
+    selectedComponentId: string
+    chooseTabName: string
 }
 
 class PageRender extends Component<PageRenderProps> {
@@ -93,12 +94,36 @@ class PageRender extends Component<PageRenderProps> {
 
     render() {
         const { pageJSON } = this.props.generatePage;
+        const {chooseTabName} = this.props;
         const { components } = pageJSON;
         const dataSource = this.props.dataSource || components;
+        console.log(chooseTabName);
         return (
             <div
                 className='render-page'
             >
+                {
+                    chooseTabName === 'RelationTable'
+                        ? <div className='item-close'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                Confirm({
+                                    title: '请确认删除所有组件',
+                                    content: '删除后其配置会消失，请谨慎操作',
+                                    onOk: () => {
+                                        this.setRedux({
+                                            pageJSON: {
+                                                name: '', // 页面名称
+                                                components: [] // 子组件
+                                            }
+                                        });
+                                    }
+                                });
+                            }}
+                        >
+                            <Icon type='close-circle' className='item-close-icon'/>
+                        </div> : ''
+                }
                 <DND
                     onRender={(data) => {
                         return (
@@ -109,22 +134,24 @@ class PageRender extends Component<PageRenderProps> {
                                 className={this.props.selectedComponentId === data.id ? 'page-item component-selected' : 'page-item'}
                             >
                                 {this.renderComponent(data)}
-                                <div className='item-close'
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        Confirm({
-                                            title: '请确认删除组件',
-                                            content: '删除后其配置会消失，请谨慎操作',
-                                            onOk: () => {
-                                                this.setJSON({
-                                                    components: this.filterComponent(data.id, components)
-                                                });
-                                            }
-                                        });
-                                    }}
-                                >
-                                    <Icon type='close-circle' className='item-close-icon' />
-                                </div>
+                                {
+                                    chooseTabName !== 'RelationTable'
+                                        ? <div className='item-close' onClick={(e) => {
+                                            e.stopPropagation();
+                                            Confirm({
+                                                title: '请确认删除组件',
+                                                content: '删除后其配置会消失，请谨慎操作',
+                                                onOk: () => {
+                                                    this.setJSON({
+                                                        components: this.filterComponent(data.id, components)
+                                                    });
+                                                }
+                                            });
+                                        }}
+                                        >
+                                            <Icon type='close-circle' className='item-close-icon' />
+                                        </div> : ''
+                                }
                             </div>
                         );
                     }}
@@ -142,5 +169,6 @@ class PageRender extends Component<PageRenderProps> {
 }
 
 export default connect(({ generatePage }) => ({
-    selectedComponentId: generatePage.selectedComponentId
+    selectedComponentId: generatePage.selectedComponentId,
+    chooseTabName: generatePage.chooseTabName
 }))(PageRender);
