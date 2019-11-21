@@ -1,8 +1,8 @@
 
 import React, { Component } from 'react';
-import { actions } from 'kredux';
-import { Form, Input } from 'antd';
+import {Form, Input, message} from 'antd';
 import { DATA_DISPLAY, DATA_ENTRY, OTHER_COMPONENTS, ALL_TOOLS, RELATION_TABLE } from 'Src/components';
+import { connect, actions } from 'kredux';
 import ComponentType from './ComponentType';
 import { getTools } from 'Src/utils';
 import {TABLE_TYPE} from 'utils/constants';
@@ -21,6 +21,11 @@ const TOOLS = {
     RELATION_TABLE: getTools(RELATION_TABLE),
 };
 
+/**
+ * 只能配置一次的组件
+ */
+const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
+
 interface PageConfigProps{
     generatePage: {
         pageJSON: {
@@ -30,6 +35,9 @@ interface PageConfigProps{
     };
 }
 
+@connect(({ generatePage = {} }) => ({
+    generatePage,
+}))
 export default class ComponentsLib extends Component<PageConfigProps> {
 
     state = {
@@ -40,6 +48,25 @@ export default class ComponentsLib extends Component<PageConfigProps> {
      * 插入组件事件
      */
     handleClick = (componentName: string) => {
+        const {generatePage} = this.props;
+        const {pageJSON} = generatePage;
+        const {components} = pageJSON;
+        if (componentName === 'RelationTable') {
+            if (components.length !== 0) {
+                message.warn('请先清空当前页面组件');
+                return;
+            }
+        } else {
+            if (components.length === 4) {
+                message.warn('请先清空当前页面组件');
+                return;
+            }
+            const componentNames = componentName;
+            if (ONLY_ONCE_COMPONENTS.includes(componentName) && components.some(({ componentName }) => componentName === componentNames)) {
+                message.warn('该组件只能配置一次');
+                return;
+            }
+        }
         if (componentName === 'RelationTable') {
             actions.generatePage.insertComponent(ALL_TOOLS.Form.getInitJson());
             actions.generatePage.insertComponent(ALL_TOOLS.Table.getInitJson(TABLE_TYPE.PARENT_TABLE));

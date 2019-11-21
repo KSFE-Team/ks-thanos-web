@@ -1,13 +1,8 @@
-import { actions } from 'kredux';
-import { getUniqueID, request, insertComponents } from 'Src/utils';
-import { API } from 'Src/api';
-import { goto } from 'Src/utils/commonFunc';
-import { message } from 'antd';
-
-/**
- * 只能配置一次的组件
- */
-// const ONLY_ONCE_COMPONENTS = ['Table', 'Form'];
+import {actions} from 'kredux';
+import {getUniqueID, request, insertComponents} from 'Src/utils';
+import {API} from 'Src/api';
+import {goto} from 'Src/utils/commonFunc';
+import {message} from 'antd';
 
 export const STATE = {
     count: 0,
@@ -69,13 +64,9 @@ export default {
     reducers: {
         insertComponent: (payload: any, getState: any) => {
             const state = getState();
-            const { generatePage } = state;
-            let { pageJSON } = generatePage;
-            const { components } = pageJSON;
-            // if (ONLY_ONCE_COMPONENTS.includes(payload.componentName) && components.some(({ componentName }) => componentName === payload.componentName)) {
-            //     message.warn('该组件只能配置一次');
-            //     return;
-            // }
+            const {generatePage} = state;
+            let {pageJSON} = generatePage;
+            const {components} = pageJSON;
             pageJSON = {
                 ...pageJSON,
                 components: [
@@ -98,9 +89,9 @@ export default {
         },
         insertFormComponent: (payload: any, getState) => {
             const state = getState();
-            const { generatePage } = state;
+            const {generatePage} = state;
             let pageJSON = {...generatePage.pageJSON};
-            const { components } = pageJSON;
+            const {components} = pageJSON;
             insertComponents(payload, components);
             // console.log('had insert components =>', components);
 
