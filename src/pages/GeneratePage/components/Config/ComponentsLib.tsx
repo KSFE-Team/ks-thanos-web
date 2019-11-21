@@ -45,7 +45,7 @@ export default class ComponentsLib extends Component<PageConfigProps> {
             actions.generatePage.insertComponent(ALL_TOOLS.Table.getInitJson(TABLE_TYPE.PARENT_TABLE));
             actions.generatePage.insertComponent(ALL_TOOLS.Form.getInitJson());
             const childrenObj = ALL_TOOLS.Table.getInitJson(TABLE_TYPE.CHILDREN_TABLE);
-            actions.generatePage.insertComponent({childrenObj, relationParentKey: 'selectedRowKeys'});
+            actions.generatePage.insertComponent({...childrenObj, relationParentKey: 'selectedRowKeys'});
         } else {
             actions.generatePage.insertComponent(ALL_TOOLS[componentName].getInitJson());
         }
