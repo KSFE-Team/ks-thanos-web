@@ -8,6 +8,7 @@ import * as TextArea from './TextArea/index';
 import * as Radio from './Radio/index';
 import * as CheckBox from './CheckBox';
 import * as Form from './Form';
+import * as BizSelectModal from './BizSelectModal';
 
 /**
  * 展示类组件
@@ -38,23 +39,37 @@ const OTHER_COMPONENTS = {
 };
 
 /**
+ * 获取录入组件
+ */
+const getDataEntry = () => DATA_ENTRY;
+
+/**
+ * 云组件
+ */
+const CLOUD_COMPONENTS = {
+    BizSelectModal
+};
+
+/**
+ * 获取云组件
+ */
+const getCloudComponents = () => CLOUD_COMPONENTS;
+
+/**
  * 所有组件
  */
 const ALL_TOOLS = {
     ...DATA_DISPLAY,
     ...DATA_ENTRY,
-    ...OTHER_COMPONENTS
+    ...OTHER_COMPONENTS,
+    ...CLOUD_COMPONENTS
 };
-
-/**
- * 获取录入组件
- */
-const getDataEntry = () => DATA_ENTRY;
 
 export {
     DATA_DISPLAY,
     DATA_ENTRY,
     OTHER_COMPONENTS,
     ALL_TOOLS,
-    getDataEntry
+    getDataEntry,
+    getCloudComponents
 };

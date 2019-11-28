@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { Form, Input, Button, Row, Col, Radio, Tabs } from 'antd';
-import { actions } from 'kredux';
+import { actions, connect } from 'kredux';
 import { FORM_TYPES } from './constants';
 import PropTypes from 'prop-types';
-import { getDataEntry, ALL_TOOLS } from 'Src/components';
+import { getDataEntry, getCloudComponents, ALL_TOOLS } from 'Src/components';
 import { getTools } from 'Src/utils';
 import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
+import { filterCloudComponents } from './utils';
+
 const [{key: NORMAL}, {key: SEARCH}] = FORM_TYPES;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -20,7 +22,6 @@ const formItemLayout = {
         sm: { span: 12 },
     }
 };
-
 const STATE_NAME = 'stateName';
 const TYPE = 'type';
 const LINK = 'link';
@@ -31,9 +32,13 @@ const PARAM_KEY = 'paramKey';
 
 interface FormConfigProps{
     onSave(pageJSON:any): void,
-    pageJSON: any
+    pageJSON: any,
+    generatePage: any,
 }
 
+@connect(({ generatePage }) => ({
+    generatePage
+}))
 export default class FormConfig extends Component<FormConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
@@ -67,6 +72,10 @@ export default class FormConfig extends Component<FormConfigProps> {
         }
     }
 
+    componentDidMount() {
+        actions.generatePage.loadCloudComponentList();
+    }
+
     /**
      * 插入组件事件
      */
@@ -74,6 +83,9 @@ export default class FormConfig extends Component<FormConfigProps> {
         actions.generatePage.insertFormComponent(ALL_TOOLS[componentName].getInitJson());
     }
 
+    /**
+     * 组件保存
+     */
     handleSave = () => {
         const { formData } = this.state;
         const { pageJSON, onSave } = this.props;
@@ -92,6 +104,9 @@ export default class FormConfig extends Component<FormConfigProps> {
         onSave && onSave(pageJSON);
     }
 
+    /**
+     * 组件保存
+     */
     handleChange = (key: string, value: string|boolean) => {
         const { formData } = this.state;
         this.setState({
@@ -103,6 +118,9 @@ export default class FormConfig extends Component<FormConfigProps> {
         });
     };
 
+    /**
+     * 根据类型展示表单
+     */
     getTypeForm = () => {
         const { formData } = this.state;
         switch (formData[TYPE]) {
@@ -186,7 +204,10 @@ export default class FormConfig extends Component<FormConfigProps> {
 
     render() {
         const { formData } = this.state;
+        const { generatePage } = this.props;
+        const { cloudComponentList } = generatePage;
         const dataSource = getTools(getDataEntry());
+        const cloudDataSource = getTools(filterCloudComponents(cloudComponentList, getCloudComponents()));
         return <div>
             <Tabs
                 defaultActiveKey={'1'}
@@ -244,9 +265,21 @@ export default class FormConfig extends Component<FormConfigProps> {
                     <FormItem
                         label={'可配置组件'}
                         {...formItemLayout}
+                        style={{marginBottom: 0}}
                     >
                         <ComponentType
                             dataSource={[dataSource] || []}
+                            span={12}
+                            onClick={this.handleClick}
+                            title={''}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label={'云组件'}
+                        {...formItemLayout}
+                    >
+                        <ComponentType
+                            dataSource={[cloudDataSource] || []}
                             span={12}
                             onClick={this.handleClick}
                             title={''}

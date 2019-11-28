@@ -25,4 +25,5 @@ export const ALIAS = {
     DATE_FORMAT: '日期格式',
     SHOW_TIME: '是否有选择时间功能',
     TIME_FORMAT: '时间格式',
+    TYPE: '类型',
 };

@@ -84,6 +84,9 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
         this.onClose();
     };
 
+    /**
+     * 组件配置渲染
+     */
     renderConfig = () => {
         const { pageJSON } = this.props.generatePage;
         const { component } = this.getShowConfig();

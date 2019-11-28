@@ -16,15 +16,17 @@ export const STATE = {
         components: [] // 子组件
     },
     pageName: '', // 页面名称
-    selectedComponentId: '',
+    selectedComponentId: '', // 被选中组件ID
+    cloudComponentList: [], // 云组件列表
 };
 
 export default {
     namespace: 'generatePage',
     initialState: {...STATE},
     effects: {
-        getTemplateItem: async(payload) => {
-            const response = await request(API.page.query, {
+        /* 获取模版 */
+        getTemplateItem: async(payload: any) => {
+            const response = await request(API.page.get, {
                 method: 'GET',
                 body: {
                     pageName: payload.pageName
@@ -41,7 +43,8 @@ export default {
                 });
             }
         },
-        addTemplateItem: async(payload?) => {
+        /* 新增模版 */
+        addTemplateItem: async(payload: any) => {
             const response = await request(API.page.save, {
                 method: 'post',
                 body: {
@@ -53,7 +56,8 @@ export default {
                 goto('');
             }
         },
-        updateTemplateItem: async(payload) => {
+        /* 更新模版 */
+        updateTemplateItem: async(payload: any) => {
             const response = await request(API.page.update, {
                 method: 'post',
                 body: {
@@ -62,6 +66,17 @@ export default {
             });
             if (response && response.errcode === 0) {
                 message.success('更新配置成功');
+            }
+        },
+        /* 加载云组件列表 */
+        loadCloudComponentList: async() => {
+            const response = await request(API.cloudComponent.query, {
+                method: 'get'
+            });
+            if (response && response.errcode === 0) {
+                actions.generatePage.setReducers({
+                    cloudComponentList: response.result.list
+                });
             }
         }
     },
