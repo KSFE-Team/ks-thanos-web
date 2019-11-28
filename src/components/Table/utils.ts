@@ -10,10 +10,10 @@ export const getInitJson = (tableType: any = TABLE_TYPE.NORMAL) => ({
     default: false,
     tableType: tableType,
     props: {
-        columns: [{title: '序号', dataIndex: 'sortNum'}]
+        columns: [{ title: '序号', dataIndex: 'sortNum' }]
     },
     dependencies: {},
-    components: []
+    components: [],
 });
 
 /**

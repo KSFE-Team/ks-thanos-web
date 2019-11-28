@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
-import { Form, Input, Table, Button, Row, Col, Select, message } from 'antd';
+import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
 import { getUniqueID } from 'Src/utils';
 const { Option } = Select;
 const FormItem = Form.Item;
@@ -32,6 +32,8 @@ export default class TableConfig extends Component<TableConfigProps> {
         method: 'GET', // request method
         // searchComponentChecked: false, // checkbox search component check flag
         tableCount: 0, // table key
+        showSelectedRows: false,
+        showSelectedRowsType: 'radio'
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -71,6 +73,12 @@ export default class TableConfig extends Component<TableConfigProps> {
                 if (currentComponent.dependencies.method) {
                     newState.method = currentComponent.dependencies.method;
                 }
+                if (currentComponent.showSelectedRows) {
+                    newState.showSelectedRows = currentComponent.showSelectedRows;
+                }
+                if (currentComponent.showSelectedRows) {
+                    newState.showSelectedRowsType = currentComponent.showSelectedRowsType;
+                }
             }
         }
         return Object.keys(newState).length ? newState : null;
@@ -87,7 +95,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         const newData: any[] = [...this.state.dataSource];
         const index = newData.findIndex((item: ItemInterface) => row.key === item.key);
         const item = newData[index];
-        const newItem = {...item, ...row};
+        const newItem = { ...item, ...row };
         newData.splice(index, 1, newItem);
         this.setState({ dataSource: newData });
     }
@@ -126,10 +134,14 @@ export default class TableConfig extends Component<TableConfigProps> {
     saveTableData = () => {
         if (!this.checkData()) { return; }
         const pageJSON = this.props.pageJSON;
-        const { currentComponent, api, method, dataSource } = this.state;
+        const { currentComponent, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.stateName = currentComponent.stateName;
+                item.showSelectedRows = showSelectedRows;
+                if (item.showSelectedRows === true) {
+                    item.showSelectedRowsType = showSelectedRowsType;
+                }
                 item.props.columns = dataSource.map((item: any) => ({
                     title: item.tableName,
                     dataIndex: item.dataKey,
@@ -143,7 +155,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                         value: api
                     }, // 接口地址
                     method,
-                    actionType: 'get'
+                    actionType: 'get',
                 };
             }
             return item;
@@ -215,11 +227,32 @@ export default class TableConfig extends Component<TableConfigProps> {
     }
 
     /**
+     * @desc showSelectedRows change event
+     * @param { Object } event
+     */
+    showSelectedRowsChange = (event) => {
+        const { value } = event.target;
+        this.setState({
+            showSelectedRows: value,
+        });
+    }
+
+    /**
+     * @desc showSelectedRowsType change event
+     * @param { Object } event
+     */
+    showSelectedRowsTypeChange = (value) => {
+        this.setState({
+            showSelectedRowsType: value,
+        });
+    }
+
+    /**
      * @desc api input change event
      * @param { Object } event
      */
     apiInputChange = (event) => {
-        const {value} = event.target;
+        const { value } = event.target;
         this.setState({
             api: value,
         });
@@ -230,7 +263,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @param { Object } event
      */
     stateNameInputChange = (event) => {
-        const {value} = event.target;
+        const { value } = event.target;
         const currentComponent = {
             ...this.state.currentComponent,
             stateName: value,
@@ -242,8 +275,8 @@ export default class TableConfig extends Component<TableConfigProps> {
 
     render() {
         const formItemLayout = {
-            labelCol: {span: 8},
-            wrapperCol: {span: 16},
+            labelCol: { span: 8 },
+            wrapperCol: { span: 16 },
         };
 
         const { dataSource } = this.state;
@@ -300,7 +333,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                 <FormItem {...formItemLayout} label="接口地址">
                     <Input value={this.state.api}
                         placeholder="例：/user/list"
-                        onChange={this.apiInputChange}/>
+                        onChange={this.apiInputChange} />
                 </FormItem>
                 <FormItem {...formItemLayout} label="请求方式">
                     <Select defaultValue={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
@@ -311,8 +344,22 @@ export default class TableConfig extends Component<TableConfigProps> {
                 <FormItem {...formItemLayout} label="表格名称">
                     <Input value={this.state.currentComponent.stateName}
                         placeholder="组件存储数据Key, 使用英文且唯一"
-                        onChange={this.stateNameInputChange}/>
+                        onChange={this.stateNameInputChange} />
                 </FormItem>
+                <FormItem {...formItemLayout} label="是否显示selectedRows">
+                    <Radio.Group defaultValue={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
+                        <Radio value={false}>不显示</Radio>
+                        <Radio value={true}>显示</Radio>
+                    </Radio.Group>
+                </FormItem>
+                {
+                    this.state.showSelectedRows && <FormItem {...formItemLayout} label="选择类型">
+                        <Select defaultValue={this.state.showSelectedRowsType} style={{ width: 120 }} onChange={this.showSelectedRowsTypeChange}>
+                            <Option value="radio">单选</Option>
+                            <Option value="checkbox">多选</Option>
+                        </Select>
+                    </FormItem>
+                }
                 <Table
                     components={components}
                     dataSource={dataSource}
@@ -323,7 +370,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                 {/* <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
                     <Checkbox checked={searchComponentChecked} onChange={this.addSearchComponent}>是否拥有条件搜索</Checkbox>
                 </Row> */}
-                <Row style={{marginTop: '20px'}} type="flex" justify="end" gutter={1}>
+                <Row style={{ marginTop: '20px' }} type="flex" justify="end" gutter={1}>
                     <Col>
                         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                             Add a row
