@@ -3,6 +3,7 @@ import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
 import { getUniqueID } from 'Src/utils';
+import {TABLE_TYPE} from 'Src/utils/constants';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -78,6 +79,9 @@ export default class TableConfig extends Component<TableConfigProps> {
                 }
                 if (currentComponent.showSelectedRows) {
                     newState.showSelectedRowsType = currentComponent.showSelectedRowsType;
+                }
+                if (currentComponent.tableType === TABLE_TYPE.PARENT_TABLE) {
+                    newState.showSelectedRows = true;
                 }
             }
         }
