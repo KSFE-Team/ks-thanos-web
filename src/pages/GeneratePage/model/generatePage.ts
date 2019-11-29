@@ -28,6 +28,14 @@ export default {
             });
             if (response && !response.errcode) {
                 const result = response.result;
+                const components = JSON.parse(result.pageData).components;
+                components.find((item) => {
+                    if (item.tableType !== 1) {
+                        actions.generatePage.setReducers({
+                            chooseTabName: 'RelationTable'
+                        });
+                    }
+                });
                 actions.generatePage.setReducers({
                     pageJSON: {
                         name: result.pageName,
