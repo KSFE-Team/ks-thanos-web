@@ -1,24 +1,34 @@
 import React from 'react';
-import { Table } from 'antd';
 import { getInitJson, getTools } from './utils';
 import tableConfig from './config';
+import PageRender from 'Src/pages/GeneratePage/components/PageRender';
 
 interface KRelationTableProps {
     columns: any[],
+    config: any,
+    generatePage: {
+        pageJSON: any
+    }
 }
 
 class KRelationTable extends React.Component<KRelationTableProps> {
 
+    renderChildren = () => {
+        const { config } = this.props;
+        if (config.components && config.components.length) {
+            return <PageRender
+                dataSource={config.components}
+                generatePage={this.props.generatePage}
+            />;
+        } else {
+            return null;
+        }
+    }
+
     render() {
-        const { columns, ...OTHER_PROPS } = this.props;
-        let showColumns = [...columns];
-        showColumns = showColumns.filter(({ component }) => !component);
         return (
             <div>
-                <Table
-                    {...OTHER_PROPS}
-                    columns={showColumns}
-                />
+                {this.renderChildren()}
             </div>
         );
     }

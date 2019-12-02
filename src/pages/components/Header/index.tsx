@@ -29,14 +29,13 @@ class Header extends Component<HeaderProps> {
             });
             return;
         }
-
         confirm({
             title: '确认提交配置？',
             content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
             onOk: async() => {
                 actions.generatePage.addTemplateItem({
                     pageData: JSON.stringify({
-                        components: formatComponents(pageJSON.components),
+                        components: formatComponents(pageJSON.components, generatePage.chooseTabName),
                         paramKey: findParamKey(pageJSON.components),
                     }),
                     pageName

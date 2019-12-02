@@ -14,7 +14,17 @@ interface FormChildren {
 /**
  * 整理JSON
  */
-export const formatComponents = (components: any[]): Array<any> => {
+export const formatComponents = (components: any[], type?: string): Array<any> => {
+    if (type === 'RelationTable') {
+        console.log(components);
+        const newComponents = [
+            {
+                componentName: 'RelationTable',
+                components: components
+            }
+        ];
+        return newComponents;
+    }
     return components.map((item: any,) => {
         const { components: children = [], componentName } = item;
         if (componentName === 'Form' && children.length) {

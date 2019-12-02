@@ -29,17 +29,15 @@ export default {
             if (response && !response.errcode) {
                 const result = response.result;
                 const components = JSON.parse(result.pageData).components;
-                components.find((item) => {
-                    if (item.tableType !== 1) {
-                        actions.generatePage.setReducers({
-                            chooseTabName: 'RelationTable'
-                        });
-                    }
-                });
+                if (components[0].componentName === 'RelationTable') {
+                    actions.generatePage.setReducers({
+                        chooseTabName: 'RelationTable'
+                    });
+                }
                 actions.generatePage.setReducers({
                     pageJSON: {
                         name: result.pageName,
-                        components: JSON.parse(result.pageData).components
+                        components: components[0].componentName === 'RelationTable' ? components[0].components : components
                     },
                     pageName: result.pageName
                 });
