@@ -27,7 +27,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             id: '',
             stateName: '',
             tableType: 0,
-            tableName: ''
+            listName: ''
         }, // current component info
         currentComponentIdx: '', // current component index
         dataSource: [], // table data
@@ -144,7 +144,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.stateName = currentComponent.stateName;
-                item.tableName = currentComponent.tableName;
+                item.listName = currentComponent.listName;
                 item.showSelectedRows = showSelectedRows;
                 if (item.showSelectedRows === true) {
                     item.showSelectedRowsType = showSelectedRowsType;
@@ -287,7 +287,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         const { value } = event.target;
         const currentComponent = {
             ...this.state.currentComponent,
-            tableName: value,
+            listName: value,
         };
         this.setState({
             currentComponent,
@@ -368,7 +368,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                 </FormItem>
                 {
                     currentComponent && currentComponent.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
-                        <Input value={this.state.currentComponent.tableName}
+                        <Input value={this.state.currentComponent.listName}
                             placeholder="表格列表名称"
                             onChange={this.tableNameInputChange} />
                     </FormItem> : ''
