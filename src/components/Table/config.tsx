@@ -144,6 +144,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.stateName = currentComponent.stateName;
+                item.tableName = currentComponent.tableName;
                 item.showSelectedRows = showSelectedRows;
                 if (item.showSelectedRows === true) {
                     item.showSelectedRowsType = showSelectedRowsType;

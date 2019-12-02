@@ -16,7 +16,6 @@ interface FormChildren {
  */
 export const formatComponents = (components: any[], type?: string): Array<any> => {
     if (type === 'RelationTable') {
-        console.log(components);
         const newComponents = [
             {
                 componentName: 'RelationTable',
