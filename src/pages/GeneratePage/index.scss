@@ -45,6 +45,14 @@
                     .thanos-page-container {
                         flex: 1;
                         padding: 15px;
+                        position: relative;
+
+                        .item-close-box {
+                            position: absolute;
+                            right: 5px;
+                            font-size: 20px;
+                            top: -8px;
+                        }
                     }
                 
                     .thanos-page-operation {

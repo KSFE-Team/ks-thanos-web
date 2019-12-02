@@ -101,28 +101,6 @@ class PageRender extends Component<PageRenderProps> {
             <div
                 className='render-page'
             >
-                {
-                    chooseTabName === 'RelationTable'
-                        ? <div className='item-close'
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                Confirm({
-                                    title: '请确认删除所有组件',
-                                    content: '删除后其配置会消失，请谨慎操作',
-                                    onOk: () => {
-                                        this.setRedux({
-                                            pageJSON: {
-                                                name: '', // 页面名称
-                                                components: [] // 子组件
-                                            }
-                                        });
-                                    }
-                                });
-                            }}
-                        >
-                            <Icon type='close-circle' className='item-close-icon'/>
-                        </div> : ''
-                }
                 <DND
                     onRender={(data) => {
                         return (
@@ -134,7 +112,7 @@ class PageRender extends Component<PageRenderProps> {
                             >
                                 {this.renderComponent(data)}
                                 {
-                                    chooseTabName !== 'RelationTable'
+                                    (chooseTabName === 'RelationTable' && data.componentName !== 'Table' && data.componentName !== 'Form') || chooseTabName !== 'RelationTable'
                                         ? <div className='item-close' onClick={(e) => {
                                             e.stopPropagation();
                                             Confirm({

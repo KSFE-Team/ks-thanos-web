@@ -33,6 +33,10 @@ export default {
                     actions.generatePage.setReducers({
                         chooseTabName: 'RelationTable'
                     });
+                } else {
+                    actions.generatePage.setReducers({
+                        chooseTabName: ''
+                    });
                 }
                 actions.generatePage.setReducers({
                     pageJSON: {

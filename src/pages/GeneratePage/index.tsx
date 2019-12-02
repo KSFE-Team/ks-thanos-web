@@ -6,11 +6,15 @@ import { PageRender, ComponentConfig, ComponentsLib } from './components';
 import { STATE } from './model/generatePage';
 import './index.scss';
 import PageConfig from 'Src/pages/GeneratePage/components/Config/PageConfig';
+import {Icon, Modal} from 'antd';
+
+const Confirm = Modal.confirm;
 
 interface GeneratePageProps {
     generatePage: {
         pageJSON: any;
         selectedComponentId: string;
+        chooseTabName: string,
      };
     operate: {
         undoDisable: any;
@@ -89,6 +93,7 @@ class GeneratePage extends Component<GeneratePageProps> {
     render() {
         // const { undoDisable, redoDisable } = this.props.operate;
         const visible = this.getShowConfig().visible;
+        const {generatePage} = this.props;
         return (
             <div className="thanos-generate-page-container">
                 <Header showTopToolbar={true} />
@@ -120,6 +125,28 @@ class GeneratePage extends Component<GeneratePageProps> {
                                     <ComponentsLib {...this.props} />
                                 </div>
                                 <div className="thanos-page-container">
+                                    {
+                                        generatePage.chooseTabName === 'RelationTable'
+                                            ? <div className='item-close-box'
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    Confirm({
+                                                        title: '请确认删除所有组件',
+                                                        content: '删除后其配置会消失，请谨慎操作',
+                                                        onOk: () => {
+                                                            actions.generatePage.setReducers({
+                                                                pageJSON: {
+                                                                    name: '', // 页面名称
+                                                                    components: [] // 子组件
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }}
+                                            >
+                                                <Icon type='close-circle' className='item-close-icon'/>
+                                            </div> : ''
+                                    }
                                     <PageRender {...this.props} />
                                 </div>
                                 {
