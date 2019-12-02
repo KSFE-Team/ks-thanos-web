@@ -347,7 +347,6 @@ export default class TableConfig extends Component<TableConfigProps> {
             };
         });
 
-        console.log(currentComponent);
         return (
             <React.Fragment>
                 <FormItem {...formItemLayout} label="接口地址">
