@@ -13,6 +13,7 @@ export const getInitJson = (tableType: any = TABLE_TYPE.NORMAL) => ({
         columns: [{ title: '序号', dataIndex: 'sortNum' }]
     },
     dependencies: {},
+    tableName: '',
     components: [],
 });
 

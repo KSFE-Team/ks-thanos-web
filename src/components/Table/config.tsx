@@ -26,6 +26,8 @@ export default class TableConfig extends Component<TableConfigProps> {
         currentComponent: {
             id: '',
             stateName: '',
+            tableType: 0,
+            tableName: ''
         }, // current component info
         currentComponentIdx: '', // current component index
         dataSource: [], // table data
@@ -277,13 +279,26 @@ export default class TableConfig extends Component<TableConfigProps> {
         });
     }
 
+    /**
+     * 表格列表名称
+     * */
+    tableNameInputChange =(event) => {
+        const { value } = event.target;
+        const currentComponent = {
+            ...this.state.currentComponent,
+            tableName: value,
+        };
+        this.setState({
+            currentComponent,
+        });
+    }
+
     render() {
         const formItemLayout = {
             labelCol: { span: 8 },
             wrapperCol: { span: 16 },
         };
-
-        const { dataSource } = this.state;
+        const { dataSource, currentComponent } = this.state;
         let columns = [
             {
                 title: '表头名称',
@@ -332,6 +347,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             };
         });
 
+        console.log(currentComponent);
         return (
             <React.Fragment>
                 <FormItem {...formItemLayout} label="接口地址">
@@ -345,11 +361,19 @@ export default class TableConfig extends Component<TableConfigProps> {
                         <Option value="POST">POST</Option>
                     </Select>
                 </FormItem>
-                <FormItem {...formItemLayout} label="表格名称">
+                <FormItem {...formItemLayout} label={currentComponent && currentComponent.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'}>
                     <Input value={this.state.currentComponent.stateName}
                         placeholder="组件存储数据Key, 使用英文且唯一"
                         onChange={this.stateNameInputChange} />
                 </FormItem>
+                {
+                    currentComponent && currentComponent.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
+                        <Input value={this.state.currentComponent.tableName}
+                            placeholder="表格列表名称"
+                            onChange={this.tableNameInputChange} />
+                    </FormItem> : ''
+                }
+
                 <FormItem {...formItemLayout} label="是否显示selectedRows">
                     <Radio.Group defaultValue={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
                         <Radio value={false}>不显示</Radio>
