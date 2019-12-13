@@ -49,13 +49,8 @@ export default {
                 });
             }
         },
-<<<<<<< HEAD
-        addTemplateItem: async(payload?) => {
-            // console.log('addTemplateItem payload =>>', JSON.stringify(payload));
-=======
         /* 新增模版 */
         addTemplateItem: async(payload: any) => {
->>>>>>> feature_cloud_components
             const response = await request(API.page.save, {
                 method: 'post',
                 body: {
