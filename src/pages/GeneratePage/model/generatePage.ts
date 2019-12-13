@@ -11,13 +11,9 @@ export const STATE = {
         components: [] // 子组件
     },
     pageName: '', // 页面名称
-<<<<<<< HEAD
-    selectedComponentId: '',
     chooseTabName: '',
-=======
     selectedComponentId: '', // 被选中组件ID
     cloudComponentList: [], // 云组件列表
->>>>>>> feature_cloud_components
 };
 
 export default {
