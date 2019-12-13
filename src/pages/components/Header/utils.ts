@@ -14,16 +14,7 @@ interface FormChildren {
 /**
  * 整理JSON
  */
-export const formatComponents = (components: any[], type?: string): Array<any> => {
-    if (type === 'RelationTable') {
-        const newComponents = [
-            {
-                componentName: 'RelationTable',
-                components: components
-            }
-        ];
-        return newComponents;
-    }
+export const formatComponents = (components: any[]): Array<any> => {
     return components.map((item: any,) => {
         const { components: children = [], componentName } = item;
         if (componentName === 'Form' && children.length) {
@@ -37,11 +28,6 @@ export const formatComponents = (components: any[], type?: string): Array<any> =
 
             // Form 内部的组件
             modifyCorrelationFragment(item.components, stateName, type);
-            // item.components.forEach((it) => {
-            //     if (it.componentName === 'Radio') {
-            //     //
-            //     }
-            // })
 
             if (type === NORMAL_FORM) {
                 item.activeEvents = [
@@ -96,31 +82,15 @@ export const formatComponents = (components: any[], type?: string): Array<any> =
                                 responseType: 'list'
                             }
                         },
-                        // {
-                        //     eventType: 'link',
-                        //     dependencies: {
-                        //         ...components[tableIndex].dependencies,
-                        //         responseType: 'list'
-                        //     }
-                        // }
                     ];
                 }
             }
         }
         if (componentName === 'Table') {
-            // Table 的特殊册立
-            // item.props.columns = [
-            //     ...item.props.columns,
-            //     {
-            //         title: '操作',
-            //         component: {
-            //             componentName: 'a', // 组件名称
-            //             type: 'link',
-            //             href: 'http://www.baidu.com',
-            //         }
-            //     }
-            // ];
             item.props.columns = item.props.columns.filter(({ component }) => !component);
+        }
+        if (componentName === 'RelationTable') {
+            item.components = formatComponents(children);
         }
         return item;
     });

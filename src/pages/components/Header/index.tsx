@@ -33,9 +33,18 @@ class Header extends Component<HeaderProps> {
             title: '确认提交配置？',
             content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
             onOk: async() => {
+                let components = pageJSON.components;
+                if (generatePage.chooseTabName === 'RelationTable') {
+                    components = [
+                        {
+                            componentName: 'RelationTable',
+                            components: components
+                        }
+                    ];
+                }
                 actions.generatePage.addTemplateItem({
                     pageData: JSON.stringify({
-                        components: formatComponents(pageJSON.components, generatePage.chooseTabName),
+                        components: formatComponents(components),
                         paramKey: findParamKey(pageJSON.components),
                     }),
                     pageName
