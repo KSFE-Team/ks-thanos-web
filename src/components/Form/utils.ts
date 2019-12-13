@@ -21,3 +21,20 @@ export const getTools = () => ({
     icon: 'form',
     componentName: 'Form'
 });
+
+/**
+ * 过滤云组件
+ */
+export const filterCloudComponents = (serverList: any[], localCloudConfig: any) => {
+    return Object.keys(localCloudConfig).reduce((prev: any, key: string) => {
+        const { getTools } = localCloudConfig[key];
+        const { cloudName = '' } = getTools();
+        if (cloudName && serverList.some(({ name }) => `${name}` === `${cloudName}`)) {
+            prev = {
+                ...prev,
+                [key]: localCloudConfig[key]
+            };
+        }
+        return prev;
+    }, {});
+};

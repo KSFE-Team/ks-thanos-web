@@ -10,6 +10,7 @@ import * as Radio from './Radio/index';
 import * as CheckBox from './CheckBox';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
+import * as BizSelectModal from './BizSelectModal';
 
 /**
  * 展示类组件
@@ -40,12 +41,29 @@ const OTHER_COMPONENTS = {
     Form
 };
 
-/**
+/*
  * 父子Table
  */
 const RELATION_TABLE = {
     RelationTable
 };
+
+/**
+ * 获取录入组件
+ */
+const getDataEntry = () => DATA_ENTRY;
+
+/**
+ * 云组件
+ */
+const CLOUD_COMPONENTS = {
+    BizSelectModal
+};
+
+/**
+ * 获取云组件
+ */
+const getCloudComponents = () => CLOUD_COMPONENTS;
 
 /**
  * 所有组件
@@ -57,12 +75,8 @@ const ALL_TOOLS = {
     ...RELATION_TABLE,
     ...Form,
     ...Table,
+    ...CLOUD_COMPONENTS
 };
-
-/**
- * 获取录入组件
- */
-const getDataEntry = () => DATA_ENTRY;
 
 export {
     DATA_DISPLAY,
@@ -70,5 +84,6 @@ export {
     DATA_ENTRY,
     OTHER_COMPONENTS,
     ALL_TOOLS,
-    getDataEntry
+    getDataEntry,
+    getCloudComponents
 };

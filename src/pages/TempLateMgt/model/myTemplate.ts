@@ -7,7 +7,7 @@ export default {
     initialState: {
         list: [],
         page: 1,
-        limit: 15,
+        limit: 10,
         totalPage: 0,
         total: 0,
         pageName: {
