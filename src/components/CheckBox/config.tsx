@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import Form from 'antd/es/form';
 import { findComponent, saveComponent } from 'Src/utils';
 import { FORMITEM_LAYOUT, ALIAS } from 'Src/utils/constants';
+import {initState} from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const VALUE = 'value';
 const LABEL = 'label';
@@ -74,6 +76,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             render: (item, record, index) =>
                 <Switch
                     defaultChecked={record[CHECK]}
+                    key={record[CHECK]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, CHECK, index)}
@@ -86,6 +89,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             render: (item, record, index) =>
                 <Switch
                     defaultChecked={record[DISABLED]}
+                    key={record[DISABLED]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, DISABLED, index)}
@@ -267,6 +271,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 </Col>
                 <Col>
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
+                </Col>
+                <Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Col>
             </Row>
         </>;

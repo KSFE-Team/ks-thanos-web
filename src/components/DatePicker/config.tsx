@@ -3,6 +3,8 @@ import {Form, Radio, Button, Row, Col, Input} from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 
@@ -22,18 +24,7 @@ export default class Config extends Component<ConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        showTime: true,
-        format: 'YYYY-MM-DD',
-        placeholder: '',
-        key: '',
-        label: '',
-        current: {
-            id: '',
-            props: {}
-        },
-        isTouch: false,
-    };
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -131,6 +122,7 @@ export default class Config extends Component<ConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} />
                 </Row>
             </FormItem>
         </div>;

@@ -25,3 +25,21 @@ export const getTools = () => ({
     icon: 'table',
     componentName: 'Table'
 });
+
+export const initState = {
+    api: '', // api path
+    currentComponent: {
+        id: '',
+        stateName: '',
+        tableType: 0,
+        listName: ''
+    }, // current component info
+    currentComponentIdx: '', // current component index
+    dataSource: [], // table data
+    editDataFlag: false,
+    method: 'GET', // request method
+    // searchComponentChecked: false, // checkbox search component check flag
+    tableCount: 0, // table key
+    showSelectedRows: false,
+    showSelectedRowsType: 'radio'
+};

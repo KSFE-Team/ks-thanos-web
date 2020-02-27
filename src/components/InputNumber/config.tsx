@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 const LABEL = 'label';
@@ -26,15 +28,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -102,7 +96,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                         rules: [
                             {required: true, message: '请输入表单key'}
                         ],
-                        initialValue: formData[KEY]
+                        initialValue: formData[KEY] || '',
                     })(
                         <Input
                             placeholder='例如:inputnumber'
@@ -232,6 +226,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} type='InputNumber'/>
                 </Row>
             </FormItem>
         </div>;

@@ -8,3 +8,14 @@ import { PROJECT_NAME } from './constants';
 export const goto = function(route) {
     history.push(`${PROJECT_NAME}/${route}`);
 };
+
+/**
+ * 清除数据
+ * @param route
+ */
+export const clearData = (that, initState, type = '') => {
+    if (type === 'InputNumber' || type === 'Select' || type === 'RangePicker') {
+        that.props.form.resetFields();
+    }
+    that.setState({...initState});
+};

@@ -3,6 +3,8 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import {initState} from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const FormItem = Form.Item;
 const KEY = 'key';
@@ -19,16 +21,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-            type: ''
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -117,6 +110,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Row>
             </FormItem>
         </div>;

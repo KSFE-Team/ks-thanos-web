@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
+import ClearButton from 'Src/components/ClearButton';
 import { getUniqueID } from 'Src/utils';
 import {TABLE_TYPE} from 'Src/utils/constants';
+import {initState} from './utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -21,23 +23,7 @@ interface TableConfigProps {
 
 export default class TableConfig extends Component<TableConfigProps> {
 
-    state = {
-        api: '', // api path
-        currentComponent: {
-            id: '',
-            stateName: '',
-            tableType: 0,
-            listName: ''
-        }, // current component info
-        currentComponentIdx: '', // current component index
-        dataSource: [], // table data
-        editDataFlag: false,
-        method: 'GET', // request method
-        // searchComponentChecked: false, // checkbox search component check flag
-        tableCount: 0, // table key
-        showSelectedRows: false,
-        showSelectedRowsType: 'radio'
-    };
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         const newState: any = {};
@@ -356,7 +342,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                         onChange={this.apiInputChange} />
                 </FormItem>
                 <FormItem {...formItemLayout} label="请求方式">
-                    <Select defaultValue={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
+                    <Select defaultValue={this.state.method} key={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
                         <Option value="GET">GET</Option>
                         <Option value="POST">POST</Option>
                     </Select>
@@ -375,7 +361,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                 }
 
                 <FormItem {...formItemLayout} label="是否显示selectedRows">
-                    <Radio.Group defaultValue={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
+                    <Radio.Group value={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
                         <Radio value={false}>不显示</Radio>
                         <Radio value={true}>显示</Radio>
                     </Radio.Group>
@@ -408,6 +394,9 @@ export default class TableConfig extends Component<TableConfigProps> {
                         <Button type="primary" onClick={this.saveTableData}>
                             确定
                         </Button>
+                    </Col>
+                    <Col offset={1}>
+                        <ClearButton initState={initState} that={this}/>
                     </Col>
                 </Row>
             </React.Fragment>

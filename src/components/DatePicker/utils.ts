@@ -18,3 +18,19 @@ export const getTools = () => ({
     icon: 'calendar',
     componentName: 'DatePicker'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    showTime: true,
+    format: 'YYYY-MM-DD',
+    placeholder: '',
+    key: '',
+    label: '',
+    current: {
+        id: '',
+        props: {}
+    },
+    isTouch: false,
+};

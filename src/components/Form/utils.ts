@@ -38,3 +38,12 @@ export const filterCloudComponents = (serverList: any[], localCloudConfig: any) 
         return prev;
     }, {});
 };
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+    },
+    isTouch: false
+};

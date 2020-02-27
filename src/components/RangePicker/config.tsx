@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {FormComponentProps} from 'antd/es/form';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 const DATE_FORMAT = 'YYYY-MM-DD';
@@ -25,16 +27,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-            props: {}
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state= initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -222,6 +215,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} type='RangePicker'/>
                 </Row>
             </FormItem>
         </div>;

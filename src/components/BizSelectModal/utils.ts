@@ -20,3 +20,17 @@ export const getTools = () => ({
     componentName: 'BizSelectModal',
     cloudName: '@ks/kms-bizselectmodal'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+        type: ''
+    },
+    isTouch: false,
+    current: {
+        id: '',
+        props: {}
+    }
+};

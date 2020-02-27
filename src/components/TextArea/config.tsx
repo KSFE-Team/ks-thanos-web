@@ -3,6 +3,8 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 
@@ -21,16 +23,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -127,6 +120,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Row>
             </FormItem>
         </div>;

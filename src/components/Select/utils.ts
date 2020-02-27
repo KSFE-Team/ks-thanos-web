@@ -24,3 +24,15 @@ export const getTools = () => ({
     icon: 'down-square',
     componentName: 'Select'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {},
+    isTouch: false,
+    current: {
+        id: '',
+        props: {}
+    }
+};

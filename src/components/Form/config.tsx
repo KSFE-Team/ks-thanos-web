@@ -6,7 +6,8 @@ import PropTypes from 'prop-types';
 import { getDataEntry, getCloudComponents, ALL_TOOLS } from 'Src/components';
 import { getTools } from 'Src/utils';
 import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
-import { filterCloudComponents } from './utils';
+import { filterCloudComponents, initState } from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const [{key: NORMAL}, {key: SEARCH}] = FORM_TYPES;
 const FormItem = Form.Item;
@@ -44,12 +45,7 @@ export default class FormConfig extends Component<FormConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-
-        },
-        isTouch: false
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -260,6 +256,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                                     type='primary'
                                 >确定</Button>
                             </Col>
+                            <ClearButton initState={initState} that={this}/>
                         </Row>
                     </FormItem>
                 </TabPane>

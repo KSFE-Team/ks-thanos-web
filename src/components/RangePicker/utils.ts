@@ -22,3 +22,17 @@ export const getTools = () => ({
     icon: 'calendar',
     componentName: 'RangePicker'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+        props: {}
+    },
+    isTouch: false,
+    current: {
+        id: '',
+        props: {}
+    }
+};

@@ -27,3 +27,16 @@ export const getTools = () => ({
     icon: 'number',
     componentName: 'InputNumber'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+    },
+    isTouch: false,
+    current: {
+        id: '',
+        props: {}
+    }
+};

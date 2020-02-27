@@ -21,3 +21,17 @@ export const getTools = () => ({
     icon: 'edit',
     componentName: 'TextArea'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+
+    },
+    isTouch: false,
+    current: {
+        id: '',
+        props: {}
+    }
+};
