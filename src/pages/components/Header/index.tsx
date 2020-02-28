@@ -19,6 +19,13 @@ interface HeaderProps {
 }))
 class Header extends Component<HeaderProps> {
 
+    /**
+     * 清空数据
+     */
+    clearAllData = () => {
+        console.log('清空数据');
+    }
+
     handleSubmit = () => {
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
@@ -66,6 +73,11 @@ class Header extends Component<HeaderProps> {
                                 goto('');
                             }}>
                                 返回
+                            </Button>
+                            <Button className='mar-l-4' onClick={() => {
+                                this.clearAllData();
+                            }}>
+                                清空全部配置
                             </Button>
                             <Button
                                 className='mar-l-4'

@@ -41,5 +41,6 @@ export const initState = {
     // searchComponentChecked: false, // checkbox search component check flag
     tableCount: 0, // table key
     showSelectedRows: false,
-    showSelectedRowsType: 'radio'
+    showSelectedRowsType: 'radio',
+    isClear: false,
 };

@@ -5,7 +5,7 @@ import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'an
 import ClearButton from 'Src/components/ClearButton';
 import { getUniqueID } from 'Src/utils';
 import {TABLE_TYPE} from 'Src/utils/constants';
-import {initState} from './utils';
+import {initState, getInitJson} from './utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -207,6 +207,13 @@ export default class TableConfig extends Component<TableConfigProps> {
         this.setState({
             searchComponentChecked: e.target.checked,
         });
+    }
+
+    /**
+     * getInitJson
+     */
+    getInitJson = () => {
+        return getInitJson();
     }
 
     /**
