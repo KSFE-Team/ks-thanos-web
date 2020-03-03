@@ -21,6 +21,7 @@
     "dart-sass": "^1.22.1",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
+    "echarts": "^4.6.0",
     "eslint": "^5.16.0",
     "eslint-config-react-app": "^4.0.1",
     "eslint-loader": "2.1.2",

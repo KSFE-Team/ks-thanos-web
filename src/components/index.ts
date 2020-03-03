@@ -11,6 +11,7 @@ import * as CheckBox from './CheckBox';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
+import * as Report from './Report';
 
 /**
  * 展示类组件
@@ -31,7 +32,8 @@ const DATA_ENTRY = {
  * 展示类组件
  */
 const DATA_DISPLAY = {
-    Table
+    Table,
+    Report
 };
 
 /**
