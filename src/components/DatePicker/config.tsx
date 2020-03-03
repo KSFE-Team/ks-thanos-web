@@ -32,6 +32,9 @@ export default class Config extends Component<ConfigProps> {
             const { components } = pageJSON;
             const current = findComponent(components);
             return {
+                [KEY]: current[KEY],
+                [LABEL]: current[LABEL],
+                [PLACEHOLDER]: current[PLACEHOLDER],
                 current
             };
         } else {
@@ -45,9 +48,9 @@ export default class Config extends Component<ConfigProps> {
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
             [KEY]: key,
             [LABEL]: label,
+            [PLACEHOLDER]: placeholder,
             props: {
                 ...current.props,
-                [PLACEHOLDER]: placeholder,
                 [SHOW_TIME]: showTime,
                 [FORMAT]: format,
             }

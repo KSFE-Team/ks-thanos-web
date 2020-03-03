@@ -61,7 +61,8 @@ export default class FormConfig extends Component<FormConfigProps> {
                     [UPDATE_API]: current[UPDATE_API],
                     [GET_API]: current[GET_API],
                     [PARAM_KEY]: current[PARAM_KEY],
-                }
+                },
+                current
             };
         } else {
             return state;

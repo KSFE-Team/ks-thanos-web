@@ -7,8 +7,11 @@ export const getInitJson = () => ({
     source: 'Src/components/@ks/kms-bizselectmodal',
     default: false,
     componentType: 'cloud',
+    props: {
+        type: ''
+    },
     key: '',
-    label: ''
+    label: '',
 });
 
 /**

@@ -10,7 +10,11 @@ export const getInitJson = () => ({
         key: '',
         rows: '',
         placeholder: '',
-    }
+    },
+    key: '',
+    label: '',
+    placeholder: '',
+    rows: ''
 });
 
 /**

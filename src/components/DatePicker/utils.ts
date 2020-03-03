@@ -6,6 +6,7 @@ export const getInitJson = () => ({
     componentName: 'DatePicker',
     source: 'antd',
     default: false,
+    placeholder: '',
     key: '',
     label: ''
 });

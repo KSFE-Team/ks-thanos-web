@@ -10,7 +10,11 @@ export const getInitJson = () => ({
     default: false,
     type: NORMAL_FORM,
     key: '',
-    label: ''
+    label: '',
+    saveApi: '',
+    updateApi: '',
+    getApi: '',
+    paramKey: ''
 });
 
 /**

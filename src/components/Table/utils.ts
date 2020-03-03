@@ -28,13 +28,13 @@ export const getTools = () => ({
 
 export const initState = {
     api: '', // api path
-    currentComponent: {
+    current: {
         id: '',
         stateName: '',
         tableType: 0,
         listName: ''
     }, // current component info
-    currentComponentIdx: '', // current component index
+    currentIdx: '', // current component index
     dataSource: [], // table data
     editDataFlag: false,
     method: 'GET', // request method
