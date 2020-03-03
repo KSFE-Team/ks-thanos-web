@@ -33,6 +33,11 @@ export const initState = {
     isTouch: false,
     current: {
         id: '',
-        props: {}
+        props: {
+            placeholder: '',
+            disabled: false,
+            allowClear: true,
+            showSearch: false
+        }
     }
 };

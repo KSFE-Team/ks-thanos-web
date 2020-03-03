@@ -3,7 +3,7 @@ import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
 import './index.scss';
-import { goto } from 'Src/utils/commonFunc';
+import { goto, clearAllData } from 'Src/utils/commonFunc';
 
 const confirm = Modal.confirm;
 const error = Modal.error;
@@ -23,7 +23,15 @@ class Header extends Component<HeaderProps> {
      * 清空数据
      */
     clearAllData = () => {
-        console.log('清空数据');
+        confirm({
+            title: '清空全部配置',
+            content: '确认是否清空全部配置，谨慎操作',
+            onOk: () => {
+                const { generatePage } = this.props;
+                const { pageJSON } = generatePage;
+                clearAllData(pageJSON.components);
+            }
+        });
     }
 
     handleSubmit = () => {

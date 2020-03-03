@@ -12,58 +12,75 @@ export const goto = function(route) {
 };
 
 /**
+ * 获取层级数组的索引
+ */
+export const getComponents = (components, id = '') => {
+    let nodeArray:Array<any> = [];
+    if (id) {
+        nodeArray = components.map((item) => {
+            if (item.id === id) {
+                const pageJSON = ALL_TOOLS[item.componentName].getInitJson();
+                for (const key in pageJSON) {
+                    if (item.componentName === 'Table' && key === 'tableType') {
+                        if (item.tableType === 2 || item.tableType === 3) {
+                            item.tableType = item[key];
+                        }
+                    } else {
+                        item[key] = pageJSON[key];
+                    }
+                }
+            } else {
+                if (item.components && item.components.length) {
+                    getComponents(item.components, id);
+                }
+            }
+            return item;
+        });
+    } else {
+        nodeArray = components.map((item) => {
+            const pageJSON = ALL_TOOLS[item.componentName].getInitJson();
+            for (const key in pageJSON) {
+                if (item.componentName === 'Table' && key === 'tableType') {
+                    if (item.tableType === 2 || item.tableType === 3) {
+                        item.tableType = item[key];
+                    }
+                } else {
+                    item[key] = pageJSON[key];
+                }
+            }
+            if (item.components && item.components.length) {
+                getComponents(item.components);
+            }
+            return item;
+        });
+    }
+
+    return nodeArray;
+};
+
+/**
  * 清除数据
  * @param route
  */
 export const clearData = (that, initState, type = '') => {
     console.log(that);
     const id = that.state.current.id; // 当前操作的组件id
-    const currentComponentName = that.state.current.componentName; // 当前组件的名称
-    console.log(currentComponentName);
-    const pageJSON = ALL_TOOLS[currentComponentName].getInitJson();
     const components = that.props.pageJSON.components; // 页面里的所有组件：数组
-    const index = components.findIndex((item) => {
-        return item.id === id;
+    const newComponents = getComponents(components, id);
+    actions.generatePage.setReducers({
+        pageJSON: {
+            components: newComponents
+        }
     });
-    if (index === -1) {
-        let itemIndex, parentIndex;
-        components.forEach((item, index) => {
-            if (item.components) {
-                item.components.forEach((item, indexs) => {
-                    if (item.id === id) {
-                        parentIndex = index;
-                        itemIndex = indexs;
-                    }
-                });
-            }
-        });
-        const newData = that.props.pageJSON.components[parentIndex].components[itemIndex];
-        for (const key in pageJSON) {
-            newData[key] = pageJSON[key];
-        }
-        const newArray = that.props.pageJSON.components;
-        newArray[parentIndex].components[itemIndex] = newData;
-        actions.generatePage.setReducers({
-            pageJSON: {
-                components: newArray
-            }
-        });
-    } else {
-        const newData = that.props.pageJSON.components[index];
-        for (const key in pageJSON) {
-            newData[key] = pageJSON[key];
-        }
-        const newArray = that.props.pageJSON.components;
-        newArray[index] = newData;
-        actions.generatePage.setReducers({
-            pageJSON: {
-                components: newArray
-            }
-        });
-    }
-
     if (type === 'InputNumber' || type === 'Select' || type === 'RangePicker') {
         that.props.form.resetFields();
     }
     that.setState({...initState, isClear: true});
+};
+
+/**
+ * 清空所有配置
+ */
+export const clearAllData = (components) => {
+    getComponents(components);
 };
