@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
-import {FormComponentProps} from 'antd/es/form';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { FormComponentProps } from 'antd/es/form';
+import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import { checkFieldData } from 'Src/utils/utils';
 
 const FormItem = Form.Item;
 const LABEL = 'label';
@@ -16,7 +17,7 @@ const PRECISION = 'precision';
 const STEP = 'step';
 const KEY = 'key';
 
-interface InputConfigProps extends FormComponentProps{
+interface InputConfigProps extends FormComponentProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
@@ -26,7 +27,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
+    state = {
         formData: {
         },
         isTouch: false,
@@ -75,6 +76,11 @@ class InputNumberConfig extends Component<InputConfigProps> {
                         delete fieldValues[key];
                     }
                 }
+                const flag = checkFieldData('obj', { key, label }, FIELD_ARR);
+                if (flag) {
+                    message.error(FORM_MESSAGE);
+                    return false;
+                }
                 pageJSON.components = saveComponent(current.id, pageJSON.components, {
                     [KEY]: key,
                     [LABEL]: label,
@@ -100,7 +106,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 {
                     getFieldDecorator(KEY, {
                         rules: [
-                            {required: true, message: '请输入表单key'}
+                            { required: true, message: '请输入表单key' }
                         ],
                         initialValue: formData[KEY]
                     })(

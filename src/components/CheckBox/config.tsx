@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Alert, Table } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Table, message } from 'antd';
 import PropTypes from 'prop-types';
 import Form from 'antd/es/form';
 import { findComponent, saveComponent } from 'Src/utils';
-import { FORMITEM_LAYOUT, ALIAS } from 'Src/utils/constants';
+import { FORMITEM_LAYOUT, ALIAS, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { checkFieldData } from 'Src/utils/utils';
 
 const VALUE = 'value';
 const LABEL = 'label';
@@ -13,6 +14,10 @@ const DISABLED = 'disabled';
 const OPTIONS = 'options';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
+const fieldArr = [
+    'text',
+    'value'
+];
 
 interface CheckBoxConfigProps {
     pageJSON: any;
@@ -137,20 +142,12 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        if (!formData.label) {
-            this.setState({
-                errMessage: '请输入表单名称'
-            });
-            return;
-        }
-        for (let i = 0; i < formData.options.length; i++) {
-            const item = formData.options[i];
-            if (!item[TEXT]) {
-                this.setState({
-                    errMessage: '请输入表单项名称'
-                });
-                return;
-            }
+        const flag = checkFieldData('obj', {key: formData.key, label: formData.label}, FIELD_ARR);
+        const columnFlag = checkFieldData('checkoutArr', formData.options, fieldArr);
+        // 提交检验
+        if (flag || columnFlag) {
+            message.error(FORM_MESSAGE);
+            return false;
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
         onSave && onSave(pageJSON);
@@ -227,18 +224,8 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     }
 
     render() {
-        const { formData, errMessage } = this.state;
-        return <>
-            {
-                errMessage
-                    ? <Alert message={errMessage}
-                        type='error'
-                        closable
-                        onClose={this.handleAlertClose}
-                    ></Alert>
-                    : null
-            }
-            <br />
+        const { formData } = this.state;
+        return <div>
             <Form.Item
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
@@ -269,6 +256,6 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
                 </Col>
             </Row>
-        </>;
+        </div>;
     }
 }

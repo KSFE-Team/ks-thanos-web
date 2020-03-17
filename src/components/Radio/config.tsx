@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Alert, Table, Form, Select } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Table, Form, Select, message } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS } from 'Src/utils/constants';
+import { ALIAS, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent, getFragments } from 'Src/utils';
+import { checkFieldData } from 'Src/utils/utils';
 const Option = Select.Option;
 
 const VALUE = 'value';
@@ -23,6 +24,11 @@ const formItemLayout = {
         sm: { span: 12 },
     }
 };
+
+const fieldArr = [
+    'text',
+    'value'
+];
 
 interface RadioConfigProps {
     pageJSON: any;
@@ -163,24 +169,15 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        if (!formData.label) {
-            this.setState({
-                errMessage: '请输入表单名称'
-            });
-            return;
-        }
-        for (let i = 0; i < formData.options.length; i++) {
-            const item = formData.options[i];
-            if (!item[TEXT]) {
-                this.setState({
-                    errMessage: '请输入表单项名称'
-                });
-                return;
-            }
+        const flag = checkFieldData('obj', {key: formData.key, label: formData.label}, FIELD_ARR);
+        const columnFlag = checkFieldData('radioArr', formData.options, fieldArr);
+        // 提交检验
+        if (flag || columnFlag) {
+            message.error(FORM_MESSAGE);
+            return false;
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
         onSave && onSave(pageJSON);
-        console.log(pageJSON, 'pageJSON');
     }
 
     /**
@@ -243,18 +240,8 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     }
 
     render() {
-        const { formData, errMessage } = this.state;
-        return <>
-            {
-                errMessage
-                    ? <Alert message={errMessage}
-                        type='error'
-                        closable
-                        onClose={this.handleAlertClose}
-                    ></Alert>
-                    : null
-            }
-            <br />
+        const { formData } = this.state;
+        return <div>
             <Form.Item
                 {...formItemLayout}
                 label={ALIAS.LABEL}
@@ -304,6 +291,6 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
                 </Col>
             </Row>
-        </>;
+        </div>;
     }
 }

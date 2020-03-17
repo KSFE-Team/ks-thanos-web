@@ -113,6 +113,9 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
             >
                 {
                     getFieldDecorator('label', {
+                        rules: [
+                            {required: true, message: `请输入${ALIAS.LABEL}`}
+                        ],
                         initialValue: formData[LABEL]
                     })(
                         <Input

@@ -3,7 +3,8 @@ import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
 import { getUniqueID } from 'Src/utils';
-import {TABLE_TYPE} from 'Src/utils/constants';
+import { TABLE_TYPE } from 'Src/utils/constants';
+import { checkFieldData } from 'Src/utils/utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -14,6 +15,11 @@ const EditableRow = ({ form, index, ...props }: any) => (
 );
 const EditableFormRow = Form.create()(EditableRow);
 
+const columnDataIndex = [
+    'dataKey',
+    'tableName'
+];
+// import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE } from 'Src/utils/constants';
 interface TableConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): any;
@@ -139,6 +145,11 @@ export default class TableConfig extends Component<TableConfigProps> {
      */
     saveTableData = () => {
         if (!this.checkData()) { return; }
+        const flag = checkFieldData('arr', this.state.dataSource, columnDataIndex);
+        if (flag) {
+            message.error('请填写完整表格信息。');
+            return;
+        }
         const pageJSON = this.props.pageJSON;
         const { currentComponent, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
@@ -313,7 +324,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             },
             {
                 title: 'operation',
-                render: (text: string, record: any) => {
+                render: (_text: string, record: any) => {
                     return this.state.dataSource.length >= 2 ? (
                         <div>
                             <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
@@ -455,19 +466,33 @@ class EditableCell extends React.Component<EditableCellProps> {
 
     renderCell = (form) => {
         this.form = form;
-        const { children, dataIndex, record, title } = this.props;
+        const { children, dataIndex, record } = this.props;
         const { editing } = this.state;
         return editing ? (
             <Form.Item style={{ margin: 0 }}>
-                {form.getFieldDecorator(dataIndex, {
+                <Input value={record[dataIndex]} ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} onChange={() => {}}/>
+                {/* {form.getFieldDecorator(dataIndex, {
                     rules: [
                         {
                             required: true,
                             message: `${title} is required.`,
                         },
+                        {
+                            validator: (rule, value, callback) => {
+                                if (rule.field === 'dataKey') {
+                                    if (CHARACTER_REG.test(value)) {
+                                        callback(new Error(CHARACTER_MESSAGE));
+                                    } else {
+                                        callback();
+                                    }
+                                } else {
+                                    callback();
+                                }
+                            }
+                        }
                     ],
                     initialValue: record[dataIndex],
-                })(<Input ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)}
+                })(<Input ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)} */}
             </Form.Item>
         ) : (
             <div

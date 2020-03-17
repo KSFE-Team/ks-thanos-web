@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import { checkFieldData } from 'Src/utils/utils';
 
 const FormItem = Form.Item;
 const KEY = 'key';
@@ -49,6 +50,12 @@ export default class InputConfig extends Component<InputConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
+        const flag = checkFieldData('obj', formData, FIELD_ARR);
+        // 提交检验
+        if (flag) {
+            message.error(FORM_MESSAGE);
+            return false;
+        }
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
             ...formData,
             props: {

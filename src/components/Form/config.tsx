@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Form, Input, Button, Row, Col, Radio, Tabs } from 'antd';
+import { Form, Input, Button, Row, Col, Radio, Tabs, message } from 'antd';
 import { actions, connect } from 'kredux';
 import { FORM_TYPES } from './constants';
 import PropTypes from 'prop-types';
@@ -7,8 +7,10 @@ import { getDataEntry, getCloudComponents, ALL_TOOLS } from 'Src/components';
 import { getTools } from 'Src/utils';
 import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
 import { filterCloudComponents } from './utils';
+import { CHARACTER_REG, CHARACTER_MESSAGE, FORM_MESSAGE } from 'Src/utils/constants';
+import { checkFieldData } from 'Src/utils/utils';
 
-const [{key: NORMAL}, {key: SEARCH}] = FORM_TYPES;
+const [{ key: NORMAL }, { key: SEARCH }] = FORM_TYPES;
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
 const { TabPane } = Tabs;
@@ -29,9 +31,16 @@ const SAVE_API = 'saveApi';
 const UPDATE_API = 'updateApi';
 const GET_API = 'getApi';
 const PARAM_KEY = 'paramKey';
-
-interface FormConfigProps{
-    onSave(pageJSON:any): void,
+const fieldArr = [
+    'stateName',
+    'type',
+    'saveApi',
+    'updateApi',
+    'getApi',
+    'paramKey'
+];
+interface FormConfigProps {
+    onSave(pageJSON: any): void,
     pageJSON: any,
     generatePage: any,
 }
@@ -44,11 +53,10 @@ export default class FormConfig extends Component<FormConfigProps> {
         onSave: PropTypes.func
     };
 
-    state={
+    state = {
         formData: {
-
         },
-        isTouch: false
+        isTouch: false,
     };
 
     static getDerivedStateFromProps(props, state) {
@@ -65,7 +73,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     [UPDATE_API]: current[UPDATE_API],
                     [GET_API]: current[GET_API],
                     [PARAM_KEY]: current[PARAM_KEY],
-                }
+                },
             };
         } else {
             return state;
@@ -82,7 +90,7 @@ export default class FormConfig extends Component<FormConfigProps> {
     handleClick = (componentName: string) => {
         const insertComponent = ALL_TOOLS[componentName].getInitJson();
         const current = this.props.pageJSON.components.find(({ configVisible }) => configVisible);
-        actions.generatePage.insertFormComponent({insertComponent, targetId: current.id});
+        actions.generatePage.insertFormComponent({ insertComponent, targetId: current.id });
     }
 
     /**
@@ -90,7 +98,13 @@ export default class FormConfig extends Component<FormConfigProps> {
      */
     handleSave = () => {
         const { formData } = this.state;
+        const flag = checkFieldData('obj', formData, fieldArr);
         const { pageJSON, onSave } = this.props;
+        // 提交检验
+        if (flag) {
+            message.error(FORM_MESSAGE);
+            return false;
+        }
         pageJSON.components = pageJSON.components.map((component: any) => {
             if (component.configVisible) {
                 component = {
@@ -109,12 +123,19 @@ export default class FormConfig extends Component<FormConfigProps> {
     /**
      * 组件保存
      */
-    handleChange = (key: string, value: string|boolean) => {
+    handleChange = (key: string, value: string, type: string = '') => {
+        let current = value;
+        if (type) {
+            if (CHARACTER_REG.test(value)) {
+                message.error(CHARACTER_MESSAGE);
+                current = '';
+            }
+        }
         const { formData } = this.state;
         this.setState({
             formData: {
                 ...formData,
-                [key]: value
+                [key]: current
             },
             isTouch: true
         });
@@ -225,7 +246,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                             placeholder='例如： userSearchForm / userInfo'
                             onChange={(e) => {
                                 const value = e.target.value;
-                                this.handleChange(STATE_NAME, value);
+                                this.handleChange(STATE_NAME, value, 'filter');
                             }}
                         />
                     </FormItem>
@@ -267,7 +288,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     <FormItem
                         label={'可配置组件'}
                         {...formItemLayout}
-                        style={{marginBottom: 0}}
+                        style={{ marginBottom: 0 }}
                     >
                         <ComponentType
                             dataSource={[dataSource] || []}
@@ -291,4 +312,5 @@ export default class FormConfig extends Component<FormConfigProps> {
             </Tabs>
         </div>;
     }
+
 }
