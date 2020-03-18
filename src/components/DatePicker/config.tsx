@@ -3,6 +3,8 @@ import {Form, Radio, Button, Row, Col, Input, message} from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 import { checkFieldData } from 'Src/utils/utils';
 
 const FormItem = Form.Item;
@@ -23,18 +25,7 @@ export default class Config extends Component<ConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        showTime: true,
-        format: 'YYYY-MM-DD',
-        placeholder: '',
-        key: '',
-        label: '',
-        current: {
-            id: '',
-            props: {}
-        },
-        isTouch: false,
-    };
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -42,6 +33,9 @@ export default class Config extends Component<ConfigProps> {
             const { components } = pageJSON;
             const current = findComponent(components);
             return {
+                [KEY]: current[KEY],
+                [LABEL]: current[LABEL],
+                [PLACEHOLDER]: current[PLACEHOLDER],
                 current
             };
         } else {
@@ -61,6 +55,7 @@ export default class Config extends Component<ConfigProps> {
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
             [KEY]: key,
             [LABEL]: label,
+            [PLACEHOLDER]: placeholder,
             props: {
                 ...current.props,
                 [PLACEHOLDER]: placeholder,
@@ -138,6 +133,7 @@ export default class Config extends Component<ConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} />
                 </Row>
             </FormItem>
         </div>;

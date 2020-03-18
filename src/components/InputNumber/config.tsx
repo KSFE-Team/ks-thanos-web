@@ -5,6 +5,8 @@ import { FormComponentProps } from 'antd/es/form';
 import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 const LABEL = 'label';
@@ -17,7 +19,7 @@ const PRECISION = 'precision';
 const STEP = 'step';
 const KEY = 'key';
 
-interface InputConfigProps extends FormComponentProps {
+interface InputConfigProps extends FormComponentProps{
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
@@ -27,15 +29,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        formData: {
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -106,9 +100,9 @@ class InputNumberConfig extends Component<InputConfigProps> {
                 {
                     getFieldDecorator(KEY, {
                         rules: [
-                            { required: true, message: '请输入表单key' }
+                            {required: true, message: '请输入表单key'}
                         ],
-                        initialValue: formData[KEY]
+                        initialValue: formData[KEY] || '',
                     })(
                         <Input
                             placeholder='例如:inputnumber'
@@ -238,6 +232,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} type='InputNumber'/>
                 </Row>
             </FormItem>
         </div>;

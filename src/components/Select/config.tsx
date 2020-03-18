@@ -4,6 +4,8 @@ import ConfigItem from './ConfigItem';
 import DynamicConfigItem from './DynamicConfigItem';
 import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import {initState} from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const FormItem = Form.Item;
 const KEY = 'key';
@@ -50,14 +52,7 @@ class Config extends Component<ConfigProps, ConfigState> {
     constructor(props) {
         super(props);
 
-        this.state = {
-            formData: {},
-            isTouch: false,
-            current: {
-                id: '',
-                props: {}
-            }
-        };
+        this.state = initState;
     }
 
     static getDerivedStateFromProps(props, state) {
@@ -194,6 +189,7 @@ class Config extends Component<ConfigProps, ConfigState> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} type="Select"/>
                 </Row>
             </FormItem>
         </div>;

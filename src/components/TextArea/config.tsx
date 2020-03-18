@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
+import ClearButton from 'Src/components/ClearButton';
+import {initState} from './utils';
 
 const FormItem = Form.Item;
 
@@ -12,7 +14,7 @@ const Label = 'label';
 const Rows = 'rows';
 const Placeholder = 'placeholder';
 
-interface InputConfigProps {
+interface InputConfigProps{
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
@@ -22,16 +24,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        formData: {
-
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -134,6 +127,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Row>
             </FormItem>
         </div>;
