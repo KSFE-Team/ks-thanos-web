@@ -2,9 +2,11 @@ import React, { Component } from 'react';
 import { actions } from 'kredux';
 import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
+import ClearButton from 'Src/components/ClearButton';
 import { getUniqueID } from 'Src/utils';
-import { TABLE_TYPE } from 'Src/utils/constants';
+import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE, FORM_MESSAGE } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
+import { initState, getInitJson} from './utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -15,10 +17,6 @@ const EditableRow = ({ form, index, ...props }: any) => (
 );
 const EditableFormRow = Form.create()(EditableRow);
 
-const columnDataIndex = [
-    'dataKey',
-    'tableName'
-];
 // import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE } from 'Src/utils/constants';
 interface TableConfigProps {
     pageJSON: any;
@@ -27,44 +25,28 @@ interface TableConfigProps {
 
 export default class TableConfig extends Component<TableConfigProps> {
 
-    state = {
-        api: '', // api path
-        currentComponent: {
-            id: '',
-            stateName: '',
-            tableType: 0,
-            listName: ''
-        }, // current component info
-        currentComponentIdx: '', // current component index
-        dataSource: [], // table data
-        editDataFlag: false,
-        method: 'GET', // request method
-        // searchComponentChecked: false, // checkbox search component check flag
-        tableCount: 0, // table key
-        showSelectedRows: false,
-        showSelectedRowsType: 'radio'
-    };
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         const newState: any = {};
         if (!state.editDataFlag) {
-            const currentComponent = props.pageJSON.components.find((item, index) => {
+            const current = props.pageJSON.components.find((item, index) => {
                 if (item.configVisible) {
-                    newState.currentComponentIdx = index;
+                    newState.currentIdx = index;
                     newState.editDataFlag = true;
                 }
                 return item.configVisible;
             });
 
-            if (currentComponent) {
-                newState.currentComponent = currentComponent;
+            if (current) {
+                newState.current = current;
                 props.pageJSON.components.forEach((item) => {
-                    if (item.parentId && item.parentId === currentComponent.id) {
+                    if (item.parentId && item.parentId === current.id) {
                         newState.searchComponentChecked = true;
                     }
                 });
                 if (state.dataSource.length === 0) {
-                    const dataSource = currentComponent.props.columns.filter(({ component }) => !component).map((item, index) => {
+                    const dataSource = current.props.columns.filter(({ component }) => !component).map((item, index) => {
                         return {
                             dataKey: item.dataIndex,
                             key: index,
@@ -75,20 +57,20 @@ export default class TableConfig extends Component<TableConfigProps> {
                     newState.tableCount = dataSource.length;
                 }
 
-                if (!state.api && currentComponent.dependencies && currentComponent.dependencies.api) {
-                    newState.api = currentComponent.dependencies.api.value || '';
+                if (!state.api && current.dependencies && current.dependencies.api) {
+                    newState.api = current.dependencies.api.value || '';
                 }
 
-                if (currentComponent.dependencies.method) {
-                    newState.method = currentComponent.dependencies.method;
+                if (current.dependencies.method) {
+                    newState.method = current.dependencies.method;
                 }
-                if (currentComponent.showSelectedRows) {
-                    newState.showSelectedRows = currentComponent.showSelectedRows;
+                if (current.showSelectedRows) {
+                    newState.showSelectedRows = current.showSelectedRows;
                 }
-                if (currentComponent.showSelectedRows) {
-                    newState.showSelectedRowsType = currentComponent.showSelectedRowsType;
+                if (current.showSelectedRows) {
+                    newState.showSelectedRowsType = current.showSelectedRowsType;
                 }
-                if (currentComponent.tableType === TABLE_TYPE.PARENT_TABLE) {
+                if (current.tableType === TABLE_TYPE.PARENT_TABLE) {
                     newState.showSelectedRows = true;
                 }
             }
@@ -144,18 +126,17 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc save table data
      */
     saveTableData = () => {
-        if (!this.checkData()) { return; }
-        const flag = checkFieldData('arr', this.state.dataSource, columnDataIndex);
-        if (flag) {
-            message.error('请填写完整表格信息。');
-            return;
+        const { error } = checkFieldData('Table', { ...this.state, stateName: this.state.current.stateName });
+        if (error) {
+            message.error(FORM_MESSAGE);
+            return false;
         }
         const pageJSON = this.props.pageJSON;
-        const { currentComponent, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
+        const { current, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
-                item.stateName = currentComponent.stateName;
-                item.listName = currentComponent.listName;
+                item.stateName = current.stateName;
+                item.listName = current.listName;
                 item.showSelectedRows = showSelectedRows;
                 if (item.showSelectedRows === true) {
                     item.showSelectedRowsType = showSelectedRowsType;
@@ -185,7 +166,7 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc check require option
      */
     checkData = () => {
-        const { api, method, dataSource, currentComponent } = this.state;
+        const { api, method, dataSource, current} = this.state;
         if (!api) {
             message.error('api不可为空');
             return false;
@@ -198,7 +179,7 @@ export default class TableConfig extends Component<TableConfigProps> {
         } else if (!dataSource.length) {
             message.error('表头数据不能为空');
             return false;
-        } else if (!currentComponent.stateName) {
+        } else if (!current.stateName) {
             message.error('表头名称不能为空');
             return false;
         }
@@ -212,19 +193,19 @@ export default class TableConfig extends Component<TableConfigProps> {
     addSearchComponent = (e) => {
         const pageJSON = this.props.pageJSON;
         if (e.target.checked) {
-            const { currentComponentIdx, currentComponent } = this.state;
+            const { currentIdx, current } = this.state;
             const InputData = {
                 ...DATA_ENTRY.Input.getInitJson(),
                 id: getUniqueID(),
-                parentId: currentComponent.id,
+                parentId: current.id,
             };
 
-            pageJSON.components.splice(currentComponentIdx, 0, InputData);
+            pageJSON.components.splice(currentIdx, 0, InputData);
 
             actions.generatePage.setReducers(pageJSON);
         } else {
             const searchComponentIdx = pageJSON.components.findIndex((item) => {
-                return item.parentId && item.parentId === this.state.currentComponent.id;
+                return item.parentId && item.parentId === this.state.current.id;
             });
             pageJSON.components.splice(searchComponentIdx, 1);
             actions.generatePage.setReducers(pageJSON);
@@ -232,6 +213,13 @@ export default class TableConfig extends Component<TableConfigProps> {
         this.setState({
             searchComponentChecked: e.target.checked,
         });
+    }
+
+    /**
+     * getInitJson
+     */
+    getInitJson = () => {
+        return getInitJson();
     }
 
     /**
@@ -282,12 +270,12 @@ export default class TableConfig extends Component<TableConfigProps> {
      */
     stateNameInputChange = (event) => {
         const { value } = event.target;
-        const currentComponent = {
-            ...this.state.currentComponent,
+        const current = {
+            ...this.state.current,
             stateName: value,
         };
         this.setState({
-            currentComponent,
+            current,
         });
     }
 
@@ -296,12 +284,12 @@ export default class TableConfig extends Component<TableConfigProps> {
      * */
     tableNameInputChange =(event) => {
         const { value } = event.target;
-        const currentComponent = {
-            ...this.state.currentComponent,
+        const current = {
+            ...this.state.current,
             listName: value,
         };
         this.setState({
-            currentComponent,
+            current,
         });
     }
 
@@ -310,7 +298,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             labelCol: { span: 8 },
             wrapperCol: { span: 16 },
         };
-        const { dataSource, currentComponent } = this.state;
+        const { dataSource, current } = this.state;
         let columns = [
             {
                 title: '表头名称',
@@ -361,32 +349,32 @@ export default class TableConfig extends Component<TableConfigProps> {
 
         return (
             <React.Fragment>
-                <FormItem {...formItemLayout} label="接口地址">
+                <FormItem {...formItemLayout} label="接口地址" required={true}>
                     <Input value={this.state.api}
                         placeholder="例：/user/list"
                         onChange={this.apiInputChange} />
                 </FormItem>
-                <FormItem {...formItemLayout} label="请求方式">
-                    <Select defaultValue={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
+                <FormItem {...formItemLayout} label="请求方式" required={true}>
+                    <Select defaultValue={this.state.method} key={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
                         <Option value="GET">GET</Option>
                         <Option value="POST">POST</Option>
                     </Select>
                 </FormItem>
-                <FormItem {...formItemLayout} label={currentComponent && currentComponent.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'}>
-                    <Input value={this.state.currentComponent.stateName}
+                <FormItem {...formItemLayout} label={current && current.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'} required={true}>
+                    <Input value={this.state.current.stateName}
                         placeholder="组件存储数据Key, 使用英文且唯一"
                         onChange={this.stateNameInputChange} />
                 </FormItem>
                 {
-                    currentComponent && currentComponent.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
-                        <Input value={this.state.currentComponent.listName}
+                    current && current.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
+                        <Input value={this.state.current.listName}
                             placeholder="表格列表名称"
                             onChange={this.tableNameInputChange} />
                     </FormItem> : ''
                 }
 
                 <FormItem {...formItemLayout} label="是否显示selectedRows">
-                    <Radio.Group defaultValue={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
+                    <Radio.Group value={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
                         <Radio value={false}>不显示</Radio>
                         <Radio value={true}>显示</Radio>
                     </Radio.Group>
@@ -419,6 +407,9 @@ export default class TableConfig extends Component<TableConfigProps> {
                         <Button type="primary" onClick={this.saveTableData}>
                             确定
                         </Button>
+                    </Col>
+                    <Col offset={1}>
+                        <ClearButton initState={initState} that={this}/>
                     </Col>
                 </Row>
             </React.Fragment>
@@ -453,15 +444,15 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     }
 
-    save = (e) => {
+    handleChangeValue = (dataIndex, value) => {
         const { record, handleSave } = this.props;
-        this.form.validateFields((error, values) => {
-            if (error && error[e.currentTarget.id]) {
-                return;
+        if (dataIndex === 'dataKey') {
+            if (CHARACTER_REG.test(value)) {
+                message.error(CHARACTER_MESSAGE, 5);
+                value = '';
             }
-            this.toggleEdit();
-            handleSave({ ...record, ...values });
-        });
+        }
+        handleSave({ ...record, [dataIndex]: value });
     }
 
     renderCell = (form) => {
@@ -470,29 +461,15 @@ class EditableCell extends React.Component<EditableCellProps> {
         const { editing } = this.state;
         return editing ? (
             <Form.Item style={{ margin: 0 }}>
-                <Input value={record[dataIndex]} ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} onChange={() => {}}/>
-                {/* {form.getFieldDecorator(dataIndex, {
-                    rules: [
-                        {
-                            required: true,
-                            message: `${title} is required.`,
-                        },
-                        {
-                            validator: (rule, value, callback) => {
-                                if (rule.field === 'dataKey') {
-                                    if (CHARACTER_REG.test(value)) {
-                                        callback(new Error(CHARACTER_MESSAGE));
-                                    } else {
-                                        callback();
-                                    }
-                                } else {
-                                    callback();
-                                }
-                            }
-                        }
-                    ],
-                    initialValue: record[dataIndex],
-                })(<Input ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)} */}
+                <Input
+                    value={record[dataIndex]}
+                    ref={(node) => (this.input = node)}
+                    onPressEnter={this.toggleEdit}
+                    onBlur={this.toggleEdit}
+                    onChange={(event) => {
+                        this.handleChangeValue(dataIndex, event.target.value);
+                    }}
+                />
             </Form.Item>
         ) : (
             <div

@@ -13,7 +13,8 @@ export const getInitJson = () => ({
         disabled: false,
         allowClear: true,
         showSearch: false
-    }
+    },
+    options: []
 });
 
 /**
@@ -24,3 +25,25 @@ export const getTools = () => ({
     icon: 'down-square',
     componentName: 'Select'
 });
+
+/**
+ * 初始化state
+ */
+export const initState = {
+    formData: {
+        props: {},
+        options: [],
+        key: '',
+        lable: ''
+    },
+    isTouch: false,
+    current: {
+        id: '',
+        props: {
+            placeholder: '',
+            disabled: false,
+            allowClear: true,
+            showSearch: false
+        }
+    }
+};

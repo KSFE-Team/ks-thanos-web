@@ -3,8 +3,10 @@ import { Input, Button, Row, Col, Icon, Switch, Table, message } from 'antd';
 import PropTypes from 'prop-types';
 import Form from 'antd/es/form';
 import { findComponent, saveComponent } from 'Src/utils';
-import { FORMITEM_LAYOUT, ALIAS, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { FORMITEM_LAYOUT, ALIAS, FORM_MESSAGE } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
+import { initState } from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const VALUE = 'value';
 const LABEL = 'label';
@@ -14,10 +16,6 @@ const DISABLED = 'disabled';
 const OPTIONS = 'options';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
-const fieldArr = [
-    'text',
-    'value'
-];
 
 interface CheckBoxConfigProps {
     pageJSON: any;
@@ -79,6 +77,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             render: (item, record, index) =>
                 <Switch
                     defaultChecked={record[CHECK]}
+                    key={record[CHECK]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, CHECK, index)}
@@ -91,6 +90,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             render: (item, record, index) =>
                 <Switch
                     defaultChecked={record[DISABLED]}
+                    key={record[DISABLED]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, DISABLED, index)}
@@ -142,14 +142,14 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const flag = checkFieldData('obj', {key: formData.key, label: formData.label}, FIELD_ARR);
-        const columnFlag = checkFieldData('checkoutArr', formData.options, fieldArr);
+        const { error } = checkFieldData('CheckBox', formData);
         // 提交检验
-        if (flag || columnFlag) {
-            message.error(FORM_MESSAGE);
+        if (error) {
+            message.error(FORM_MESSAGE + ',' + 'CheckBox组件至少需要一项配置');
             return false;
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
+        // console.log(onSave, 'onSave');
         onSave && onSave(pageJSON);
     }
 
@@ -229,6 +229,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             <Form.Item
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData.label}
@@ -239,6 +240,7 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
             <Form.Item
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData.key}
@@ -254,6 +256,9 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
                 </Col>
                 <Col>
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
+                </Col>
+                <Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Col>
             </Row>
         </div>;

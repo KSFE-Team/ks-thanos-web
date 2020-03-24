@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { Input, Button, Row, Col, Icon, Switch, Table, Form, Select, message } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent, getFragments } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
+import ClearButton from 'Src/components/ClearButton';
+import { initState } from './utils';
 const Option = Select.Option;
 
 const VALUE = 'value';
@@ -25,11 +27,6 @@ const formItemLayout = {
     }
 };
 
-const fieldArr = [
-    'text',
-    'value'
-];
-
 interface RadioConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
@@ -39,30 +36,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        formData: {
-            [OPTIONS]: [{
-                [DISABLED]: false,
-                [VALUE]: '',
-                [TEXT]: '',
-                [ROW_KEY]: 0,
-                [SELECT]: ''
-            }],
-            [LABEL]: '',
-            [KEY]: '',
-            isRequired: true,
-            defaultValue: 1
-        },
-        isTouch: false,
-        errMessage: '',
-        // isRequired: true,
-        // defaultValue: 1
-        current: {
-            id: '',
-            props: {}
-        },
-        selectOption: []
-    };
+    state = initState
 
     columns = [
         {
@@ -110,6 +84,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             render: (item, record, index) =>
                 <Switch
                     defaultChecked={record[DISABLED]}
+                    key={record[DISABLED]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, DISABLED, index)}
@@ -134,7 +109,6 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = findComponent(components);
-
             const fragment = getFragments(current.id, props.pageJSON.components);
             return {
                 formData: {
@@ -169,13 +143,15 @@ export default class RadioConfig extends Component<RadioConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const flag = checkFieldData('obj', {key: formData.key, label: formData.label}, FIELD_ARR);
-        const columnFlag = checkFieldData('radioArr', formData.options, fieldArr);
+        const { error } = checkFieldData('Radio', formData);
         // 提交检验
-        if (flag || columnFlag) {
-            message.error(FORM_MESSAGE);
+        if (error) {
+            message.error(FORM_MESSAGE + ',' + 'Radio组件最少需要一组配置信息');
             return false;
         }
+        this.setState({
+            isTouch: true,
+        });
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
         onSave && onSave(pageJSON);
     }
@@ -245,6 +221,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             <Form.Item
                 {...formItemLayout}
                 label={ALIAS.LABEL}
+                required={true}
             >
                 <Input
                     value={formData.label}
@@ -255,6 +232,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             <Form.Item
                 {...formItemLayout}
                 label={ALIAS.KEY}
+                required={true}
             >
                 <Input
                     value={formData.key}
@@ -290,6 +268,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 <Col>
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
                 </Col>
+                <ClearButton initState={initState} that={this}/>
             </Row>
         </div>;
     }

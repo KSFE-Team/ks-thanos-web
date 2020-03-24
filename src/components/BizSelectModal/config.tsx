@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
+import { initState } from './utils';
+import ClearButton from 'Src/components/ClearButton';
+import { checkFieldData } from 'Src/utils/utils';
 
 const FormItem = Form.Item;
 const KEY = 'key';
@@ -19,16 +22,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         onSave: PropTypes.func
     };
 
-    state={
-        formData: {
-            type: ''
-        },
-        isTouch: false,
-        current: {
-            id: '',
-            props: {}
-        }
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -53,6 +47,11 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
         const { type, ...OTHER_DATA } = formData;
+        const { error } = checkFieldData('BizSelectModal', formData);
+        if (error) {
+            message.error(FORM_MESSAGE);
+            return false;
+        }
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
             ...OTHER_DATA,
             props: {
@@ -82,6 +81,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
             <FormItem
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData[LABEL]}
@@ -92,6 +92,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData[KEY]}
@@ -102,6 +103,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
             <FormItem
                 label={ALIAS.TYPE}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData[TYPE]}
@@ -117,6 +119,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this}/>
                 </Row>
             </FormItem>
         </div>;

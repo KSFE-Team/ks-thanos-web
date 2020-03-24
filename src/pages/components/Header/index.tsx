@@ -3,7 +3,8 @@ import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
 import './index.scss';
-import { goto } from 'Src/utils/commonFunc';
+import { goto, clearAllData } from 'Src/utils/commonFunc';
+import { checkFieldData } from 'Src/utils/utils';
 
 const confirm = Modal.confirm;
 const error = Modal.error;
@@ -13,15 +14,69 @@ interface HeaderProps {
     showTopToolbar?: boolean;
 }
 
+interface ItemInterface {
+    componentName: string,
+    components: []
+}
+
 @connect(({ generatePage = {}, operate = {} }) => ({
     generatePage,
     operate
 }))
 class Header extends Component<HeaderProps> {
 
+    /**
+     * 清空数据
+     */
+    clearAllData = () => {
+        confirm({
+            title: '清空全部配置',
+            content: '确认是否清空全部配置，谨慎操作',
+            onOk: () => {
+                const { generatePage } = this.props;
+                const { pageJSON } = generatePage;
+                clearAllData(pageJSON.components);
+            }
+        });
+    }
+
+    // 打响指校验
+    getErrorList = (components: []) => {
+        const tempArr: object[] = [];
+        let tempList;
+        if (components && components.length > 0) {
+            components.forEach((item: ItemInterface) => {
+                tempArr.push(checkFieldData(item.componentName, item, 'submit'));
+                const {
+                    tempArr: newTempArr
+                } = this.getErrorList(item.components);
+                tempList = tempArr.concat(newTempArr);
+            });
+        }
+        return {
+            tempArr,
+            tempList
+        };
+    }
+
     handleSubmit = () => {
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
+        const { tempList } = this.getErrorList(pageJSON.components);
+        let errorlist: any = [];
+        tempList.forEach((item) => {
+            if (item.error) {
+                errorlist.push(item.message);
+            }
+        });
+        errorlist = Array.from(new Set(errorlist));
+        if (errorlist.length > 0) {
+            error({
+                title: '配置错误',
+                content: `${errorlist.join(',')}组件,配置信息不完整，请按照提示完成组件配置！`
+            });
+            return;
+        }
         if (!pageName) {
             error({
                 title: '配置错误',
@@ -66,6 +121,11 @@ class Header extends Component<HeaderProps> {
                                 goto('');
                             }}>
                                 返回
+                            </Button>
+                            <Button className='mar-l-4' onClick={() => {
+                                this.clearAllData();
+                            }}>
+                                清空全部配置
                             </Button>
                             <Button
                                 className='mar-l-4'

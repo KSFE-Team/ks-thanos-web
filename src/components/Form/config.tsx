@@ -6,9 +6,10 @@ import PropTypes from 'prop-types';
 import { getDataEntry, getCloudComponents, ALL_TOOLS } from 'Src/components';
 import { getTools } from 'Src/utils';
 import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
-import { filterCloudComponents } from './utils';
 import { CHARACTER_REG, CHARACTER_MESSAGE, FORM_MESSAGE } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
+import { filterCloudComponents, initState } from './utils';
+import ClearButton from 'Src/components/ClearButton';
 
 const [{ key: NORMAL }, { key: SEARCH }] = FORM_TYPES;
 const FormItem = Form.Item;
@@ -31,14 +32,6 @@ const SAVE_API = 'saveApi';
 const UPDATE_API = 'updateApi';
 const GET_API = 'getApi';
 const PARAM_KEY = 'paramKey';
-const fieldArr = [
-    'stateName',
-    'type',
-    'saveApi',
-    'updateApi',
-    'getApi',
-    'paramKey'
-];
 interface FormConfigProps {
     onSave(pageJSON: any): void,
     pageJSON: any,
@@ -53,11 +46,7 @@ export default class FormConfig extends Component<FormConfigProps> {
         onSave: PropTypes.func
     };
 
-    state = {
-        formData: {
-        },
-        isTouch: false,
-    };
+    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -74,6 +63,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     [GET_API]: current[GET_API],
                     [PARAM_KEY]: current[PARAM_KEY],
                 },
+                current
             };
         } else {
             return state;
@@ -98,10 +88,10 @@ export default class FormConfig extends Component<FormConfigProps> {
      */
     handleSave = () => {
         const { formData } = this.state;
-        const flag = checkFieldData('obj', formData, fieldArr);
+        const { error } = checkFieldData('Form', formData);
         const { pageJSON, onSave } = this.props;
         // 提交检验
-        if (flag) {
+        if (error) {
             message.error(FORM_MESSAGE);
             return false;
         }
@@ -281,6 +271,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                                     type='primary'
                                 >确定</Button>
                             </Col>
+                            <ClearButton initState={initState} that={this}/>
                         </Row>
                     </FormItem>
                 </TabPane>

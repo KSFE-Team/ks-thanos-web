@@ -10,6 +10,8 @@ interface ConfigItemProps {
     form: any;
     formItemLayout: any;
     defaultValue: any;
+    onChange: any;
+    prevdata: any;
 }
 
 /**
@@ -18,13 +20,16 @@ interface ConfigItemProps {
 export default class ConfigItem extends Component<ConfigItemProps> {
     state = { }
 
-    renderContent(type, otherProps) {
+    renderContent(type, name, otherProps) {
         let content;
 
         switch (type) {
             case 'boolean':
                 content = (
-                    <RadioGroup {...otherProps}>
+                    <RadioGroup
+                        {...otherProps}
+                        onChange={(e) => { this.handleChange(name, e.target.value); }}
+                    >
                         <Radio value={true}>true</Radio>
                         <Radio value={false}>false</Radio>
                     </RadioGroup>
@@ -32,7 +37,10 @@ export default class ConfigItem extends Component<ConfigItemProps> {
                 break;
             default:
                 content = (
-                    <Input {...otherProps} />
+                    <Input
+                        {...otherProps}
+                        onChange={(e) => { this.handleChange(name, e.target.value); }}
+                    />
                 );
                 break;
         }
@@ -40,20 +48,20 @@ export default class ConfigItem extends Component<ConfigItemProps> {
         return content;
     }
 
+    handleChange = (name, value) => {
+        const newProps = this.props.prevdata;
+        newProps[name] = value;
+        this.props.onChange(newProps);
+    }
+
     render() {
         const { name, label, form, formItemLayout, defaultValue, type, ...otherProps } = this.props;
-
         return (
             <FormItem
                 label={label}
                 {...formItemLayout}
             >
-                {
-
-                    form.getFieldDecorator(name, {
-                        initialValue: defaultValue
-                    })(this.renderContent(type, otherProps))
-                }
+                {this.renderContent(type, name, otherProps)}
             </FormItem>
         );
     }
