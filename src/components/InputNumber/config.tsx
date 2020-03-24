@@ -19,7 +19,7 @@ const PRECISION = 'precision';
 const STEP = 'step';
 const KEY = 'key';
 
-interface InputConfigProps extends FormComponentProps {
+interface InputConfigProps extends FormComponentProps{
     pageJSON: any;
     onSave(pageJSON: any): void;
 }

@@ -80,7 +80,7 @@ export default class FormConfig extends Component<FormConfigProps> {
     handleClick = (componentName: string) => {
         const insertComponent = ALL_TOOLS[componentName].getInitJson();
         const current = this.props.pageJSON.components.find(({ configVisible }) => configVisible);
-        actions.generatePage.insertFormComponent({ insertComponent, targetId: current.id });
+        actions.generatePage.insertFormComponent({insertComponent, targetId: current.id});
     }
 
     /**
@@ -279,7 +279,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     <FormItem
                         label={'可配置组件'}
                         {...formItemLayout}
-                        style={{ marginBottom: 0 }}
+                        style={{marginBottom: 0}}
                     >
                         <ComponentType
                             dataSource={[dataSource] || []}
@@ -303,5 +303,4 @@ export default class FormConfig extends Component<FormConfigProps> {
             </Tabs>
         </div>;
     }
-
 }

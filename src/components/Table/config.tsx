@@ -312,7 +312,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             },
             {
                 title: 'operation',
-                render: (_text: string, record: any) => {
+                render: (text: string, record: any) => {
                     return this.state.dataSource.length >= 2 ? (
                         <div>
                             <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>

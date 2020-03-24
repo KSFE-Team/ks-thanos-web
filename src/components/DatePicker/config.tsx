@@ -58,6 +58,7 @@ export default class Config extends Component<ConfigProps> {
             [PLACEHOLDER]: placeholder,
             props: {
                 ...current.props,
+                [PLACEHOLDER]: placeholder,
                 [SHOW_TIME]: showTime,
                 [FORMAT]: format,
             }

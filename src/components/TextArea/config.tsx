@@ -14,7 +14,7 @@ const Label = 'label';
 const Rows = 'rows';
 const Placeholder = 'placeholder';
 
-interface InputConfigProps {
+interface InputConfigProps{
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
