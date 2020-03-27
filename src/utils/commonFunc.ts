@@ -8,6 +8,7 @@ import { actions } from 'kredux';
  * @param { string } route 需要跳转的路由
  */
 export const goto = function(route) {
+    // history.push(`${PROJECT_NAME}${route}`);
     history.push(`${PROJECT_NAME}/${route}`);
 };
 

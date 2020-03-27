@@ -2,7 +2,7 @@ import {actions} from 'kredux';
 import {getUniqueID, request, insertComponents} from 'Src/utils';
 import {API} from 'Src/api';
 import {goto} from 'Src/utils/commonFunc';
-import {message} from 'antd';
+import {message, Modal} from 'antd';
 
 export const STATE = {
     count: 0,
@@ -22,15 +22,16 @@ export default {
     effects: {
         /* 获取模版 */
         getTemplateItem: async(payload: any) => {
-            const response = await request(API.page.get, {
+            const {pageOrTemp, pageName} = payload;
+            const response = await request(API[pageOrTemp].get, {
                 method: 'GET',
                 body: {
-                    pageName: payload.pageName
+                    [pageOrTemp + 'Name']: pageName
                 }
             });
             if (response && !response.errcode) {
                 const result = response.result;
-                const components = JSON.parse(result.pageData).components;
+                const components = JSON.parse(result[pageOrTemp + 'Data']).components;
                 if (components[0].componentName === 'RelationTable') {
                     actions.generatePage.setReducers({
                         chooseTabName: 'RelationTable'
@@ -42,36 +43,39 @@ export default {
                 }
                 actions.generatePage.setReducers({
                     pageJSON: {
-                        name: result.pageName,
+                        name: result[pageOrTemp + 'Name'],
                         components: components[0].componentName === 'RelationTable' ? components[0].components : components
                     },
-                    pageName: result.pageName
+                    pageName: result[pageOrTemp + 'Name']
                 });
             }
         },
-        /* 新增模版 */
-        addTemplateItem: async(payload: any) => {
-            const response = await request(API.page.save, {
+        /* 新增修改模版 */
+        addOrUpdateItem: async(payload: any) => {
+            const {pageOrTemp, postDate} = payload;
+            const response = await request(API[pageOrTemp].addOrUpdate, {
                 method: 'post',
                 body: {
-                    ...payload
+                    ...postDate
                 }
             });
             if (response && response.errcode === 0) {
-                message.success('提交配置成功');
-                goto('');
-            }
-        },
-        /* 更新模版 */
-        updateTemplateItem: async(payload: any) => {
-            const response = await request(API.page.update, {
-                method: 'post',
-                body: {
-                    ...payload
+                const text = postDate.id ? '修改' : '新增';
+
+                if (pageOrTemp === 'template') {
+                    message.success(`${text}模板配置成功`);
+                    Modal.confirm({
+                        title: `是否前往模板列表查看`,
+                        okText: 'YES',
+                        cancelText: 'NO',
+                        onOk: () => {
+                            goto(`myTemplate`);
+                        },
+                    });
+                } else {
+                    message.success(`${text}页面配置成功`);
+                    goto('');
                 }
-            });
-            if (response && response.errcode === 0) {
-                message.success('更新配置成功');
             }
         },
         /* 加载云组件列表 */

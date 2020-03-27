@@ -47,3 +47,9 @@ export const CHARACTER_MESSAGE = '字段值不能为汉字符！请重新输入�
 export const FIELD_ARR = ['key', 'label'];
 // form 错误提示
 export const FORM_MESSAGE = '请填写完整配置信息';
+
+export const tempTabs = [
+    {name: '库模版', index: 0},
+    {name: '共享模版', index: 1},
+    {name: '现有页面', index: 2}
+];

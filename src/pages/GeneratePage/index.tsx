@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 // import { Icon, Tooltip } from 'antd';
 import { connect, actions } from 'kredux';
 import Header from '../components/Header';
+import qs from 'qs';
 import { PageRender, ComponentConfig, ComponentsLib } from './components';
 import { STATE } from './model/generatePage';
 import './index.scss';
@@ -24,6 +25,9 @@ interface GeneratePageProps {
         params: {
             name: string;
         }
+    };
+    location:{
+        search: string;
     }
 }
 
@@ -41,10 +45,16 @@ class GeneratePage extends Component<GeneratePageProps> {
             },
         });
         if (this.props.match.params.name !== '-1') {
+            const str = this.props.location.search.split('?')[1];
+            const obj = qs.parse(str);
             actions.generatePage.getTemplateItem({
-                pageName: this.props.match.params.name
+                pageName: this.props.match.params.name,
+                pageOrTemp: obj.pageOrTemp
             });
-        } else {
+            if (obj.id) {
+                this.id = obj.id;
+            }
+        } else { // 新增空白页面
             actions.generatePage.setReducers({
                 pageJSON: STATE.pageJSON,
                 pageName: STATE.pageName
@@ -52,6 +62,7 @@ class GeneratePage extends Component<GeneratePageProps> {
         }
     }
 
+    id=''
     componentWillUnmount() {
         actions.generatePage.selectComponent({
             id: ''
@@ -96,7 +107,7 @@ class GeneratePage extends Component<GeneratePageProps> {
         const {generatePage} = this.props;
         return (
             <div className="thanos-generate-page-container">
-                <Header showTopToolbar={true} />
+                <Header showTopToolbar={true} searchId={this.id}/>
                 <div className="page-wrapper">
                     {/* <div className="left-toolbar">
                         <Tooltip placement="right" title="撤销" >
@@ -121,7 +132,7 @@ class GeneratePage extends Component<GeneratePageProps> {
                         <div className="canvas">
                             <div className="thanos-page">
                                 <div className="thanos-page-operation">
-                                    <PageConfig />
+                                    <PageConfig/>
                                     <ComponentsLib {...this.props} />
                                 </div>
                                 <div className="thanos-page-container">
