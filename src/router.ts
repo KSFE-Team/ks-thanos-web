@@ -2,7 +2,16 @@ export default [
     {
         path: '/',
         exact: true,
-        title: '我的模版',
+        title: '现有页面',
+        modelList: [
+            () => import('./pages/TempLateMgt/model/myTemplate')
+        ],
+        component: () => import('./pages/ExistingPage')
+    },
+    {
+        path: '/myTemplate',
+        exact: true,
+        title: '现有模版',
         modelList: [
             () => import('./pages/TempLateMgt/model/myTemplate')
         ],

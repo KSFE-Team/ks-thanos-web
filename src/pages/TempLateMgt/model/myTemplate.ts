@@ -1,28 +1,36 @@
 import request from '../../../utils/request';
 import { API } from '../../../api/index';
 import { actions } from 'kredux';
+import { message } from 'antd';
 
+export const STATE = {
+    list: [],
+    page: 1,
+    limit: 10,
+    totalPage: 0,
+    total: 0,
+    pageName: {
+        value: ''
+    }, // 模版名称
+    type: {
+        value: ''
+    }, // 模板类型
+    cuTempLateModalVisible: false
+};
 export default {
     namespace: 'myTemplate',
-    initialState: {
-        list: [],
-        page: 1,
-        limit: 10,
-        totalPage: 0,
-        total: 0,
-        pageName: {
-            value: ''
-        }, // 模版名称
-    },
+    initialState: { ...STATE },
     effects: {
         async getTemplateList(payload: any, getState: any) {
             const templateState = getState().myTemplate;
+            const {pageOrTemp, type} = payload;
             const postData = {
                 page: templateState.page,
                 limit: templateState.limit,
-                pageName: templateState.pageName.value
+                type: type,
+                [pageOrTemp + 'Name']: templateState.pageName.value
             };
-            const response = await request(API.pageList.query, {
+            const response = await request(API[pageOrTemp + 'List'].query, {
                 method: 'GET',
                 body: postData
             });
@@ -36,15 +44,18 @@ export default {
             }
         },
         async deleteTemplateItem(payload: any) {
-            const response = await request(API.page.delete, {
-                method: 'GET',
+            const {pageOrTemp, pageName} = payload;
+            const response = await request(API[payload.pageOrTemp].delete, {
+                method: 'POST',
                 body: {
-                    pageName: payload.pageName
+                    [pageOrTemp + 'Name']: pageName
                 }
             });
 
             if (response && !response.errcode) {
-                actions.myTemplate.getTemplateList();
+                const text = pageOrTemp === 'page' ? '页面' : '模板';
+                message.success(`删除${text}${pageName}成功`);
+                actions.myTemplate.getTemplateList(pageOrTemp);
             }
         }
     }

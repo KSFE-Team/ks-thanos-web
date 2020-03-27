@@ -12,6 +12,7 @@ const error = Modal.error;
 interface HeaderProps {
     generatePage?: any;
     showTopToolbar?: boolean;
+    searchId?: string;
 }
 
 interface ItemInterface {
@@ -59,7 +60,9 @@ class Header extends Component<HeaderProps> {
         };
     }
 
-    handleSubmit = () => {
+    handleSubmit = (pageOrTemp) => {
+        const text = this.props.searchId ? '修改' : '新增';
+        const pageOrTempText = pageOrTemp === 'page' ? '页面' : '模版';
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
         const { tempList } = this.getErrorList(pageJSON.components);
@@ -80,13 +83,13 @@ class Header extends Component<HeaderProps> {
         if (!pageName) {
             error({
                 title: '配置错误',
-                content: '请填写页面模板名称！'
+                content: `请填写页面模板名称！`
             });
             return;
         }
         confirm({
-            title: '确认提交配置？',
-            content: '请确认提交所写配置，页面名称重复则会覆盖之前的配置，请谨慎。',
+            title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
+            // content: `请确认提交${text}所写配置`,
             onOk: async() => {
                 let components = pageJSON.components;
                 if (generatePage.chooseTabName === 'RelationTable') {
@@ -97,12 +100,16 @@ class Header extends Component<HeaderProps> {
                         }
                     ];
                 }
-                actions.generatePage.addTemplateItem({
-                    pageData: JSON.stringify({
-                        components: formatComponents(components),
-                        paramKey: findParamKey(pageJSON.components),
-                    }),
-                    pageName
+                actions.generatePage.addOrUpdateItem({
+                    postDate: {
+                        [pageOrTemp + 'Data']: JSON.stringify({
+                            components: formatComponents(components),
+                            paramKey: findParamKey(pageJSON.components),
+                        }),
+                        [pageOrTemp + 'Name']: pageName,
+                        id: this.props.searchId
+                    },
+                    pageOrTemp
                 });
             }
         });
@@ -127,10 +134,24 @@ class Header extends Component<HeaderProps> {
                             }}>
                                 清空全部配置
                             </Button>
+                            <Button className='mar-l-4' type='primary'
+                                onClick={() => this.handleSubmit('template')}
+                                // onClick={() => {
+                                // Modal.confirm({
+                                //     title: `是否生成模板`,
+                                //     okText: 'YES',
+                                //     cancelText: 'NO',
+                                //     onOk: () => {
+                                //         // 调模版的接口
+
+                            // }}
+                            >
+                                生成模板
+                            </Button>
                             <Button
                                 className='mar-l-4'
                                 type='primary'
-                                onClick={this.handleSubmit}
+                                onClick={() => this.handleSubmit('page')}
                             >
                                 打响指
                             </Button>
