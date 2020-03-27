@@ -19,6 +19,7 @@ class KSelect extends Component<KSelectProps> {
     render() {
         const { allowClear, disabled, placeholder, showSearch, config } = this.props;
         const { options = [], label } = config;
+        console.log(options, 'options');
         const selectProps = {
             allowClear,
             disabled,
@@ -43,8 +44,8 @@ class KSelect extends Component<KSelectProps> {
                     }}
                 >
                     {
-                        options.map((item, index) => {
-                            return <Option key={index} value={item.props.value}>{item.label}</Option>;
+                        options.length && options.length > 0 && options.map((item, index) => {
+                            return <Option key={index} value={item && item.props && item.props.value}>{item && item.label}</Option>;
                         })
                     }
                 </Select>
