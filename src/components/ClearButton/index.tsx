@@ -1,7 +1,7 @@
 import React from 'react';
 import {Button} from 'antd';
 // import { connect } from 'kredux';
-import {clearData} from 'Src/utils/commonFunc';
+import { clearData } from 'Src/utils/commonFunc';
 
 interface Props {
     initState: object,

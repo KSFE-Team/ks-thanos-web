@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
 import {Form, Radio, Button, Row, Col, Input, message} from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
-import ClearButton from 'Src/components/ClearButton';
-import {initState} from './utils';
 import { checkFieldData } from 'Src/utils/utils';
+import ClearButton from 'Src/components/ClearButton';
+import { initState } from './utils';
 
 const FormItem = Form.Item;
 
@@ -46,9 +46,9 @@ export default class Config extends Component<ConfigProps> {
     handleSave = () => {
         const { placeholder, showTime, format, key, label, current } = this.state;
         const {pageJSON, onSave} = this.props;
-        const flag = checkFieldData('obj', {key, label}, FIELD_ARR);
+        const { error } = checkFieldData('DatePicker', {key, label});
         // 提交检验
-        if (flag) {
+        if (error) {
             message.error(FORM_MESSAGE);
             return false;
         }
@@ -80,6 +80,7 @@ export default class Config extends Component<ConfigProps> {
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={key}
@@ -90,6 +91,7 @@ export default class Config extends Component<ConfigProps> {
             <Form.Item
                 {...FORMITEM_LAYOUT}
                 label={ALIAS.LABEL}
+                required={true}
             >
                 <Input
                     value={label}

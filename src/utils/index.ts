@@ -82,6 +82,11 @@ export const findComponent = (components: any[]) => {
     components.forEach((item: any) => {
         if (!result) {
             if (item.configVisible) {
+                // if (item.components) {
+                //     result = findComponent(item.components);
+                // } else {
+                //     result = item;
+                // }
                 result = item;
             } else if (item.components) {
                 const tempResult = findComponent(item.components);
@@ -117,7 +122,7 @@ export const saveComponent = (targetId: string, components: any[], config: any) 
  */
 export const matchRouter = (path: string, routerList: any[]) => {
     const currentPath = path;
-    return routerList.find(({path}) => path === currentPath) || {};
+    return routerList.find(({ path }) => path === currentPath) || {};
 };
 
 /**
@@ -136,7 +141,7 @@ export const insertComponents = (payload: any, components: any[] = []) => {
         return;
     }
     let item,
-        hadInsert:boolean = false;
+        hadInsert: boolean = false;
     for (item of components) {
         if (hadInsert) {
             break;
@@ -163,7 +168,7 @@ export const getFragments = (targetId: string, components: any[] = []) => {
     if (!targetId || !components.length) {
         return [];
     }
-    let fragments:any[] = [],
+    let fragments: any[] = [],
         item;
     for (item of components) {
         if (fragments && fragments.length) {

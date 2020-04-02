@@ -1,7 +1,5 @@
-import React, {Component} from 'react';
-import {Form, Input, Icon, Button} from 'antd';
-
-let id = 0;
+import React, { Component } from 'react';
+import { Form, Input, Icon, Button } from 'antd';
 
 interface DynamicConfigItemProps {
     form: any;
@@ -9,91 +7,101 @@ interface DynamicConfigItemProps {
     name: string;
     addText: string;
     defaultValue: any[];
+    onChange: any;
 }
 
 export default class DynamicConfigItem extends Component<DynamicConfigItemProps> {
-    remove = (k) => {
-        const {form} = this.props;
-        // can use data-binding to get
-        const keys = form.getFieldValue('keys');
-        // We need at least one passenger
-        if (keys.length === 1) {
-            return;
-        }
 
-        // can use data-binding to set
-        form.setFieldsValue({
-            keys: keys.filter((key) => key !== k),
+    state = {
+        id: 0,
+        current: this.props.defaultValue || []
+    }
+
+    remove = (index) => {
+        const tempArr = JSON.parse(JSON.stringify(this.state.current));
+        tempArr.splice(index, 1);
+        this.setState({
+            current: [...tempArr]
+        }, () => {
+            this.props.onChange(this.state.current);
         });
     };
 
     add = () => {
-        const {form} = this.props;
-        // can use data-binding to get
-        const keys = form.getFieldValue('keys');
-        const nextKeys = keys.concat(id++);
-        // can use data-binding to set
-        // important! notify form to detect changes
-        form.setFieldsValue({
-            keys: nextKeys,
+        const arr = [...this.state.current];
+        const tempId = this.state.id - 1;
+        arr.push({
+            id: this.state.id,
+            label: '',
+            props: {
+                value: ''
+            }
+        });
+        this.setState({
+            current: [...arr],
+            id: tempId
+        }, () => {
+            this.props.onChange(this.state.current);
         });
     };
 
+    handleChangeValue = (type, value, index) => {
+        const temp = JSON.parse(JSON.stringify(this.state.current));
+        if (type === 'value') {
+            temp[index].props.value = value;
+        } else {
+            temp[index][type] = value;
+        }
+        this.setState({
+            current: [...temp]
+        }, () => {
+            this.props.onChange(this.state.current);
+        });
+    }
+
     render() {
-        const {getFieldDecorator, getFieldValue} = this.props.form;
-        const {label, name, addText, defaultValue = []} = this.props;
+        const { label, addText } = this.props;
+        const { current } = this.state;
         const formItemLayout = {
             labelCol: {
-                xs: {span: 24},
-                sm: {span: 4},
+                xs: { span: 24 },
+                sm: { span: 4 },
             },
             wrapperCol: {
-                xs: {span: 24},
-                sm: {span: 20},
+                xs: { span: 24 },
+                sm: { span: 20 },
             },
         };
         const formItemLayoutWithOutLabel = {
             wrapperCol: {
-                xs: {span: 24, offset: 0},
-                sm: {span: 20, offset: 4},
+                xs: { span: 24, offset: 0 },
+                sm: { span: 20, offset: 4 },
             },
         };
-        getFieldDecorator('keys', {initialValue: defaultValue.map((item, index) => index)});
-        const keys = getFieldValue('keys');
-        const formItems = keys.map((k, index) => (
+        const formItems = current.map((item, index) => (
             <Form.Item
                 {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
                 label={index === 0 ? label : ''}
                 required={false}
-                key={k}
+                key={item.id}
             >
-                {getFieldDecorator(`${name}[${k}].label`, {
-                    validateTrigger: ['onChange', 'onBlur'],
-                    rules: [
-                        {
-                            required: true,
-                            whitespace: true,
-                            message: '请填写label',
-                        },
-                    ],
-                    initialValue: defaultValue[k] ? defaultValue[k].label : undefined
-                })(<Input placeholder="请填写label" style={{width: '40%', marginRight: 8}}/>)}
-                {getFieldDecorator(`${name}[${k}].props.value`, {
-                    validateTrigger: ['onChange', 'onBlur'],
-                    rules: [
-                        {
-                            required: true,
-                            whitespace: true,
-                            message: '请填写value',
-                        },
-                    ],
-                    initialValue: defaultValue[k] ? defaultValue[k].props.value : undefined
-                })(<Input placeholder="请填写value" style={{width: '40%', marginRight: 8}}/>)}
-                {keys.length > 1 ? (
+                <Input
+                    value={item.label}
+                    placeholder="请填写label"
+                    style={{ width: '40%', marginRight: 8 }}
+                    onChange={(e) => { this.handleChangeValue('label', e.target.value, index); }}
+                />
+                <Input
+                    value={item.props.value}
+                    placeholder="请填写value"
+                    style={{ width: '40%', marginRight: 8 }}
+                    onChange={(e) => { this.handleChangeValue('value', e.target.value, index); }}
+                />
+                {current.length > 1 ? (
                     <Icon
                         className="dynamic-delete-button"
                         type="minus-circle-o"
-                        onClick={() => this.remove(k)}
+                        onClick={() => this.remove(index)}
                     />
                 ) : null}
             </Form.Item>
@@ -102,8 +110,8 @@ export default class DynamicConfigItem extends Component<DynamicConfigItemProps>
             <React.Fragment>
                 {formItems}
                 <Form.Item {...formItemLayoutWithOutLabel}>
-                    <Button type="dashed" onClick={this.add} style={{width: '60%'}}>
-                        <Icon type="plus"/> {addText}
+                    <Button type="dashed" onClick={this.add} style={{ width: '60%' }}>
+                        <Icon type="plus" /> {addText}
                     </Button>
                 </Form.Item>
             </React.Fragment>

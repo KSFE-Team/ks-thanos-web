@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Card } from 'antd';
+import { Form, Input, Button, Row, Col, Card, message } from 'antd';
 import ConfigItem from './ConfigItem';
 import DynamicConfigItem from './DynamicConfigItem';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
-import {initState} from './utils';
+import { initState } from './utils';
+import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
 
 const FormItem = Form.Item;
@@ -75,33 +76,27 @@ class Config extends Component<ConfigProps, ConfigState> {
     }
 
     handleSave = () => {
-        this.props.form.validateFields((err, fieldValues) => {
-            if (!err) {
-                this.setState({
-                    formData: {
-                        ...fieldValues
-                    },
-                    isTouch: true
-                });
-                const { current } = this.state;
-                const { options, props: fieldProps } = fieldValues;
-                const { pageJSON, onSave } = this.props;
-                pageJSON.components = saveComponent(current.id, pageJSON.components, {
-                    key: fieldValues.key,
-                    label: fieldValues.label || '',
-                    props: {
-                        ...fieldProps
-                    },
-                    options
-                });
-                onSave && onSave(pageJSON);
-            }
+        const { error } = checkFieldData('Select', this.state.formData);
+        if (error) {
+            message.error(FORM_MESSAGE + ',' + 'Select组件至少需要一个Option配置');
+            return false;
+        }
+        const { current } = this.state;
+        const { formData, formData: { props: fieldProps, options } } = this.state;
+        const { pageJSON, onSave } = this.props;
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            key: formData.key,
+            label: formData.label || '',
+            props: {
+                ...fieldProps
+            },
+            options
         });
+        onSave && onSave(pageJSON);
     }
 
-    handleChange = (key, e) => {
+    handleChangeValue = (value, key) => {
         const { formData } = this.state;
-        const value = e.target.value;
         this.setState({
             formData: {
                 ...formData,
@@ -114,59 +109,56 @@ class Config extends Component<ConfigProps, ConfigState> {
     render() {
         const { formData } = this.state;
         const { form } = this.props;
-        const { getFieldDecorator } = form;
         return <div>
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
-                {
-                    getFieldDecorator('key', {
-                        rules: [
-                            {required: true, message: '请输入表单字段名'}
-                        ],
-                        initialValue: formData[KEY]
-                    })(
-                        <Input
-                            placeholder='例如： orderType'
-                        />
-                    )
-                }
-
+                <Input
+                    placeholder='例如： orderType'
+                    value={formData[KEY]}
+                    onChange={(e) => { this.handleChangeValue(e.target.value, KEY); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
-                {
-                    getFieldDecorator('label', {
-                        rules: [
-                            {required: true, message: '请输入表单项名称'}
-                        ],
-                        initialValue: formData[LABEL]
-                    })(
-                        <Input
-                            placeholder='例如： 订单类型'
-                        />
-                    )
-                }
-
+                <Input
+                    placeholder='例如： 订单类型'
+                    value={formData[LABEL]}
+                    onChange={(e) => { this.handleChangeValue(e.target.value, LABEL); }}
+                />
             </FormItem>
             <Card title="Select Props 配置">
                 {
                     selectProps.map((item, index) => {
                         const { type, name, label, ...otherProps } = item;
-
                         return (
                             <ConfigItem
                                 key={index}
                                 type={type}
-                                name={`props.${name}`}
+                                name={name}
                                 label={label}
                                 defaultValue={formData.props ? formData.props[item.name] : undefined}
                                 form={form}
                                 formItemLayout={FORMITEM_LAYOUT}
                                 {...otherProps}
+                                onChange={(value) => {
+                                    this.setState({
+                                        formData: {
+                                            ...formData,
+                                            props: {
+                                                ...formData.props,
+                                                ...value
+                                            }
+                                        },
+                                        isTouch: true
+                                    });
+                                }}
+                                prevdata={formData.props}
                             />
                         );
                     })
@@ -178,7 +170,23 @@ class Config extends Component<ConfigProps, ConfigState> {
                     name="options"
                     label="下拉选项"
                     addText="添加选项"
-                    defaultValue={formData.options}
+                    defaultValue={formData.options || []}
+                    onChange={(value) => {
+                        this.setState({
+                            formData: {
+                                ...formData,
+                                options: value.map((item) => {
+                                    return {
+                                        label: item.label,
+                                        props: {
+                                            value: item.props.value
+                                        }
+                                    };
+                                })
+                            },
+                            isTouch: true
+                        });
+                    }}
                 />
             </Card>
             <FormItem>
@@ -189,7 +197,7 @@ class Config extends Component<ConfigProps, ConfigState> {
                             type='primary'
                         >确定</Button>
                     </Col>
-                    <ClearButton initState={initState} that={this} type="Select"/>
+                    <ClearButton initState={initState} that={this} type="Select" />
                 </Row>
             </FormItem>
         </div>;

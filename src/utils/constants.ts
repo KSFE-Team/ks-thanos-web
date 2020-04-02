@@ -46,7 +46,7 @@ export const CHARACTER_MESSAGE = '字段值不能为汉字符！请重新输入�
 // form 必校验的字段值
 export const FIELD_ARR = ['key', 'label'];
 // form 错误提示
-export const FORM_MESSAGE = '请填写完整配置信息';
+export const FORM_MESSAGE = '请填写完整配置信息, * 号为必填项';
 
 export const tempTabs = [
     {name: '库模版', index: 0},

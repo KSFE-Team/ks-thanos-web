@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
 import PropTypes from 'prop-types';
 import { FormComponentProps } from 'antd/es/form';
-import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
-import {initState} from './utils';
+import { initState } from './utils';
 
 const FormItem = Form.Item;
 const LABEL = 'label';
@@ -29,7 +29,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
         onSave: PropTypes.func
     };
 
-    state=initState
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -51,170 +51,148 @@ class InputNumberConfig extends Component<InputConfigProps> {
     }
 
     handleSave = () => {
-        this.props.form.validateFields((err, fieldValues) => {
-            if (!err) {
-                if (fieldValues[MIN_VALUE] > fieldValues[MAX_VALUE]) {
-                    message.error('最小值不能大于最大值！');
-                    return;
-                }
-                const { current } = this.state;
-                const { pageJSON, onSave } = this.props;
-                const key = fieldValues[KEY];
-                const label = fieldValues[LABEL];
-                const initialValue = fieldValues[DEFAULT_VALUE];
-                delete fieldValues[KEY];
-                delete fieldValues[LABEL];
-                delete fieldValues[DEFAULT_VALUE];
-                for (const key in fieldValues) {
-                    if (!fieldValues[key] && fieldValues[key] !== 0) {
-                        delete fieldValues[key];
-                    }
-                }
-                const flag = checkFieldData('obj', { key, label }, FIELD_ARR);
-                if (flag) {
-                    message.error(FORM_MESSAGE);
-                    return false;
-                }
-                pageJSON.components = saveComponent(current.id, pageJSON.components, {
-                    [KEY]: key,
-                    [LABEL]: label,
-                    [DEFAULT_VALUE]: initialValue,
-                    props: {
-                        ...current.props,
-                        ...fieldValues,
-                    }
-                });
-                onSave && onSave(pageJSON);
+        const { formData } = this.state;
+        if (formData[MIN_VALUE] > formData[MAX_VALUE]) {
+            message.error('最小值不能大于最大值！');
+            return;
+        }
+        const { current } = this.state;
+        const { pageJSON, onSave } = this.props;
+        const key = formData[KEY];
+        const label = formData[LABEL];
+        const initialValue = formData[DEFAULT_VALUE];
+        delete formData[KEY];
+        delete formData[LABEL];
+        delete formData[DEFAULT_VALUE];
+        for (const key in formData) {
+            if (!formData[key] && formData[key] !== 0) {
+                delete formData[key];
             }
+        }
+        const { error } = checkFieldData('InputNumber', { key, label });
+        if (error) {
+            message.error(FORM_MESSAGE);
+            return false;
+        }
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            [KEY]: key,
+            [LABEL]: label,
+            [DEFAULT_VALUE]: initialValue,
+            props: {
+                ...current.props,
+                ...formData,
+            }
+        });
+        onSave && onSave(pageJSON);
+    }
+
+    handleChangeValue = (type, value) => {
+        this.setState({
+            formData: {
+                ...this.state.formData,
+                [type]: value
+            },
+            isTouch: true
         });
     }
 
     render() {
-        const { getFieldDecorator } = this.props.form;
         const { formData } = this.state;
         return <div>
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
-                {
-                    getFieldDecorator(KEY, {
-                        rules: [
-                            {required: true, message: '请输入表单key'}
-                        ],
-                        initialValue: formData[KEY] || '',
-                    })(
-                        <Input
-                            placeholder='例如:inputnumber'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如:inputnumber'
+                    value={formData[KEY] || ''}
+                    onChange={(e) => { this.handleChangeValue(KEY, e.target.value); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(LABEL, {
-                        initialValue: formData[LABEL]
-                    })(
-                        <Input
-                            placeholder='例如:inputnumber'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如:inputnumber'
+                    value={formData[LABEL]}
+                    onChange={(e) => { this.handleChangeValue(LABEL, e.target.value); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.PLACEHOLDER}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(PLACEHOLDER, {
-                        initialValue: formData[PLACEHOLDER]
-                    })(
-                        <Input
-                            placeholder='例如:inputnumber'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如:inputnumber'
+                    value={formData[PLACEHOLDER]}
+                    onChange={(e) => { this.handleChangeValue(PLACEHOLDER, e.target.value); }}
+                />
             </FormItem>
             <FormItem
                 label={'默认值'}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(DEFAULT_VALUE, {
-                        initialValue: formData[DEFAULT_VALUE]
-                    })(
-                        <InputNumber
-                            placeholder='例如:1'
-                        />
-                    )
-                }
+                <InputNumber
+                    placeholder='例如:1'
+                    value={formData[DEFAULT_VALUE]}
+                    onChange={(value) => { this.handleChangeValue(DEFAULT_VALUE, value); }}
+                />
             </FormItem>
             <FormItem
                 label={'最小值'}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(MIN_VALUE, {
-                        initialValue: formData[MIN_VALUE]
-                    })(
-                        <InputNumber
-                            placeholder='例如:1'
-                        />
-                    )
-                }
+                <InputNumber
+                    placeholder='例如:1'
+                    value={formData[MIN_VALUE]}
+                    onChange={(value) => { this.handleChangeValue(MIN_VALUE, value); }}
+                />
             </FormItem>
             <FormItem
                 label={'最大值'}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(MAX_VALUE, {
-                        initialValue: formData[MAX_VALUE]
-                    })(
-                        <InputNumber
-                            placeholder='例如:100'
-                        />
-                    )
-                }
+                <InputNumber
+                    placeholder='例如:100'
+                    value={formData[MAX_VALUE]}
+                    onChange={(value) => { this.handleChangeValue(MAX_VALUE, value); }}
+                />
             </FormItem>
             <FormItem
                 label={'是否禁用'}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(DISABLED, {
-                        initialValue: formData[DISABLED]
-                    })(
-                        <Radio.Group>
-                            <Radio value={true}>true</Radio>
-                            <Radio value={false}>false</Radio>
-                        </Radio.Group>
-                    )
-                }
+                <Radio.Group
+                    value={formData[DISABLED]}
+                    onChange={(e) => { this.handleChangeValue(DISABLED, e.target.value); }}
+                >
+                    <Radio value={true}>true</Radio>
+                    <Radio value={false}>false</Radio>
+                </Radio.Group>
             </FormItem>
             <FormItem
                 label={'数值精度'}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator(PRECISION, {
-                        initialValue: formData[PRECISION]
-                    })(
-                        <InputNumber
-                            max={100}
-                            placeholder='例如:100'
-                        />
-                    )
-                }
+                <InputNumber
+                    max={100}
+                    placeholder='例如:100'
+                    value={formData[PRECISION]}
+                    onChange={(value) => { this.handleChangeValue(PRECISION, value); }}
+                />
             </FormItem>
             <FormItem
                 label={'每次改变步数'}
                 {...FORMITEM_LAYOUT}
             >
-                {
+                <InputNumber
+                    placeholder='例如:1'
+                    value={formData[STEP]}
+                    onChange={(value) => { this.handleChangeValue(STEP, value); }}
+                />
+                {/* {
                     getFieldDecorator(STEP, {
                         initialValue: formData[STEP]
                     })(
@@ -222,7 +200,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                             placeholder='例如:1'
                         />
                     )
-                }
+                } */}
             </FormItem>
             <FormItem>
                 <Row>
@@ -232,7 +210,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
-                    <ClearButton initState={initState} that={this} type='InputNumber'/>
+                    <ClearButton initState={initState} that={this} type='InputNumber' />
                 </Row>
             </FormItem>
         </div>;

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col, message } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT, FIELD_ARR, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
-import {initState} from './utils';
+import { initState } from './utils';
 
 const FormItem = Form.Item;
 const KEY = 'key';
@@ -43,9 +43,9 @@ export default class InputConfig extends Component<InputConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const flag = checkFieldData('obj', formData, FIELD_ARR);
+        const { error } = checkFieldData('Input', formData);
         // 提交检验
-        if (flag) {
+        if (error) {
             message.error(FORM_MESSAGE);
             return false;
         }
@@ -77,6 +77,7 @@ export default class InputConfig extends Component<InputConfigProps> {
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData[KEY]}
@@ -87,6 +88,7 @@ export default class InputConfig extends Component<InputConfigProps> {
             <FormItem
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
                 <Input
                     value={formData[LABEL]}

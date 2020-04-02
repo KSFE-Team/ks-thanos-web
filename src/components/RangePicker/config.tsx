@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Switch } from 'antd';
+import { Form, Input, Button, Row, Col, Switch, message } from 'antd';
 import PropTypes from 'prop-types';
-import {FormComponentProps} from 'antd/es/form';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
+import { FormComponentProps } from 'antd/es/form';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import ClearButton from 'Src/components/ClearButton';
-import {initState} from './utils';
+import { initState } from './utils';
+import { checkFieldData } from 'Src/utils/utils';
 
 const FormItem = Form.Item;
 const DATE_FORMAT = 'YYYY-MM-DD';
@@ -15,19 +16,29 @@ const LABEL = 'label';
 const PLACEHOLDER = 'placeholder';
 const FORMAT = 'format';
 const SHOWTIME = 'showTime';
-// const SHOWTIMEFORMAT = 'showTimeFormat';
+const SHOWTIMEFORMAT = 'showTimeFormat';
 
 interface RangePickerConfigProps extends FormComponentProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
 
-class RangePickerConfig extends Component<RangePickerConfigProps> {
+interface RangePickerConfigState {
+    formData: {
+        props: {
+            showTime: boolean;
+        };
+    };
+    isTouch: boolean;
+    current: any;
+}
+
+class RangePickerConfig extends Component<RangePickerConfigProps, RangePickerConfigState> {
     static propTypes = {
         onSave: PropTypes.func
     };
 
-    state= initState
+    state = initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -48,166 +59,127 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
     }
 
     handleSave = () => {
-        this.props.form.validateFields((err, fieldValues) => {
-            if (!err) {
-                this.setState({
-                    formData: {
-                        ...fieldValues
-                    },
-                    isTouch: true
-                });
-                const { current } = this.state;
-                const {props: fieldProps} = fieldValues;
-                const { pageJSON, onSave } = this.props;
-                const formData = {
-                    key: fieldValues.key,
-                    label: fieldValues.label || '',
-                    props: {
-                        ...current.props,
-                        placeholder: [],
-                        format: fieldProps.format,
-                        showTime: fieldProps.showTimeFormat ? { format: fieldProps.showTimeFormat } : fieldProps.showTime,
-                    }
-                };
-                if (fieldProps.placeholder) {
-                    formData.props.placeholder = fieldProps.placeholder.split('/');
-                }
-                pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
-                onSave && onSave(pageJSON);
+        const { formData, formData: { props: fieldProps } } = this.state;
+        const { current } = this.state;
+        const { pageJSON, onSave } = this.props;
+        const { error } = checkFieldData('RangePicker', formData);
+        if (error) {
+            message.error(FORM_MESSAGE);
+            return false;
+        }
+        this.setState({
+            isTouch: true
+        });
+        const postFormData = {
+            key: formData[KEY],
+            label: formData[LABEL] || '',
+            props: {
+                ...current.props,
+                placeholder: fieldProps[PLACEHOLDER] || '',
+                format: fieldProps[FORMAT],
+                showTime: fieldProps[SHOWTIMEFORMAT] ? { format: fieldProps[SHOWTIMEFORMAT] } : fieldProps.showTime,
             }
+        };
+        pageJSON.components = saveComponent(current.id, pageJSON.components, postFormData);
+        onSave && onSave(pageJSON);
+    }
+
+    handleChangeValue = ({ type, ...other }) => {
+        const isChild = type.split('.');
+        let provPro = JSON.parse(JSON.stringify(this.state.formData));
+        if (isChild[0] === 'props') {
+            provPro = {
+                ...provPro,
+                props: {
+                    ...provPro.props,
+                    ...other
+                }
+            };
+        } else {
+            provPro = {
+                ...provPro,
+                ...other
+            };
+        }
+        this.setState({
+            formData: {
+                ...provPro
+            },
+            isTouch: true
         });
     }
 
     render() {
-        const { getFieldDecorator, getFieldValue, setFieldsValue } = this.props.form;
-        const { formData, formData: {props: stateProps = {}} } = this.state;
+        const { formData, formData: { props: stateProps = {} } } = this.state;
         return <div>
             <FormItem
                 label={ALIAS.KEY}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
-                {
-                    getFieldDecorator('key', {
-                        rules: [
-                            {required: true, message: `请输入${ALIAS.KEY}`}
-                        ],
-                        initialValue: formData[KEY]
-                    })(
-                        <Input
-                            placeholder='例如： rangePicker'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如： rangePicker'
+                    value={formData[KEY]}
+                    onChange={(e) => { this.handleChangeValue({ key: e.target.value, type: 'key' }); }}
+                />
 
             </FormItem>
             <FormItem
                 label={ALIAS.LABEL}
                 {...FORMITEM_LAYOUT}
+                required={true}
             >
-                {
-                    getFieldDecorator('label', {
-                        rules: [
-                            {required: true, message: `请输入${ALIAS.LABEL}`}
-                        ],
-                        initialValue: formData[LABEL]
-                    })(
-                        <Input
-                            placeholder='例如： 时间区间'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如： 时间区间'
+                    value={formData[LABEL]}
+                    onChange={(e) => { this.handleChangeValue({ label: e.target.value, type: 'label' }); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.PLACEHOLDER}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator('props.placeholder', {
-                        rules: [
-                            {
-                                validator: (rule, value, callback) => {
-                                    if (!value) {
-                                        callback();
-                                    }
-                                    if (value && !/^[^/\s]+\/[^/\s]+$/.test(value)) {
-                                        callback(rule.message);
-                                    }
-                                    callback();
-                                },
-                                message: '用/分割的两个名称'
-                            }
-                        ],
-                        initialValue: stateProps[PLACEHOLDER] ? stateProps[PLACEHOLDER].join('/') : '开始时间/截止时间'
-                    })(
-                        <Input
-                            placeholder='例如： 开始时间/截止时间'
-                        />
-                    )
-                }
+                <Input
+                    placeholder='例如： 开始时间/截止时间'
+                    value={stateProps[PLACEHOLDER] ? stateProps[PLACEHOLDER].join('/') : '开始时间/截止时间'}
+                    onChange={(e) => { this.handleChangeValue({ placeholder: e.target.value.split('/'), type: 'props.placeholder' }); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.DATE_FORMAT}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator('props.format', {
-                        rules: [
-                            {
-                                validator: (rule, value, callback) => {
-                                    if (!value) {
-                                        callback();
-                                    }
-                                    if (value && getFieldValue('showTime') && !/^[^/\s]+ [^/\s]+$/.test(value)) {
-                                        callback(rule.message);
-                                    }
-                                    callback();
-                                },
-                                message: '日期格式化不正确'
-                            }
-                        ],
-                        initialValue: stateProps[FORMAT] || `${DATE_FORMAT} ${TIME_FORMAT}`
-                    })(
-                        <Input
-                            placeholder={`例如：${DATE_FORMAT} ${TIME_FORMAT}`}
-                        />
-                    )
-                }
+                <Input
+                    placeholder={`例如：${DATE_FORMAT} ${TIME_FORMAT}`}
+                    value={stateProps[FORMAT]}
+                    onChange={(e) => { this.handleChangeValue({ format: e.target.value, type: 'props.format' }); }}
+                />
             </FormItem>
             <FormItem
                 label={ALIAS.SHOW_TIME}
                 {...FORMITEM_LAYOUT}
             >
-                {
-                    getFieldDecorator('props.showTime', {
-                        valuePropName: 'checked',
-                        initialValue: (stateProps[SHOWTIME] || stateProps[SHOWTIME] === false) ? stateProps[SHOWTIME] : true
-                    })(
-                        <Switch
-                            onChange={(value) => {
-                                if (!value) {
-                                    setFieldsValue({'props.format': DATE_FORMAT});
-                                } else {
-                                    setFieldsValue({'props.format': `${DATE_FORMAT} ${TIME_FORMAT}`});
-                                }
-                            }}
-                        />
-                    )
-                }
+                <Switch
+                    onChange={(value) => {
+                        if (!value) {
+                            this.handleChangeValue({ showTime: false, format: DATE_FORMAT, type: 'props.showTime'});
+                        } else {
+                            this.handleChangeValue({ showTime: true, format: `${DATE_FORMAT} ${TIME_FORMAT}`, type: 'props.showTime'});
+                        }
+                    }}
+                    defaultChecked={(stateProps[SHOWTIME] || stateProps[SHOWTIME] === false) ? stateProps[SHOWTIME] : true}
+                />
             </FormItem>
             {
-                getFieldValue('props.showTime') && <FormItem
+                ('showTime' in formData.props && formData.props.showTime) && <FormItem
                     label={ALIAS.TIME_FORMAT}
                     {...FORMITEM_LAYOUT}
                 >
-                    {
-                        getFieldDecorator('props.showTimeFormat', {
-                            initialValue: (typeof stateProps[SHOWTIME]) === 'object' ? stateProps[SHOWTIME].format : ''
-                        })(
-                            <Input
-                                placeholder={`例如：${TIME_FORMAT}`}
-                            />
-                        )
-                    }
+                    <Input
+                        placeholder={`例如：${TIME_FORMAT}`}
+                        value={stateProps[SHOWTIMEFORMAT]}
+                        onChange={(e) => { this.handleChangeValue({ showTimeFormat: e.target.value, type: 'props.showTimeFormat'}); }}
+                    />
                 </FormItem>
             }
             <FormItem>
@@ -218,7 +190,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps> {
                             type='primary'
                         >确定</Button>
                     </Col>
-                    <ClearButton initState={initState} that={this} type='RangePicker'/>
+                    <ClearButton initState={initState} that={this} type='RangePicker' />
                 </Row>
             </FormItem>
         </div>;

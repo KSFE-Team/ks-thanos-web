@@ -1,69 +1,157 @@
-
 /**
  * 提交校验 - 是否信息都已填完整
  * type 类型
  * data 要校验的数据源
  * field 要校验的字段
  */
-export function checkFieldData(type: string, data: any, field: any) {
-    let flag = false, arr = [];
+
+interface checkFieldDataResult {
+    error: boolean;
+    message: string;
+}
+// 通用校验
+const FIELD_ARR = ['key', 'label'];
+// Form
+const FORM_FIELD = ['stateName', 'type', 'saveApi', 'updateApi', 'getApi', 'paramKey'];
+// Select
+const SELECT_FIELD = ['label', 'value'];
+// Radio CheckBox
+const RADIO_CHECKBOX_FIELD = ['text', 'value'];
+// BizSelectModal
+const BIZ_FIELD = ['key', 'label', 'type'];
+// Table
+const TABLE_FIELD = {
+    config: [
+        'api',
+        'method',
+        'stateName',
+    ],
+    dataSource: [
+        'dataKey',
+        'tableName'
+    ]
+};
+
+export function checkFieldData(type: string, data: any, source?: string): checkFieldDataResult {
+    let tempArr = [];
     switch (type) {
-        case 'arr':
-            return typeArr(data, field, 'arr');
-        case 'obj':
-            return typeArr(data, field, 'obj');
-        case 'form':
+        case 'Form':
             if (data.type === 'normal') {
-                return typeArr(data, field, 'obj');
+                return {
+                    error: checkCommonFn(data, FORM_FIELD),
+                    message: 'Form'
+                };
             } else if (data.type === 'search') {
-                if (!data.stateName) {
-                    flag = true;
-                }
-                return flag;
+                return {
+                    error: !data.stateName,
+                    message: 'Form'
+                };
             }
-        case 'checkoutArr':
-            arr = data.map((item: any) => {
+        case 'Input':
+            return {
+                error: checkCommonFn(data, FIELD_ARR),
+                message: 'Input'
+            };
+        case 'Select':
+            tempArr = data.options.map((item) => {
+                return {
+                    value: item.props.value,
+                    label: item.label
+                };
+            });
+            return {
+                error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(tempArr, SELECT_FIELD),
+                message: 'Select'
+            };
+        case 'DatePicker':
+            return {
+                error: checkCommonFn(data, FIELD_ARR),
+                message: 'DatePicker'
+            };
+        case 'InputNumber':
+            return {
+                error: checkCommonFn(data, FIELD_ARR),
+                message: 'InputNumber'
+            };
+        case 'RangePicker':
+            return {
+                error: checkCommonFn(data, FIELD_ARR),
+                message: 'InputNumber'
+            };
+        case 'TextArea':
+            return {
+                error: checkCommonFn(data, FIELD_ARR),
+                message: 'TextArea'
+            };
+        case 'Radio':
+            return {
+                error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(data.options, RADIO_CHECKBOX_FIELD),
+                message: 'Radio'
+            };
+        case 'CheckBox':
+            tempArr = data.options.map((item: any) => {
                 return {
                     text: item.text,
                     value: item.props.value
                 };
             });
-            return typeArr(arr, field, 'arr');
-        case 'radioArr':
-            arr = data.map((item: any) => {
-                return {
-                    text: item.text,
-                    value: item.value
-                };
-            });
-            return typeArr(arr, field, 'arr');
-
+            return {
+                error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(tempArr, RADIO_CHECKBOX_FIELD),
+                message: 'CheckoBox'
+            };
+        case 'BizSelectModal':
+            return {
+                error: checkCommonFn(source ? { ...data, type: data.props.type } : data, BIZ_FIELD),
+                message: 'BizSelectModal'
+            };
+        case 'Table':
+            if (source) {
+                tempArr = data.props.columns.map((item) => {
+                    return {
+                        dataKey: item.dataIndex,
+                        tableName: item.title
+                    };
+                });
+            } else {
+                tempArr = data.dataSource;
+            }
+            return {
+                error: checkCommonFn(data, TABLE_FIELD.config) || checkArrayCommonFn(tempArr, TABLE_FIELD.dataSource),
+                message: 'Table'
+            };
     }
+    return {
+        error: false,
+        message: ''
+    };
 };
 
-function typeArr(data, field, type) {
+function checkCommonFn(data, field) {
     let flag = false;
-    switch (type) {
-        case 'arr':
-            data.forEach((item: any) => {
-                field.find((key: any) => {
-                    if (!item[key]) {
-                        flag = true;
-                        return true;
-                    }
-                });
+    Object.getOwnPropertyNames(data).forEach(() => {
+        field.find((key: any) => {
+            if (!data[key]) {
+                flag = true;
+                return true;
+            }
+        });
+    });
+    return flag;
+};
+
+function checkArrayCommonFn(data, field) {
+    let flag = false;
+    if (data.length > 0) {
+        data.forEach((item: any) => {
+            field.find((key: any) => {
+                if (!item[key] && item[key] !== 0) {
+                    flag = true;
+                    return true;
+                }
             });
-            break;
-        case 'obj':
-            Object.getOwnPropertyNames(data).forEach(() => {
-                field.find((key: any) => {
-                    if (!data[key]) {
-                        flag = true;
-                        return true;
-                    }
-                });
-            });
-            break;
+        });
+    } else {
+        flag = true;
     }
     return flag;
 }

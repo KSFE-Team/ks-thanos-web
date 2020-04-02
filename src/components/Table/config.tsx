@@ -4,9 +4,9 @@ import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
 import ClearButton from 'Src/components/ClearButton';
 import { getUniqueID } from 'Src/utils';
-import {initState, getInitJson} from './utils';
-import { TABLE_TYPE } from 'Src/utils/constants';
+import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE, FORM_MESSAGE } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
+import { initState, getInitJson} from './utils';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -17,10 +17,6 @@ const EditableRow = ({ form, index, ...props }: any) => (
 );
 const EditableFormRow = Form.create()(EditableRow);
 
-const columnDataIndex = [
-    'dataKey',
-    'tableName'
-];
 // import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE } from 'Src/utils/constants';
 interface TableConfigProps {
     pageJSON: any;
@@ -130,11 +126,10 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc save table data
      */
     saveTableData = () => {
-        if (!this.checkData()) { return; }
-        const flag = checkFieldData('arr', this.state.dataSource, columnDataIndex);
-        if (flag) {
-            message.error('请填写完整表格信息。');
-            return;
+        const { error } = checkFieldData('Table', { ...this.state, stateName: this.state.current.stateName });
+        if (error) {
+            message.error(FORM_MESSAGE);
+            return false;
         }
         const pageJSON = this.props.pageJSON;
         const { current, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
@@ -354,18 +349,18 @@ export default class TableConfig extends Component<TableConfigProps> {
 
         return (
             <React.Fragment>
-                <FormItem {...formItemLayout} label="接口地址">
+                <FormItem {...formItemLayout} label="接口地址" required={true}>
                     <Input value={this.state.api}
                         placeholder="例：/user/list"
                         onChange={this.apiInputChange} />
                 </FormItem>
-                <FormItem {...formItemLayout} label="请求方式">
+                <FormItem {...formItemLayout} label="请求方式" required={true}>
                     <Select defaultValue={this.state.method} key={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
                         <Option value="GET">GET</Option>
                         <Option value="POST">POST</Option>
                     </Select>
                 </FormItem>
-                <FormItem {...formItemLayout} label={current && current.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'}>
+                <FormItem {...formItemLayout} label={current && current.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'} required={true}>
                     <Input value={this.state.current.stateName}
                         placeholder="组件存储数据Key, 使用英文且唯一"
                         onChange={this.stateNameInputChange} />
@@ -449,15 +444,15 @@ class EditableCell extends React.Component<EditableCellProps> {
         });
     }
 
-    save = (e) => {
+    handleChangeValue = (dataIndex, value) => {
         const { record, handleSave } = this.props;
-        this.form.validateFields((error, values) => {
-            if (error && error[e.currentTarget.id]) {
-                return;
+        if (dataIndex === 'dataKey') {
+            if (CHARACTER_REG.test(value)) {
+                message.error(CHARACTER_MESSAGE, 5);
+                value = '';
             }
-            this.toggleEdit();
-            handleSave({ ...record, ...values });
-        });
+        }
+        handleSave({ ...record, [dataIndex]: value });
     }
 
     renderCell = (form) => {
@@ -466,29 +461,15 @@ class EditableCell extends React.Component<EditableCellProps> {
         const { editing } = this.state;
         return editing ? (
             <Form.Item style={{ margin: 0 }}>
-                <Input value={record[dataIndex]} ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} onChange={() => {}}/>
-                {/* {form.getFieldDecorator(dataIndex, {
-                    rules: [
-                        {
-                            required: true,
-                            message: `${title} is required.`,
-                        },
-                        {
-                            validator: (rule, value, callback) => {
-                                if (rule.field === 'dataKey') {
-                                    if (CHARACTER_REG.test(value)) {
-                                        callback(new Error(CHARACTER_MESSAGE));
-                                    } else {
-                                        callback();
-                                    }
-                                } else {
-                                    callback();
-                                }
-                            }
-                        }
-                    ],
-                    initialValue: record[dataIndex],
-                })(<Input ref={(node) => (this.input = node)} onPressEnter={this.save} onBlur={this.save} />)} */}
+                <Input
+                    value={record[dataIndex]}
+                    ref={(node) => (this.input = node)}
+                    onPressEnter={this.toggleEdit}
+                    onBlur={this.toggleEdit}
+                    onChange={(event) => {
+                        this.handleChangeValue(dataIndex, event.target.value);
+                    }}
+                />
             </Form.Item>
         ) : (
             <div

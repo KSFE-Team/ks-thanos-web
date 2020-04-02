@@ -10,7 +10,9 @@ export const getInitJson = () => ({
     label: '时间区间',
     parentComponentName: 'DatePicker',
     props: {
-        placeholder: ['开始时间', '截止时间']
+        placeholder: ['开始时间', '截止时间'],
+        format: 'YYYY-MM-DD HH:mm:ss',
+        showTime: true,
     }
 });
 
@@ -28,7 +30,9 @@ export const getTools = () => ({
  */
 export const initState = {
     formData: {
-        props: {}
+        props: {
+            showTime: true
+        }
     },
     isTouch: false,
     current: {

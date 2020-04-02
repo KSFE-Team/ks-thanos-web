@@ -32,14 +32,6 @@ const SAVE_API = 'saveApi';
 const UPDATE_API = 'updateApi';
 const GET_API = 'getApi';
 const PARAM_KEY = 'paramKey';
-const fieldArr = [
-    'stateName',
-    'type',
-    'saveApi',
-    'updateApi',
-    'getApi',
-    'paramKey'
-];
 interface FormConfigProps {
     onSave(pageJSON: any): void,
     pageJSON: any,
@@ -96,10 +88,10 @@ export default class FormConfig extends Component<FormConfigProps> {
      */
     handleSave = () => {
         const { formData } = this.state;
-        const flag = checkFieldData('obj', formData, fieldArr);
+        const { error } = checkFieldData('Form', formData);
         const { pageJSON, onSave } = this.props;
         // 提交检验
-        if (flag) {
+        if (error) {
             message.error(FORM_MESSAGE);
             return false;
         }

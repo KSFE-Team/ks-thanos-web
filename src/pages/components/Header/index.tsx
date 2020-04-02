@@ -3,7 +3,8 @@ import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
 import './index.scss';
-import { goto, clearAllData, getComponents } from 'Src/utils/commonFunc';
+import { goto, clearAllData, getComponents} from 'Src/utils/commonFunc';
+import { checkFieldData } from 'Src/utils/utils';
 
 const confirm = Modal.confirm;
 const error = Modal.error;
@@ -12,6 +13,11 @@ interface HeaderProps {
     generatePage?: any;
     showTopToolbar?: boolean;
     searchId?: string;
+}
+
+interface ItemInterface {
+    componentName: string,
+    components: []
 }
 
 @connect(({ generatePage = {}, operate = {} }) => ({
@@ -35,11 +41,45 @@ class Header extends Component<HeaderProps> {
         });
     }
 
+    // 打响指校验
+    getErrorList = (components: []) => {
+        const tempArr: object[] = [];
+        let tempList;
+        if (components && components.length > 0) {
+            components.forEach((item: ItemInterface) => {
+                tempArr.push(checkFieldData(item.componentName, item, 'submit'));
+                const {
+                    tempArr: newTempArr
+                } = this.getErrorList(item.components);
+                tempList = tempArr.concat(newTempArr);
+            });
+        }
+        return {
+            tempArr,
+            tempList
+        };
+    }
+
     handleSubmit = (pageOrTemp) => {
         const text = this.props.searchId ? '修改' : '新增';
         const pageOrTempText = pageOrTemp === 'page' ? '页面' : '模版';
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
+        const { tempList } = this.getErrorList(pageJSON.components);
+        let errorlist: any = [];
+        tempList.forEach((item) => {
+            if (item.error) {
+                errorlist.push(item.message);
+            }
+        });
+        errorlist = Array.from(new Set(errorlist));
+        if (errorlist.length > 0) {
+            error({
+                title: '配置错误',
+                content: `${errorlist.join(',')}组件,配置信息不完整，请按照提示完成组件配置！`
+            });
+            return;
+        }
         if (!pageName) {
             error({
                 title: '配置错误',
@@ -50,7 +90,6 @@ class Header extends Component<HeaderProps> {
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
-                // let components = pageJSON.components;
                 // console.log([...pageJSON.components], pageJSON.components);
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
                 if (generatePage.chooseTabName === 'RelationTable') {
