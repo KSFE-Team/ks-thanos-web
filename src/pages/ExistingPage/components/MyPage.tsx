@@ -4,44 +4,34 @@ import { Table, Button, Modal, Form, Input } from 'antd';
 import moment from 'moment';
 import { goto } from 'Src/utils/commonFunc';
 import { SearchForm } from 'Src/bizComponents';
-import { STATE } from '../model/myTemplate';
+import { STATE } from '../model/existingPage';
 import './style.scss';
-interface MyTemplateProps {
-    myTemplate: {
-        templateList: any[];
-        searchTemplateForm:{
+import CuPageModal from './CuPageModal';
+interface ExistingPageProps {
+    existingPage: {
+        pageList: any[];
+        searchPageForm: {
             limit: number;
             page: number;
             total: number;
             totalPage: number;
-            templateName: {
+            pageName: {
                 value: string
-            },
-        }
+            }
+        },
+        cuPageModalVisible:boolean
     },
     form: any,
     listLoading: boolean,
 }
 
-class MyTemplate extends Component<MyTemplateProps> {
+class ExistingPage extends Component<ExistingPageProps> {
 
     state = {
         columns: [
             {
-                title: '模版名称',
-                dataIndex: 'templateName',
-            },
-            {
-                title: '模版类型',
-                dataIndex: 'type',
-                render: (text) => {
-                    switch (`${text}`) {
-                        case '1': return '共享模版';
-                        case '2': return '库模版';
-                        default:
-                            break;
-                    }
-                }
+                title: '页面名称',
+                dataIndex: 'pageName',
             },
             {
                 title: '创建时间',
@@ -62,15 +52,15 @@ class MyTemplate extends Component<MyTemplateProps> {
                 render: (text: string, record: any) => (
                     <span>
                         <Button type="primary" onClick={() => {
-                            goto(`generatePage/${record.templateName}?pageOrTemp=template&id=${record.id}`);
+                            goto(`generatePage/${record.pageName}?pageOrTemp=page&id=${record.id}`);
                         }}>修改</Button>
                         {
                             record.type && +record.type === 1 ? null : <Button className='mar-l-4' type="danger" onClick={() => {
                                 Modal.confirm({
-                                    title: `确认删除${record.templateName}？`,
+                                    title: `确认删除${record.pageName}？`,
                                     onOk: () => {
-                                        actions.myTemplate.deleteTemplateItem({
-                                            templateName: record.templateName
+                                        actions.existingPage.deletepageItem({
+                                            pageName: record.pageName
                                         });
                                     }
                                 });
@@ -84,9 +74,9 @@ class MyTemplate extends Component<MyTemplateProps> {
     }
 
     handlePageChange = (page) => {
-        actions.myTemplate.setReducers({
-            searchTemplateForm: {
-                ...this.props.myTemplate.searchTemplateForm,
+        actions.existingPage.setReducers({
+            searchPageForm: {
+                ...this.props.existingPage.searchPageForm,
                 page,
             }
         });
@@ -94,7 +84,7 @@ class MyTemplate extends Component<MyTemplateProps> {
     }
 
     loadList = () => {
-        actions.myTemplate.getTemplateList({pageOrTemp: 'template'});
+        actions.existingPage.getPageList();
     }
 
     resetPage = () => {
@@ -104,7 +94,7 @@ class MyTemplate extends Component<MyTemplateProps> {
     componentDidMount() {
         // 初始化redux
         const initialState = {...STATE};
-        actions.myTemplate.setReducers({
+        actions.existingPage.setReducers({
             ...initialState,
         });
         this.loadList();
@@ -112,17 +102,17 @@ class MyTemplate extends Component<MyTemplateProps> {
 
     render() {
         const { listLoading } = this.props;
-        const { templateList = [], searchTemplateForm } = this.props.myTemplate;
+        const { pageList = [], searchPageForm, cuPageModalVisible } = this.props.existingPage;
         return (
-            <div className="my-template-container">
+            <div className="my-page-container">
                 <SearchForm
                     form={this.props.form}
                     components={[
                         {
-                            title: '模版名称',
-                            key: 'templateName',
+                            title: '页面名称',
+                            key: 'pageName',
                             component: <Input
-                                placeholder={`请输入模版名称`}
+                                placeholder={`请输入页面名称`}
                                 onPressEnter={this.resetPage}
                             />
                         }
@@ -131,47 +121,57 @@ class MyTemplate extends Component<MyTemplateProps> {
                         <Button
                             onClick={this.resetPage}
                         >查询</Button>
+                        <Button
+                            className='mar-l-4'
+                            type='primary'
+                            onClick={() => {
+                                actions.existingPage.setReducers({
+                                    cuPageModalVisible: true,
+                                });
+                            }}
+                        >创建页面</Button>
                     </Fragment>}
                 />
                 <Table
                     columns={this.state.columns}
-                    dataSource={templateList}
-                    rowKey={'template' + 'Name'}
+                    dataSource={pageList}
+                    rowKey={'pageName'}
                     loading={listLoading}
                     pagination={{
                         defaultCurrent: 1,
-                        current: searchTemplateForm.page,
-                        pageSize: searchTemplateForm.limit,
-                        total: searchTemplateForm.total,
+                        current: searchPageForm.page,
+                        pageSize: searchPageForm.limit,
+                        total: searchPageForm.total,
                         onChange: this.handlePageChange
                     }}
                 />
+                {cuPageModalVisible && <CuPageModal/>}
             </div>
         );
     }
 }
 
 export default connect(({
-    myTemplate,
+    existingPage,
     loading
 }) => ({
-    myTemplate,
-    listLoading: loading.effects['myTemplate/getTemplateList']
+    existingPage,
+    listLoading: loading.effects['existingPage/getPageList']
 }))(Form.create({
-    mapPropsToFields(props: MyTemplateProps) {
+    mapPropsToFields(props: ExistingPageProps) {
         return {
-            templateName: Form.createFormField({
-                ...props.myTemplate.searchTemplateForm.templateName,
-                value: props.myTemplate.searchTemplateForm.templateName.value
+            pageName: Form.createFormField({
+                ...props.existingPage.searchPageForm.pageName,
+                value: props.existingPage.searchPageForm.pageName.value
             }),
         };
     },
-    onFieldsChange(props: MyTemplateProps, fields) {
-        actions.myTemplate.setReducers({
-            searchTemplateForm: {
-                ...props.myTemplate.searchTemplateForm,
+    onFieldsChange(props: ExistingPageProps, fields) {
+        actions.existingPage.setReducers({
+            searchPageForm: {
+                ...props.existingPage.searchPageForm,
                 ...fields
             }
         });
     }
-})(MyTemplate));
+})(ExistingPage));

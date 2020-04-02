@@ -4,6 +4,7 @@ export default [
         exact: true,
         title: '现有页面',
         modelList: [
+            () => import('./pages/ExistingPage/model/existingPage'),
             () => import('./pages/TempLateMgt/model/myTemplate')
         ],
         component: () => import('./pages/ExistingPage')

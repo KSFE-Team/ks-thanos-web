@@ -8,7 +8,7 @@ export default class TempLateMgt extends Component {
             <BasicLayout
                 {...this.props}
             >
-                <MyTemplate pageOrTemp='template' title='模版'/>
+                <MyTemplate/>
             </BasicLayout>
         );
     }

@@ -3,7 +3,7 @@ import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
 import './index.scss';
-import { goto, clearAllData } from 'Src/utils/commonFunc';
+import { goto, clearAllData, getComponents } from 'Src/utils/commonFunc';
 
 const confirm = Modal.confirm;
 const error = Modal.error;
@@ -38,7 +38,6 @@ class Header extends Component<HeaderProps> {
     handleSubmit = (pageOrTemp) => {
         const text = this.props.searchId ? '修改' : '新增';
         const pageOrTempText = pageOrTemp === 'page' ? '页面' : '模版';
-
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
         if (!pageName) {
@@ -50,9 +49,10 @@ class Header extends Component<HeaderProps> {
         }
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
-            // content: `请确认提交${text}所写配置`,
             onOk: async() => {
-                let components = pageJSON.components;
+                // let components = pageJSON.components;
+                // console.log([...pageJSON.components], pageJSON.components);
+                let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
                         {
@@ -68,7 +68,7 @@ class Header extends Component<HeaderProps> {
                             paramKey: findParamKey(pageJSON.components),
                         }),
                         [pageOrTemp + 'Name']: pageName,
-                        id: this.props.searchId
+                        id: Number(this.props.searchId || 0)
                     },
                     pageOrTemp
                 });
@@ -97,15 +97,6 @@ class Header extends Component<HeaderProps> {
                             </Button>
                             <Button className='mar-l-4' type='primary'
                                 onClick={() => this.handleSubmit('template')}
-                                // onClick={() => {
-                                // Modal.confirm({
-                                //     title: `是否生成模板`,
-                                //     okText: 'YES',
-                                //     cancelText: 'NO',
-                                //     onOk: () => {
-                                //         // 调模版的接口
-
-                            // }}
                             >
                                 生成模板
                             </Button>

@@ -5,22 +5,36 @@ import './style.scss';
 import { goto } from 'Src/utils/commonFunc';
 import { SearchForm } from 'Src/bizComponents';
 import {tempTabs} from 'Src/utils/constants';
-import { STATE } from '../model/myTemplate';
+import { STATE } from 'Src/pages/TempLateMgt/model/myTemplate';
 
 interface CuTemplateProps {
+    existingPage: {
+        pageList: any[];
+        searchPageForm: {
+            limit: number;
+            page: number;
+            total: number;
+            totalPage: number;
+            pageName: {
+                value: string
+            }
+        },
+        cuPageModalVisible: boolean
+    },
     myTemplate: {
-        list: any[];
-        limit: number;
-        page: number;
-        total: number;
-        totalPage: number;
-        pageName: {
-            value: string
-        },
-        type: {
-            value: string
-        },
-        cuTempLateModalVisible: boolean
+        templateList: any[];
+        searchTemplateForm:{
+            limit: number;
+            page: number;
+            total: number;
+            totalPage: number;
+            templateName: {
+                value: string
+            },
+            type:{
+                value: string
+            }
+        }
     },
     form: any,
     listLoading: boolean
@@ -37,30 +51,53 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         templateId: '',
     }
 
-    handlePageChange = (page) => {
+    componentDidMount() {
+        // 初始化redux
+        this.changeLimit(9);
+        this.loadList();
+    }
+
+    changeLimit=(limit) => {
         actions.myTemplate.setReducers({
-            page,
+            searchTemplateForm: {
+                ...STATE.searchTemplateForm,
+                limit
+            },
         });
+    }
+
+    handlePageChange = (page) => {
+        const {pageOrTempInfo} = this.state;
+        if (pageOrTempInfo.pageOrTemp === 'page') {
+            actions.existingPage.setReducers({
+                searchPageForm: {
+                    ...this.props.existingPage.searchPageForm,
+                    page,
+                }
+            });
+        } else {
+            actions.myTemplate.setReducers({
+                searchTemplateForm: {
+                    ...this.props.myTemplate.searchTemplateForm,
+                    page,
+                }
+            });
+        }
+
         this.loadList();
     }
 
     loadList = () => {
         const {pageOrTempInfo} = this.state;
-        actions.myTemplate.getTemplateList({...pageOrTempInfo});
+        if (pageOrTempInfo.pageOrTemp === 'page') {
+            actions.existingPage.getPageList();
+        } else {
+            actions.myTemplate.getTemplateList({...pageOrTempInfo});
+        }
     }
 
     resetPage = () => {
         this.handlePageChange(1);
-    }
-
-    componentDidMount() {
-        // 初始化redux
-        const initialState = {...STATE};
-        delete initialState.cuTempLateModalVisible;
-        actions.myTemplate.setReducers({
-            ...initialState,
-        });
-        this.loadList();
     }
 
     changeTabe=(idx) => {
@@ -68,23 +105,26 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         if (idx === 0) { // 库模版
             pageOrTempInfo.pageOrTemp = 'template';
             pageOrTempInfo.type = '2';
+            this.changeLimit(9);
         } else if (idx === 1) { // 共享模版
             pageOrTempInfo.pageOrTemp = 'template';
             pageOrTempInfo.type = '1';
+            this.changeLimit(10);
         } else if (idx === 2) { // 现有页面
             pageOrTempInfo.pageOrTemp = 'page';
             pageOrTempInfo.type = '';
         }
         this.setState({
             tab: idx,
-            pageOrTempInfo: pageOrTempInfo
+            pageOrTempInfo: pageOrTempInfo,
+            templateId: ''
         });
         this.loadList();
     }
 
     gotoPage=() => {
-        actions.myTemplate.setReducers({
-            cuTempLateModalVisible: false,
+        actions.existingPage.setReducers({
+            cuPageModalVisible: false,
         });
         const { pageOrTempInfo, templateId } = this.state;
         if (templateId === '-1') { // 新增空白页面
@@ -99,13 +139,16 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         const {tempTabs, tab, templateId, pageOrTempInfo} = this.state;
         const {pageOrTemp} = pageOrTempInfo;
         const { listLoading } = this.props;
-        const { list = [], page, limit, total, cuTempLateModalVisible } = this.props.myTemplate;
+        const { pageList = [], searchPageForm, cuPageModalVisible } = this.props.existingPage;
+        const { templateList = [], searchTemplateForm } = this.props.myTemplate;
+        const list = pageOrTemp === 'page' ? pageList : templateList;
+        const searchForm = pageOrTemp === 'page' ? searchPageForm : searchTemplateForm;
         return (
-            <Modal visible={cuTempLateModalVisible} width='75%'
+            <Modal visible={cuPageModalVisible} width='85%'
                 confirmLoading={ listLoading }
                 onCancel = {() => {
-                    actions.myTemplate.setReducers({
-                        cuTempLateModalVisible: false,
+                    actions.existingPage.setReducers({
+                        cuPageModalVisible: false,
                     });
                     actions.myTemplate.getTemplateList({pageOrTemp: 'page'});
                 }}
@@ -121,8 +164,8 @@ class CuTempLateModal extends Component<CuTemplateProps> {
                     form={this.props.form}
                     components={[
                         {
-                            title: '模版名称',
-                            key: 'pageName',
+                            title: pageOrTemp === 'page' ? '页面名称' : '模版名称',
+                            key: pageOrTemp === 'page' ? 'pageName' : 'templateName',
                             component: <Input
                                 placeholder={'请输入模版名称'}
                                 onPressEnter={this.resetPage}
@@ -157,9 +200,9 @@ class CuTempLateModal extends Component<CuTemplateProps> {
                 </ul>
                 <Pagination
                     defaultCurrent={1}
-                    total={total}
-                    current= {page}
-                    pageSize={limit}
+                    total={searchForm.total}
+                    current= {searchForm.page}
+                    pageSize={searchForm.limit}
                     onChange={this.handlePageChange}
                 />
             </Modal>
@@ -169,27 +212,37 @@ class CuTempLateModal extends Component<CuTemplateProps> {
 
 export default connect(({
     myTemplate,
+    existingPage,
     loading
 }) => ({
     myTemplate,
+    existingPage,
     listLoading: loading.effects['myTemplate/getTemplateList']
 }))(Form.create({
     mapPropsToFields(props: CuTemplateProps) {
         return {
             pageName: Form.createFormField({
-                ...props.myTemplate.pageName,
-                value: props.myTemplate.pageName.value
+                ...props.existingPage.searchPageForm.pageName,
+                value: props.existingPage.searchPageForm.pageName.value
             }),
-            type: Form.createFormField({
-                ...props.myTemplate.type,
-                value: props.myTemplate.type.value
-            }),
+            templateName: Form.createFormField({
+                ...props.myTemplate.searchTemplateForm.templateName,
+                value: props.myTemplate.searchTemplateForm.templateName.value
+            })
         };
     },
     onFieldsChange(props: CuTemplateProps, fields) {
+        actions.existingPage.setReducers({
+            searchPageForm: {
+                ...props.existingPage.searchPageForm,
+                ...fields
+            }
+        });
         actions.myTemplate.setReducers({
-            ...props.myTemplate,
-            ...fields
+            searchTemplateForm: {
+                ...props.myTemplate.searchTemplateForm,
+                ...fields
+            }
         });
     }
 })(CuTempLateModal));
