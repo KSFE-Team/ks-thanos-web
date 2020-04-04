@@ -1,0 +1,40 @@
+.my-template-container {
+    // width: 80%;
+    margin: auto;
+    
+    .my-template-title {
+        font-size: 30px;
+        // padding: 10px 0 10px;
+    }
+}
+.my-template-container {
+    // width: 80%;
+    margin: auto;
+    
+    .my-template-title {
+        font-size: 30px;
+        // padding: 10px 0 10px;
+    }
+}
+.content{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    li{
+        width: 19%;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        border:1px solid #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 180px;
+    }
+}
+.active{
+    background: #037cee!important;
+}
+.liborder{
+    border-color:#1890ff!important;
+}

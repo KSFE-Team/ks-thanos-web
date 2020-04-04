@@ -22,23 +22,3 @@
 .tab{
     margin-left: 36px;
 }
-.content{
-    display: flex;
-    flex-wrap: wrap;
-    li{
-        width: 24%;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        border:1px solid #ccc;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 180px;
-    }
-}
-.active{
-    background: #037cee!important;
-}
-.liborder{
-    border-color:#1890ff!important;
-}

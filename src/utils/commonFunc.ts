@@ -83,5 +83,10 @@ export const clearData = (that, initState, type = '') => {
  * 清空所有配置
  */
 export const clearAllData = (components) => {
-    getComponents(components);
+    const newComponents = getComponents(components);
+    actions.generatePage.setReducers({
+        pageJSON: {
+            components: newComponents
+        }
+    });
 };

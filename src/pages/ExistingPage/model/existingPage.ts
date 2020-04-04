@@ -4,42 +4,38 @@ import { actions } from 'kredux';
 import { message } from 'antd';
 
 export const STATE = {
-    templateList: [],
-    searchTemplateForm: {
+    pageList: [],
+    searchPageForm: {
         page: 1,
         limit: 10,
         totalPage: 0,
         total: 0,
-        templateName: {
+        pageName: {
             value: ''
         }, // 模版名称
-        type: {
-            value: ''
-        },
     },
+    cuPageModalVisible: false
 };
 export default {
-    namespace: 'myTemplate',
+    namespace: 'existingPage',
     initialState: { ...STATE },
     effects: {
-        async getTemplateList(payload: any, getState: any) {
-            const searchForm = getState().myTemplate.searchTemplateForm;
-            const {type} = payload;
+        async getPageList(payload: any, getState: any) {
+            const searchForm = getState().existingPage.searchPageForm;
             const postData = {
                 page: searchForm.page,
                 limit: searchForm.limit,
-                type: type,
-                templateName: searchForm.templateName.value
+                pageName: searchForm.pageName.value
             };
-            const response = await request(API.template.query, {
+            const response = await request(API.page.query, {
                 method: 'GET',
                 body: postData
             });
             if (response && !response.errcode) {
                 const result = response.result;
-                actions.myTemplate.setReducers({
-                    templateList: result.list,
-                    searchTemplateForm: {
+                actions.existingPage.setReducers({
+                    pageList: result.list,
+                    searchPageForm: {
                         ...searchForm,
                         totalPage: result.totalPage,
                         total: result.total
@@ -47,18 +43,18 @@ export default {
                 });
             }
         },
-        async deleteTemplateItem(payload: any) {
-            const { templateName } = payload;
-            const response = await request(API.template.delete, {
+        async deletepageItem(payload: any) {
+            const { pageName } = payload;
+            const response = await request(API.page.delete, {
                 method: 'POST',
                 body: {
-                    templateName
+                    pageName
                 }
             });
 
             if (response && !response.errcode) {
-                message.success(`删除模板${templateName}成功`);
-                actions.myTemplate.getTemplateList();
+                message.success(`删除页面${pageName}成功`);
+                actions.existingPage.getPageList();
             }
         }
     }
