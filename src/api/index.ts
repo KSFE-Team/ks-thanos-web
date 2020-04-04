@@ -1,4 +1,5 @@
 // const server = window.location.origin;
+// const server = 'http://localhost:3012';
 const server = 'http://kaishufe.kaishustory.com';
 export const API = {
     page: {

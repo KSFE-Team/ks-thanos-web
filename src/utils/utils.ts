@@ -22,8 +22,7 @@ const BIZ_FIELD = ['key', 'label', 'type'];
 // Table
 const TABLE_FIELD = {
     config: [
-        'api',
-        'method',
+        'dependencies',
         'stateName',
     ],
     dataSource: [
@@ -105,6 +104,8 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
                 message: 'BizSelectModal'
             };
         case 'Table':
+            console.log('data', data);
+            console.log('source', source);
             if (source) {
                 tempArr = data.props.columns.map((item) => {
                     return {
@@ -127,16 +128,19 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
 };
 
 function checkCommonFn(data, field) {
-    let flag = false;
-    Object.getOwnPropertyNames(data).forEach(() => {
-        field.find((key: any) => {
-            if (!data[key]) {
-                flag = true;
-                return true;
-            }
-        });
-    });
-    return flag;
+    console.log('field', field);
+    console.log('data', data);
+    // let flag = false;
+    return field.some((validateKey: string) => !data[validateKey]);
+    // Object.keys(data).forEach(() => {
+    //     field.find((key: any) => {
+    //         if (!data[key]) {
+    //             flag = true;
+    //             return true;
+    //         }
+    //     });
+    // });
+    // return flag;
 };
 
 function checkArrayCommonFn(data, field) {
