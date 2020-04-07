@@ -91,6 +91,7 @@ class Header extends Component<HeaderProps> {
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
                 // console.log([...pageJSON.components], pageJSON.components);
+                // let components=pageJSON.components;
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
