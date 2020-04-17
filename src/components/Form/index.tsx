@@ -8,7 +8,8 @@ import './index.scss';
 interface KFormProps {
     config: any,
     generatePage: {
-        pageJSON: any
+        pageJSON: any;
+        pageName: string;
     }
 }
 
@@ -30,10 +31,12 @@ class KForm extends Component<KFormProps> {
     }
 
     render() {
+        const { generatePage: { pageName = '' } } = this.props;
         return (
             <div
                 className={'form-container'}
             >
+                <div className={'form-title'}>{pageName || '表单'}</div>
                 <div className='form-container-background'>
                     {this.renderChildren()}
                 </div>

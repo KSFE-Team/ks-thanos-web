@@ -24,7 +24,7 @@ interface ItemInterface {
     generatePage,
     operate
 }))
-class Header extends Component<HeaderProps> {
+export default class Header extends Component<HeaderProps> {
 
     /**
      * 清空数据
@@ -65,7 +65,7 @@ class Header extends Component<HeaderProps> {
         const pageOrTempText = pageOrTemp === 'page' ? '页面' : '模版';
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
-        const { tempList } = this.getErrorList(pageJSON.components);
+        const { tempList = [] } = this.getErrorList(pageJSON.components);
         let errorlist: any = [];
         tempList.forEach((item) => {
             if (item.error) {
@@ -87,11 +87,16 @@ class Header extends Component<HeaderProps> {
             });
             return;
         }
+        if (!pageJSON.components.length) {
+            error({
+                title: '配置为空',
+                content: `请进行组件配置！`
+            });
+            return;
+        }
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
-                // console.log([...pageJSON.components], pageJSON.components);
-                // let components=pageJSON.components;
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
@@ -154,5 +159,3 @@ class Header extends Component<HeaderProps> {
         );
     }
 }
-
-export default Header;
