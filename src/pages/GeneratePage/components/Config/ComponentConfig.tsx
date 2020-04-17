@@ -50,9 +50,7 @@ export default class ComponentConfig extends Component<ComponentConfigProps> {
         }
         const { component } = this.getShowConfig();
         this.setJSON({
-            components: changeConfig(component.id, components, {
-                configVisible: false
-            })
+            components: changeConfig(component.id, components, false)
         });
         actions.generatePage.selectComponent({
             id: ''

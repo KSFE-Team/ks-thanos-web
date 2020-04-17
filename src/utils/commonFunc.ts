@@ -64,7 +64,6 @@ export const getComponents = (components, id = '') => {
  * @param route
  */
 export const clearData = (that, initState, type = '') => {
-    console.log(that);
     const id = that.state.current.id; // 当前操作的组件id
     const components = that.props.pageJSON.components; // 页面里的所有组件：数组
     const newComponents = getComponents(components, id);

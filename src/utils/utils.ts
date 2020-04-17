@@ -104,8 +104,6 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
                 message: 'BizSelectModal'
             };
         case 'Table':
-            console.log('data', data);
-            console.log('source', source);
             if (source) {
                 tempArr = data.props.columns.map((item) => {
                     return {
@@ -128,8 +126,6 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
 };
 
 function checkCommonFn(data, field) {
-    console.log('field', field);
-    console.log('data', data);
     // let flag = false;
     return field.some((validateKey: string) => !data[validateKey]);
     // Object.keys(data).forEach(() => {

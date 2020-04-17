@@ -83,7 +83,7 @@ export default class DynamicConfigItem extends Component<DynamicConfigItemProps>
                 {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
                 label={index === 0 ? label : ''}
                 required={false}
-                key={item.id}
+                key={item.id || index}
             >
                 <Input
                     value={item.label}
