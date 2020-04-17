@@ -5,7 +5,7 @@ export const API = {
     page: {
         query: server + '/api/ks-thanos/v1/page/list',
         get: server + '/api/ks-thanos/v1/page/get',
-        addOrUpdate: server + '/api/ks-thanos/v1/page/add', // 保存更新JSON
+        addOrUpdate: server + '/api/ks-thanos/v1/page/addOrUpdate', // 保存更新JSON
         delete: server + '/api/ks-thanos/v1/page/delete', // 删除模版
     },
     template: {
