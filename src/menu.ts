@@ -9,12 +9,12 @@ export interface MenuConfig {
  */
 const menuList = [
     {
-        name: '现有页面',
-        path: ''
+        name: '页面管理',
+        path: '/'
     },
     {
-        name: '现有模版', // 我的模版
-        path: 'myTemplate'
+        name: '模版管理',
+        path: '/myTemplate'
     }
 ];
 export default menuList;

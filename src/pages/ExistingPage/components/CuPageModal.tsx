@@ -128,9 +128,9 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         });
         const { pageOrTempInfo, templateId } = this.state;
         if (templateId === '-1') { // 新增空白页面
-            goto(`generatePage/${templateId}`);
+            goto(`/generatePage/${templateId}`);
         } else {
-            goto(`generatePage/${templateId}?pageOrTemp=${pageOrTempInfo.pageOrTemp}`);
+            goto(`/generatePage/${templateId}?pageOrTemp=${pageOrTempInfo.pageOrTemp}`);
         }
         // templateName
     }

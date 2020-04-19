@@ -61,7 +61,6 @@ export default {
             });
             if (response && response.errcode === 0) {
                 const text = postDate.id ? '修改' : '新增';
-
                 if (pageOrTemp === 'template') {
                     message.success(`${text}模板配置成功`);
                     Modal.confirm({
@@ -69,12 +68,12 @@ export default {
                         okText: 'YES',
                         cancelText: 'NO',
                         onOk: () => {
-                            goto(`myTemplate`);
+                            goto(`/myTemplate`);
                         },
                     });
                 } else {
                     message.success(`${text}页面配置成功`);
-                    goto('');
+                    goto('/');
                 }
             }
         },

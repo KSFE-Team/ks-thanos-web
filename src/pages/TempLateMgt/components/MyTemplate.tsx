@@ -62,7 +62,7 @@ class MyTemplate extends Component<MyTemplateProps> {
                 render: (text: string, record: any) => (
                     <span>
                         <Button type="primary" onClick={() => {
-                            goto(`generatePage/${record.templateName}?pageOrTemp=template&id=${record.id}`);
+                            goto(`/generatePage/${record.templateName}?pageOrTemp=template&id=${record.id}`);
                         }}>修改</Button>
                         {
                             record.type && +record.type === 1 ? null : <Button className='mar-l-4' type="danger" onClick={() => {

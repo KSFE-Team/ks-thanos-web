@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
+import history from '../../../utils/history';
 import { connect, actions } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
 import './index.scss';
-import { goto, clearAllData, getComponents} from 'Src/utils/commonFunc';
+import {
+    goto, clearAllData, getComponents
+} from 'Src/utils/commonFunc';
+import { parse } from 'qs';
 import { checkFieldData } from 'Src/utils/utils';
 
 const confirm = Modal.confirm;
@@ -13,6 +17,16 @@ interface HeaderProps {
     generatePage?: any;
     showTopToolbar?: boolean;
     searchId?: string;
+    location?: any;
+}
+
+interface HeaderState {
+    location: {
+        pathname: string;
+        search: string;
+        hash: string;
+        state: any;
+    }
 }
 
 interface ItemInterface {
@@ -24,7 +38,20 @@ interface ItemInterface {
     generatePage,
     operate
 }))
-export default class Header extends Component<HeaderProps> {
+export default class Header extends Component<HeaderProps, {}> {
+
+    location: {
+        pathname: string;
+        search: string;
+        hash: string;
+        state: any;
+    }
+
+    constructor(props) {
+        super(props);
+        const { location } = history;
+        this.location = location;
+    }
 
     /**
      * 清空数据
@@ -66,6 +93,7 @@ export default class Header extends Component<HeaderProps> {
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
         const { tempList = [] } = this.getErrorList(pageJSON.components);
+        const queryString = parse(this.location.search.replace(/\?/g, ''));
         let errorlist: any = [];
         tempList.forEach((item) => {
             if (item.error) {
@@ -97,7 +125,13 @@ export default class Header extends Component<HeaderProps> {
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
-                let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
+                let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components),
+                    id;
+                if (queryString.pageOrTemp === 'page' && pageOrTemp === 'template') {
+                    id = 0;
+                } else {
+                    id = Number(this.props.searchId || 0);
+                }
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
                         {
@@ -113,7 +147,7 @@ export default class Header extends Component<HeaderProps> {
                             paramKey: findParamKey(pageJSON.components),
                         }),
                         [pageOrTemp + 'Name']: pageName,
-                        id: Number(this.props.searchId || 0)
+                        id
                     },
                     pageOrTemp
                 });
@@ -131,7 +165,7 @@ export default class Header extends Component<HeaderProps> {
                     {
                         showTopToolbar && <span className="user">
                             <Button className='mar-l-4' onClick={() => {
-                                goto('');
+                                goto('/');
                             }}>
                                 返回
                             </Button>

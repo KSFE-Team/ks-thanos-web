@@ -78,7 +78,7 @@ export default class BasicLayout extends Component<BasicLayoutProps> {
     }
 
     render() {
-        const { match: { path = '' } = {} } = this.props;
+        const { match: { path = '/' } = {} } = this.props;
         return (
             <Layout className='thanos-layout'>
                 <Sider>
