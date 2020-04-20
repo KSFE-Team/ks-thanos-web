@@ -1,8 +1,11 @@
 import React, { Component } from 'react';
 import history from '../../../utils/history';
-import { connect, actions } from 'kredux';
+import {
+    connect, actions
+} from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
+import html2canvas from 'html2canvas';
 import './index.scss';
 import {
     goto, clearAllData, getComponents
@@ -94,39 +97,41 @@ export default class Header extends Component<HeaderProps, {}> {
         const { pageJSON, pageName } = generatePage;
         const { tempList = [] } = this.getErrorList(pageJSON.components);
         const queryString = parse(this.location.search.replace(/\?/g, ''));
-        let errorlist: any = [];
-        tempList.forEach((item) => {
-            if (item.error) {
-                errorlist.push(item.message);
+        if (pageOrTemp === 'page') {
+            let errorlist: any = [];
+            tempList.forEach((item) => {
+                if (item.error) {
+                    errorlist.push(item.message);
+                }
+            });
+            errorlist = Array.from(new Set(errorlist));
+            if (errorlist.length > 0) {
+                error({
+                    title: '配置错误',
+                    content: `${errorlist.join(',')}组件,配置信息不完整，请按照提示完成组件配置！`
+                });
+                return;
             }
-        });
-        errorlist = Array.from(new Set(errorlist));
-        if (errorlist.length > 0) {
-            error({
-                title: '配置错误',
-                content: `${errorlist.join(',')}组件,配置信息不完整，请按照提示完成组件配置！`
-            });
-            return;
-        }
-        if (!pageName) {
-            error({
-                title: '配置错误',
-                content: `请填写页面模板名称！`
-            });
-            return;
-        }
-        if (!pageJSON.components.length) {
-            error({
-                title: '配置为空',
-                content: `请进行组件配置！`
-            });
-            return;
+            if (!pageName) {
+                error({
+                    title: '配置错误',
+                    content: `请填写页面模板名称！`
+                });
+                return;
+            }
+            if (!pageJSON.components.length) {
+                error({
+                    title: '配置为空',
+                    content: `请进行组件配置！`
+                });
+                return;
+            }
         }
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components),
-                    id;
+                    id: number;
                 if (queryString.pageOrTemp === 'page' && pageOrTemp === 'template') {
                     id = 0;
                 } else {
@@ -140,6 +145,20 @@ export default class Header extends Component<HeaderProps, {}> {
                         }
                     ];
                 }
+                /* 获取截屏 */
+                const container: HTMLElement = document.querySelector('.thanos-generate-page-container') || document.body;
+                const canvas = await html2canvas(container);
+                const ctx: any = canvas.getContext('2d');
+                ctx.save();
+                ctx.translate(canvas.width / 4, canvas.height / 4);
+                ctx.rotate(-(30 * Math.PI / 180));
+                ctx.globalAlpha = 0.05;
+                ctx.font = '100px Arial';
+                ctx.fillStyle = '#000';
+                ctx.textAlign = 'center';
+                ctx.fillText('灭霸预览图', 0, 50);
+                ctx.restore();
+                const screenshotSrc: string = canvas.toDataURL('image/jpeg', 0.5);
                 actions.generatePage.addOrUpdateItem({
                     postDate: {
                         [pageOrTemp + 'Data']: JSON.stringify({
@@ -147,7 +166,8 @@ export default class Header extends Component<HeaderProps, {}> {
                             paramKey: findParamKey(pageJSON.components),
                         }),
                         [pageOrTemp + 'Name']: pageName,
-                        id
+                        id,
+                        img: screenshotSrc
                     },
                     pageOrTemp
                 });

@@ -17,12 +17,12 @@ const OPTIONS = 'options';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
 
-interface CheckBoxConfigProps {
+interface CheckboxConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
 
-export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
+export default class CheckboxConfig extends Component<CheckboxConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
@@ -142,10 +142,10 @@ export default class CheckBoxConfig extends Component<CheckBoxConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const { error } = checkFieldData('CheckBox', formData);
+        const { error } = checkFieldData('Checkbox', formData);
         // 提交检验
         if (error) {
-            message.error(FORM_MESSAGE + ',' + 'CheckBox组件至少需要一项配置');
+            message.error(FORM_MESSAGE + ',' + 'Checkbox组件至少需要一项配置');
             return false;
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);

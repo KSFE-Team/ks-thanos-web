@@ -3,7 +3,7 @@
  */
 export const getInitJson = () => ({
     stateName: '',
-    componentName: 'CheckBox',
+    componentName: 'Checkbox',
     source: 'antd',
     default: false,
     options: [{
@@ -23,9 +23,9 @@ export const getInitJson = () => ({
  * 获取组件Tools配置
  */
 export const getTools = () => ({
-    name: 'CheckBox',
+    name: 'Checkbox',
     icon: 'check-circle',
-    componentName: 'CheckBox'
+    componentName: 'Checkbox'
 });
 
 /**

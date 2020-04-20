@@ -2,19 +2,19 @@ import React, { Component } from 'react';
 import { Input, Form } from 'antd';
 import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
-import TextAreaConfig from './config';
+import TextareaConfig from './config';
 import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 const { TextArea } = Input;
 
-interface KKTextArea {
+interface KTextarea {
     label: string;
     generatePage: {
         pageJSON: any
     }
 }
 
-class KTextArea extends Component<KKTextArea> {
+class KTextarea extends Component<KTextarea> {
     static propTypes = {
         props: PropTypes.object
     }
@@ -38,8 +38,8 @@ class KTextArea extends Component<KKTextArea> {
 }
 
 export {
-    KTextArea as component,
+    KTextarea as component,
     getInitJson,
     getTools,
-    TextAreaConfig as config
+    TextareaConfig as config
 };

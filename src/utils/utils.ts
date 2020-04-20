@@ -77,17 +77,17 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
                 error: checkCommonFn(data, FIELD_ARR),
                 message: 'InputNumber'
             };
-        case 'TextArea':
+        case 'Textarea':
             return {
                 error: checkCommonFn(data, FIELD_ARR),
-                message: 'TextArea'
+                message: 'Textarea'
             };
         case 'Radio':
             return {
                 error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(data.options, RADIO_CHECKBOX_FIELD),
                 message: 'Radio'
             };
-        case 'CheckBox':
+        case 'Checkbox':
             tempArr = data.options.map((item: any) => {
                 return {
                     text: item.text,

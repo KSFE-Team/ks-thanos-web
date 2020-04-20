@@ -1,7 +1,7 @@
-const server = window.location.origin;
+// const server = window.location.origin;
 // const server = 'http://localhost:3012';
+const server = 'http://kaishufe.kaishustory.com';
 const thanosServer = server + '/api/ks-thanos/v1';
-// const server = 'http://kaishufe.kaishustory.com';
 export const API = {
     page: {
         query: thanosServer + '/page/list',
