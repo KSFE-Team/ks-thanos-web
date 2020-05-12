@@ -130,7 +130,7 @@ function checkCommonFn(data, field) {
     let flag = false;
     Object.getOwnPropertyNames(data).forEach(() => {
         field.find((key: any) => {
-            if (!data[key]) {
+            if (!data[key]) { // 生成模板打响指 Form''true
                 flag = true;
                 return true;
             }

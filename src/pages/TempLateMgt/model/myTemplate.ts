@@ -24,11 +24,10 @@ export default {
     effects: {
         async getTemplateList(payload: any, getState: any) {
             const searchForm = getState().myTemplate.searchTemplateForm;
-            const {type} = payload;
             const postData = {
                 page: searchForm.page,
                 limit: searchForm.limit,
-                type: type,
+                type: payload && payload.type,
                 templateName: searchForm.templateName.value
             };
             const response = await request(API.template.query, {

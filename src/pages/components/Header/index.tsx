@@ -60,20 +60,29 @@ class Header extends Component<HeaderProps> {
         };
     }
 
-    handleSubmit = (pageOrTemp) => {
+    handleSubmit = async(pageOrTemp) => {
         const text = this.props.searchId ? '修改' : '新增';
         const pageOrTempText = pageOrTemp === 'page' ? '页面' : '模版';
         const { generatePage } = this.props;
         const { pageJSON, pageName } = generatePage;
+        if (pageOrTemp !== 'page') {
+            await actions.generatePage.setReducers({
+                toTempPageJSON: {
+                    name: pageJSON.name, // 页面名称
+                    components: pageJSON.components // 子组件
+                },
+            });
+        }
+
         const { tempList } = this.getErrorList(pageJSON.components);
         let errorlist: any = [];
-        tempList.forEach((item) => {
+        tempList && tempList.forEach((item) => { // tempList未配置数据就打响指为undefined
             if (item.error) {
                 errorlist.push(item.message);
             }
         });
         errorlist = Array.from(new Set(errorlist));
-        if (errorlist.length > 0) {
+        if (errorlist.length > 0 && pageOrTemp === 'page') { // 模板不需要配置
             error({
                 title: '配置错误',
                 content: `${errorlist.join(',')}组件,配置信息不完整，请按照提示完成组件配置！`
@@ -90,9 +99,9 @@ class Header extends Component<HeaderProps> {
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
-                // console.log([...pageJSON.components], pageJSON.components);
-                // let components=pageJSON.components;
-                let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(pageJSON.components);
+                const {toTempPageJSON} = this.props.generatePage;
+                let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(JSON.parse(JSON.stringify(toTempPageJSON.components)));
+                // console.log(components, 'components');
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
                         {

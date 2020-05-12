@@ -10,6 +10,12 @@ export const STATE = {
         name: '', // 页面名称
         components: [] // 子组件
     },
+    // 为了生成模版所暂存的数据，跟pageJSON是一样的
+    toTempPageJSON: {
+        name: '', // 页面名称
+        components: [] // 子组件
+    },
+
     pageName: '', // 页面名称
     chooseTabName: '',
     selectedComponentId: '', // 被选中组件ID
