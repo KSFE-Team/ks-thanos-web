@@ -20,7 +20,7 @@ interface Props {
     };
 }
 
-class KCheckBox extends React.Component<Props> {
+class KCheckbox extends React.Component<Props> {
 
     render() {
         const { config } = this.props;
@@ -50,7 +50,7 @@ class KCheckBox extends React.Component<Props> {
 }
 
 export {
-    KCheckBox as component,
+    KCheckbox as component,
     getInitJson,
     getTools,
     Config as config

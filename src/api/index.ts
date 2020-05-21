@@ -1,17 +1,19 @@
 // const server = window.location.origin;
+// const server = 'http://localhost:3012';
 const server = 'http://kaishufe.kaishustory.com';
+const thanosServer = server + '/api/ks-thanos/v1';
 export const API = {
     page: {
-        query: server + '/api/ks-thanos/v1/page/list',
-        get: server + '/api/ks-thanos/v1/page/get',
-        addOrUpdate: server + '/api/ks-thanos/v1/page/add', // 保存更新JSON
-        delete: server + '/api/ks-thanos/v1/page/delete', // 删除模版
+        query: thanosServer + '/page/list',
+        get: thanosServer + '/page/get',
+        addOrUpdate: thanosServer + '/page/addOrUpdate', // 保存更新JSON
+        delete: thanosServer + '/page/delete', // 删除模版
     },
     template: {
-        query: server + '/api/ks-thanos/v1/template/list',
-        get: server + '/api/ks-thanos/v1/template/get',
-        addOrUpdate: server + '/api/ks-thanos/v1/template/addOrUpdate', // 保存更新JSON
-        delete: server + '/api/ks-thanos/v1/template/delete', // 删除模版
+        query: thanosServer + '/template/list',
+        get: thanosServer + '/template/get',
+        addOrUpdate: thanosServer + '/template/addOrUpdate', // 保存更新JSON
+        delete: thanosServer + '/template/delete', // 删除模版
     },
     // 云组件
     cloudComponent: {

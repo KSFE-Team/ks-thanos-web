@@ -46,12 +46,11 @@ class PageRender extends Component<PageRenderProps> {
         const { id } = item;
         const { pageJSON } = this.props.generatePage;
         const { components } = pageJSON;
-        const config = {
-            componentSelected: true,
-            configVisible: true
-        };
+        // const config = {
+        //     configVisible: true
+        // };
         this.setJSON({
-            components: changeConfig(id, components, config)
+            components: changeConfig(id, components, true)
         });
         actions.generatePage.selectComponent({
             id

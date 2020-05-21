@@ -3,7 +3,7 @@
  */
 export const getInitJson = () => ({
     stateName: '',
-    componentName: 'TextArea',
+    componentName: 'Textarea',
     source: 'antd',
     default: false,
     props: {
@@ -21,9 +21,9 @@ export const getInitJson = () => ({
  * 获取组件Tools配置
  */
 export const getTools = () => ({
-    name: 'TextArea',
+    name: 'Textarea',
     icon: 'edit',
-    componentName: 'TextArea'
+    componentName: 'Textarea'
 });
 
 /**

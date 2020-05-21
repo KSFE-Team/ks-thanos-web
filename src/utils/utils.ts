@@ -15,15 +15,14 @@ const FIELD_ARR = ['key', 'label'];
 const FORM_FIELD = ['stateName', 'type', 'saveApi', 'updateApi', 'getApi', 'paramKey'];
 // Select
 const SELECT_FIELD = ['label', 'value'];
-// Radio CheckBox
+// Radio Checkbox
 const RADIO_CHECKBOX_FIELD = ['text', 'value'];
 // BizSelectModal
 const BIZ_FIELD = ['key', 'label', 'type'];
 // Table
 const TABLE_FIELD = {
     config: [
-        'api',
-        'method',
+        'dependencies',
         'stateName',
     ],
     dataSource: [
@@ -78,17 +77,17 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
                 error: checkCommonFn(data, FIELD_ARR),
                 message: 'InputNumber'
             };
-        case 'TextArea':
+        case 'Textarea':
             return {
                 error: checkCommonFn(data, FIELD_ARR),
-                message: 'TextArea'
+                message: 'Textarea'
             };
         case 'Radio':
             return {
                 error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(data.options, RADIO_CHECKBOX_FIELD),
                 message: 'Radio'
             };
-        case 'CheckBox':
+        case 'Checkbox':
             tempArr = data.options.map((item: any) => {
                 return {
                     text: item.text,
@@ -97,7 +96,7 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
             });
             return {
                 error: checkCommonFn(data, FIELD_ARR) || checkArrayCommonFn(tempArr, RADIO_CHECKBOX_FIELD),
-                message: 'CheckoBox'
+                message: 'Checkbox'
             };
         case 'BizSelectModal':
             return {
@@ -127,16 +126,17 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
 };
 
 function checkCommonFn(data, field) {
-    let flag = false;
-    Object.getOwnPropertyNames(data).forEach(() => {
-        field.find((key: any) => {
-            if (!data[key]) { // 生成模板打响指 Form''true
-                flag = true;
-                return true;
-            }
-        });
-    });
-    return flag;
+    // let flag = false;
+    return field.some((validateKey: string) => !data[validateKey]);
+    // Object.keys(data).forEach(() => {
+    //     field.find((key: any) => {
+    //         if (!data[key]) {
+    //             flag = true;
+    //             return true;
+    //         }
+    //     });
+    // });
+    // return flag;
 };
 
 function checkArrayCommonFn(data, field) {

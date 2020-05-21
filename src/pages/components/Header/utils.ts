@@ -25,7 +25,6 @@ export const formatComponents = (components: any[]): Array<any> => {
                 formType: type,
                 stateName: stateName
             }));
-
             // Form 内部的组件
             modifyCorrelationFragment(item.components, stateName, type);
 

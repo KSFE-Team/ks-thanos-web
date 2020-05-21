@@ -103,7 +103,7 @@ class MyTemplate extends Component<MyTemplateProps> {
     }
 
     loadList = () => {
-        actions.myTemplate.getTemplateList({pageOrTemp: 'template'});
+        actions.myTemplate.getTemplateList();
     }
 
     resetPage = () => {

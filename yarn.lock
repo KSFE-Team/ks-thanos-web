@@ -2133,6 +2133,11 @@ balanced-match@^1.0.0:
   resolved "http://172.16.1.179:4873/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
 
+base64-arraybuffer@^0.2.0:
+  version "0.2.0"
+  resolved "http://172.16.1.179:4873/base64-arraybuffer/-/base64-arraybuffer-0.2.0.tgz#4b944fac0191aa5907afe2d8c999ccc57ce80f45"
+  integrity sha1-S5RPrAGRqlkHr+LYyZnMxXzoD0U=
+
 base64-js@^1.0.2:
   version "1.3.1"
   resolved "http://172.16.1.179:4873/base64-js/-/base64-js-1.3.1.tgz#58ece8cb75dd07e71ed08c736abc5fac4dbf8df1"
@@ -3080,6 +3085,13 @@ css-has-pseudo@^0.10.0:
   dependencies:
     postcss "^7.0.6"
     postcss-selector-parser "^5.0.0-rc.4"
+
+css-line-break@1.1.1:
+  version "1.1.1"
+  resolved "http://172.16.1.179:4873/css-line-break/-/css-line-break-1.1.1.tgz#d5e9bdd297840099eb0503c7310fd34927a026ef"
+  integrity sha1-1em90peEAJnrBQPHMQ/TSSegJu8=
+  dependencies:
+    base64-arraybuffer "^0.2.0"
 
 css-loader@2.1.1:
   version "2.1.1"
@@ -4885,6 +4897,13 @@ html-webpack-plugin@4.0.0-beta.5:
     tapable "^1.1.0"
     util.promisify "1.0.0"
 
+html2canvas@^1.0.0-rc.5:
+  version "1.0.0-rc.5"
+  resolved "http://172.16.1.179:4873/html2canvas/-/html2canvas-1.0.0-rc.5.tgz#4ee3cac9f6e20a0fa0c2f35a6f99c960ae7ec4c1"
+  integrity sha1-TuPKyfbiCg+gwvNab5nJYK5+xME=
+  dependencies:
+    css-line-break "1.1.1"
+
 htmlparser2@^3.10.1, htmlparser2@^3.3.0:
   version "3.10.1"
   resolved "http://172.16.1.179:4873/htmlparser2/-/htmlparser2-3.10.1.tgz#bd679dc3f59897b6a34bb10749c855bb53a9392f"
@@ -6170,23 +6189,17 @@ kleur@^3.0.3:
   resolved "http://172.16.1.179:4873/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha1-p5yezIbuHOP6YgbRIWxQHxR/wH4=
 
-kredux@^1.0.5:
-  version "1.1.0"
-  resolved "http://172.16.1.179:4873/kredux/-/kredux-1.1.0.tgz#204f1144bddf268c79485500e7c49a53306c89ec"
-  integrity sha512-x2Lpy3LxFKQ5COjoAmudmxRp23+/6D+o1qjGF1NuLX/yY7ZE2k6aL35volFy6FL8xa2uwt5kCPgnvQgthmFd1A==
+kredux@^1.3.1:
+  version "1.3.1"
+  resolved "http://172.16.1.179:4873/kredux/-/kredux-1.3.1.tgz#203c06a4b7b08d3e3a8d7de759be1549ca9a1693"
+  integrity sha512-zvhqT00PWpFpVjY8swgiRq5u1UUrXSioJ8izqxQPN0TcItvulJP1jp2bN7+HAdxHssKMqcYlv0MTGWkY3rUc+g==
   dependencies:
     invariant "^2.2.4"
     is-promise "^2.1.0"
-    ks-utils "^2.4.1"
     react-redux "^7.0.2"
     react-router "^4.3.1"
     redux "^4.0.1"
     redux-thunk "^2.3.0"
-
-ks-utils@^2.4.1:
-  version "2.4.6"
-  resolved "http://172.16.1.179:4873/ks-utils/-/ks-utils-2.4.6.tgz#ea3fafa709f67e7346c62b23156d17716066a1a1"
-  integrity sha512-3eeM6ziZZB3Sf0GceQQQ3pSc+OwggpkESzZN2bgyQfcr8aNfwdFvWjFUIRwC9igyAziq4ZWZxC408pdzQZGmLw==
 
 last-call-webpack-plugin@^3.0.0:
   version "3.0.0"
@@ -6705,9 +6718,9 @@ multicast-dns@^6.0.1:
     thunky "^1.0.2"
 
 mutationobserver-shim@^0.3.2:
-  version "0.3.3"
-  resolved "http://172.16.1.179:4873/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#65869630bc89d7bf8c9cd9cb82188cd955aacd2b"
-  integrity sha1-ZYaWMLyJ17+MnNnLghiM2VWqzSs=
+  version "0.3.5"
+  resolved "http://172.16.1.179:4873/mutationobserver-shim/-/mutationobserver-shim-0.3.5.tgz#6f35ce85867b21aa1e58f78892d0ab4eee942c0e"
+  integrity sha1-bzXOhYZ7IaoeWPeIktCrTu6ULA4=
 
 mute-stream@0.0.7:
   version "0.0.7"
@@ -8312,10 +8325,23 @@ rc-align@^2.4.0, rc-align@^2.4.1:
     prop-types "^15.5.8"
     rc-util "^4.0.4"
 
-rc-animate@2.x, rc-animate@^2.10.1, rc-animate@^2.3.0, rc-animate@^2.6.0, rc-animate@^2.8.2, rc-animate@^2.8.3:
+rc-animate@2.x, rc-animate@^2.10.1:
   version "2.10.2"
   resolved "http://172.16.1.179:4873/rc-animate/-/rc-animate-2.10.2.tgz#217fdc76ff26cbf425a5caf87cc8a36ba4598456"
   integrity sha1-IX/cdv8my/Qlpcr4fMija6RZhFY=
+  dependencies:
+    babel-runtime "6.x"
+    classnames "^2.2.6"
+    css-animation "^1.3.2"
+    prop-types "15.x"
+    raf "^3.4.0"
+    rc-util "^4.15.3"
+    react-lifecycles-compat "^3.0.4"
+
+rc-animate@^2.3.0, rc-animate@^2.6.0, rc-animate@^2.8.2, rc-animate@^2.8.3:
+  version "2.10.3"
+  resolved "http://172.16.1.179:4873/rc-animate/-/rc-animate-2.10.3.tgz#163d5e29281a4ff82d53ee7918eeeac856b756f9"
+  integrity sha1-Fj1eKSgaT/gtU+55GO7qyFa3Vvk=
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.6"
@@ -8340,9 +8366,9 @@ rc-animate@^3.0.0-rc.1:
     react-lifecycles-compat "^3.0.4"
 
 rc-calendar@~9.15.0:
-  version "9.15.9"
-  resolved "http://172.16.1.179:4873/rc-calendar/-/rc-calendar-9.15.9.tgz#7a3457ee10f27b9972a755fe6415ef352f01a97a"
-  integrity sha1-ejRX7hDye5lyp1X+ZBXvNS8BqXo=
+  version "9.15.10"
+  resolved "http://172.16.1.179:4873/rc-calendar/-/rc-calendar-9.15.10.tgz#21cf87baa789e585ab17b62cf77184657a7d036f"
+  integrity sha1-Ic+HuqeJ5YWrF7Ys93GEZXp9A28=
   dependencies:
     babel-runtime "6.x"
     classnames "2.x"
@@ -8533,9 +8559,9 @@ rc-notification@~3.3.1:
     rc-util "^4.0.4"
 
 rc-pagination@~1.20.1:
-  version "1.20.13"
-  resolved "http://172.16.1.179:4873/rc-pagination/-/rc-pagination-1.20.13.tgz#aca9dc020e475f77c5335659f7fe5d7cca2f2592"
-  integrity sha1-rKncAg5HX3fFM1ZZ9/5dfMovJZI=
+  version "1.20.14"
+  resolved "http://172.16.1.179:4873/rc-pagination/-/rc-pagination-1.20.14.tgz#981c125ebedbe7fe6782bd311f8bb9c99eb0cded"
+  integrity sha1-mBwSXr7b5/5ngr0xH4u5yZ6wze0=
   dependencies:
     babel-runtime "6.x"
     classnames "^2.2.6"
@@ -8729,7 +8755,7 @@ rc-upload@~2.6.7:
     prop-types "^15.5.7"
     warning "4.x"
 
-rc-util@^4.0.4, rc-util@^4.1.1, rc-util@^4.13.0, rc-util@^4.15.3, rc-util@^4.15.7, rc-util@^4.3.0, rc-util@^4.4.0, rc-util@^4.5.0, rc-util@^4.5.1, rc-util@^4.6.0:
+rc-util@^4.0.4, rc-util@^4.13.0, rc-util@^4.15.3, rc-util@^4.3.0, rc-util@^4.5.1, rc-util@^4.6.0:
   version "4.19.0"
   resolved "http://172.16.1.179:4873/rc-util/-/rc-util-4.19.0.tgz#f3b5e3a02cc0a667d127784068e1236c095dbcbf"
   integrity sha1-87XjoCzApmfRJ3hAaOEjbAldvL8=
@@ -8737,6 +8763,17 @@ rc-util@^4.0.4, rc-util@^4.1.1, rc-util@^4.13.0, rc-util@^4.15.3, rc-util@^4.15.
     add-dom-event-listener "^1.1.0"
     babel-runtime "6.x"
     prop-types "^15.5.10"
+    react-lifecycles-compat "^3.0.4"
+    shallowequal "^1.1.0"
+
+rc-util@^4.1.1, rc-util@^4.15.7, rc-util@^4.4.0, rc-util@^4.5.0:
+  version "4.20.3"
+  resolved "http://172.16.1.179:4873/rc-util/-/rc-util-4.20.3.tgz#c4d4ee6171cf685dc75572752a764310325888d3"
+  integrity sha1-xNTuYXHPaF3HVXJ1KnZDEDJYiNM=
+  dependencies:
+    add-dom-event-listener "^1.1.0"
+    prop-types "^15.5.10"
+    react-is "^16.12.0"
     react-lifecycles-compat "^3.0.4"
     shallowequal "^1.1.0"
 
@@ -8811,6 +8848,11 @@ react-error-overlay@^6.0.3:
   version "6.0.5"
   resolved "http://172.16.1.179:4873/react-error-overlay/-/react-error-overlay-6.0.5.tgz#55d59c2a3810e8b41922e0b4e5f85dcf239bd533"
   integrity sha1-VdWcKjgQ6LQZIuC05fhdzyOb1TM=
+
+react-is@^16.12.0:
+  version "16.13.1"
+  resolved "http://172.16.1.179:4873/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
 
 react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.12.0"

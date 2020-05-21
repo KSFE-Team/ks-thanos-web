@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, InputNumber, Button, Row, Col, Radio, message } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import PropTypes from 'prop-types';
 import { FormComponentProps } from 'antd/es/form';
 import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
@@ -14,9 +14,9 @@ const DEFAULT_VALUE = 'initialValue';
 const PLACEHOLDER = 'placeholder';
 const MIN_VALUE = 'min';
 const MAX_VALUE = 'max';
-const DISABLED = 'disabled';
-const PRECISION = 'precision';
-const STEP = 'step';
+// const DISABLED = 'disabled';
+// const PRECISION = 'precision';
+// const STEP = 'step';
 const KEY = 'key';
 
 interface InputConfigProps extends FormComponentProps{
@@ -130,7 +130,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     onChange={(e) => { this.handleChangeValue(PLACEHOLDER, e.target.value); }}
                 />
             </FormItem>
-            <FormItem
+            {/* <FormItem
                 label={'默认值'}
                 {...FORMITEM_LAYOUT}
             >
@@ -192,16 +192,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     value={formData[STEP]}
                     onChange={(value) => { this.handleChangeValue(STEP, value); }}
                 />
-                {/* {
-                    getFieldDecorator(STEP, {
-                        initialValue: formData[STEP]
-                    })(
-                        <InputNumber
-                            placeholder='例如:1'
-                        />
-                    )
-                } */}
-            </FormItem>
+            </FormItem> */}
             <FormItem>
                 <Row>
                     <Col>

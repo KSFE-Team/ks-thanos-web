@@ -57,17 +57,16 @@ export function toTreeData(data, {
 };
 
 /**
-     * 修改配置显隐藏
-     */
-export const changeConfig = (id: string, components: any[], config: any) => {
+ * 修改配置显隐藏
+ */
+export const changeConfig = (id: string, components: any[], visible: boolean) => {
     return components.map((item) => {
-        if (item.id === id) {
-            item = {
-                ...item,
-                ...config
-            };
-        } else if (item.components) {
-            item.components = changeConfig(id, item.components, config);
+        item = {
+            ...item,
+            configVisible: id === item.id ? visible : false
+        };
+        if (item.components) {
+            item.components = changeConfig(id, item.components, visible);
         }
         return item;
     });

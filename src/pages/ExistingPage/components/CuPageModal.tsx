@@ -6,6 +6,7 @@ import { goto } from 'Src/utils/commonFunc';
 import { SearchForm } from 'Src/bizComponents';
 import {tempTabs} from 'Src/utils/constants';
 import { STATE } from 'Src/pages/TempLateMgt/model/myTemplate';
+import TextWithImg from './TextWithImg';
 
 interface CuTemplateProps {
     existingPage: {
@@ -128,9 +129,9 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         });
         const { pageOrTempInfo, templateId } = this.state;
         if (templateId === '-1') { // 新增空白页面
-            goto(`generatePage/${templateId}`);
+            goto(`/generatePage/${templateId}`);
         } else {
-            goto(`generatePage/${templateId}?pageOrTemp=${pageOrTempInfo.pageOrTemp}`);
+            goto(`/generatePage/${templateId}?pageOrTemp=${pageOrTempInfo.pageOrTemp}`);
         }
         // templateName
     }
@@ -191,12 +192,33 @@ class CuTempLateModal extends Component<CuTemplateProps> {
                     </Fragment>}
                 />
                 <ul className='content'>
-                    {tab === 0 && <li key={-1} className = { templateId === '-1' ? 'liborder' : '' } onClick={() => this.setState({templateId: '-1'})}>空白模版</li> }
+                    {tab === 0 && <li key={-1} className = { templateId === '-1' ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' } onClick={() => this.setState({templateId: '-1'})}>空白模版</li> }
                     {
                         list.length && list.length > 0 ? list.map((item, ind) => {
-                            return <li key={ind} className = { templateId === item[pageOrTemp + 'Name'] ? 'liborder' : '' } onClick={() => this.setState({templateId: item[pageOrTemp + 'Name']})}>{item[pageOrTemp + 'Name']}</li>;
+                            const { img = '' } = item;
+                            if (img) {
+                                return <TextWithImg
+                                    key={ind}
+                                    text={item[pageOrTemp + 'Name']}
+                                    src={img}
+                                    className={templateId === item[pageOrTemp + 'Name'] ? 'liborder' : ''}
+                                    onClick={() => this.setState({
+                                        templateId: item[pageOrTemp + 'Name']
+                                    })}
+                                />;
+                            }
+                            return (
+                                <li
+                                    key={ind}
+                                    className = { templateId === item[pageOrTemp + 'Name'] ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' }
+                                    onClick={() => this.setState({templateId: item[pageOrTemp + 'Name']})}
+                                >
+                                    {item[pageOrTemp + 'Name']}
+                                </li>
+                            );
                         })
-                            : <li key={-2}>暂无数据</li> }
+                            : <li key={-2}>暂无数据</li>
+                    }
                 </ul>
                 <Pagination
                     defaultCurrent={1}

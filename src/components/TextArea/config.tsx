@@ -19,7 +19,7 @@ interface InputConfigProps{
     onSave(pageJSON: any): void;
 }
 
-export default class TextAreaConfig extends Component<InputConfigProps> {
+export default class TextareaConfig extends Component<InputConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
@@ -48,7 +48,7 @@ export default class TextAreaConfig extends Component<InputConfigProps> {
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const { error } = checkFieldData('TextArea', formData);
+        const { error } = checkFieldData('Textarea', formData);
         // 提交检验
         if (error) {
             message.error(FORM_MESSAGE);

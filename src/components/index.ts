@@ -5,13 +5,12 @@ import * as Select from './Select/index';
 import * as DatePicker from './DatePicker/index';
 import * as InputNumber from './InputNumber/index';
 import * as RangePicker from './RangePicker/index';
-import * as TextArea from './TextArea/index';
+import * as Textarea from './TextArea/index';
 import * as Radio from './Radio/index';
-import * as CheckBox from './CheckBox';
+import * as Checkbox from './CheckBox/index';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
-
 /**
  * 展示类组件
  */
@@ -21,9 +20,9 @@ const DATA_ENTRY = {
     DatePicker,
     InputNumber,
     RangePicker,
-    TextArea,
+    Textarea,
     Radio,
-    CheckBox,
+    Checkbox,
     Fragment
 };
 

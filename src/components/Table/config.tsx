@@ -4,7 +4,10 @@ import { DATA_ENTRY } from 'Src/components';
 import { Form, Input, Table, Button, Row, Col, Select, message, Radio } from 'antd';
 import ClearButton from 'Src/components/ClearButton';
 import { getUniqueID } from 'Src/utils';
-import { TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE, FORM_MESSAGE } from 'Src/utils/constants';
+import {
+    TABLE_TYPE, CHARACTER_REG, CHARACTER_MESSAGE,
+    FORM_MESSAGE
+} from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
 import { initState, getInitJson} from './utils';
 const { Option } = Select;
@@ -60,7 +63,6 @@ export default class TableConfig extends Component<TableConfigProps> {
                 if (!state.api && current.dependencies && current.dependencies.api) {
                     newState.api = current.dependencies.api.value || '';
                 }
-
                 if (current.dependencies.method) {
                     newState.method = current.dependencies.method;
                 }
@@ -126,7 +128,13 @@ export default class TableConfig extends Component<TableConfigProps> {
      * @desc save table data
      */
     saveTableData = () => {
-        const { error } = checkFieldData('Table', { ...this.state, stateName: this.state.current.stateName });
+        const { error } = checkFieldData('Table', {
+            ...this.state,
+            stateName: this.state.current.stateName,
+            ...(this.state.api ? {
+                dependencies: {}
+            } : {})
+        });
         if (error) {
             message.error(FORM_MESSAGE);
             return false;

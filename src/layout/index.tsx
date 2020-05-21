@@ -5,6 +5,7 @@ import menuList, { MenuConfig } from 'Src/menu';
 import { matchRouter } from 'Src/utils';
 import './index.scss';
 import { goto } from 'Src/utils/commonFunc';
+import { PROJECT_NAME } from 'Src/utils/constants';
 const { Sider, Content, Header } = Layout;
 const { SubMenu, Item: MenuItem } = Menu;
 const BreadcrumbItem = Breadcrumb.Item;
@@ -49,14 +50,14 @@ export default class BasicLayout extends Component<BasicLayoutProps> {
             const { name, path, children, icon } = menu;
             if (children && children.length) {
                 return <SubMenu
-                    key={path}
+                    key={`${PROJECT_NAME}${path}`}
                     title={this.getMenuName(name, icon)}
                 >
                     {this.getMenu(children)}
                 </SubMenu>;
             } else {
                 return <MenuItem
-                    key={path}
+                    key={`${PROJECT_NAME}${path}`}
                     onClick={() => {
                         this.handleGoto(path);
                     }}
@@ -78,7 +79,7 @@ export default class BasicLayout extends Component<BasicLayoutProps> {
     }
 
     render() {
-        const { match: { path = '' } = {} } = this.props;
+        const { match: { path = '/' } = {} } = this.props;
         return (
             <Layout className='thanos-layout'>
                 <Sider>
