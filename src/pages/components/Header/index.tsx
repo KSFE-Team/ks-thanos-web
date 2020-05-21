@@ -101,7 +101,6 @@ class Header extends Component<HeaderProps> {
             onOk: async() => {
                 const {toTempPageJSON} = this.props.generatePage;
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(JSON.parse(JSON.stringify(toTempPageJSON.components)));
-                // console.log(components, 'components');
                 if (generatePage.chooseTabName === 'RelationTable') {
                     components = [
                         {

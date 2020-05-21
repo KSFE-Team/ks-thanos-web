@@ -83,6 +83,15 @@ class MyTemplate extends Component<MyTemplateProps> {
         ]
     }
 
+    componentDidMount() {
+        // 初始化redux
+        const initialState = {...STATE};
+        actions.myTemplate.setReducers({
+            ...initialState,
+        });
+        this.loadList();
+    }
+
     handlePageChange = (page) => {
         actions.myTemplate.setReducers({
             searchTemplateForm: {
@@ -99,15 +108,6 @@ class MyTemplate extends Component<MyTemplateProps> {
 
     resetPage = () => {
         this.handlePageChange(1);
-    }
-
-    componentDidMount() {
-        // 初始化redux
-        const initialState = {...STATE};
-        actions.myTemplate.setReducers({
-            ...initialState,
-        });
-        this.loadList();
     }
 
     render() {
