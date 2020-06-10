@@ -1,3 +1,5 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
+
 /**
  * 获取初始化JSON
  */
@@ -8,6 +10,8 @@ export const getInitJson = () => ({
     default: false,
     key: '', // 唯一
     label: '数字框', // 名称
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
     props: {
         // min: '', // 最小值
         // max: '', // 最大值
@@ -28,11 +32,15 @@ export const getTools = () => ({
     componentName: 'InputNumber'
 });
 
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 /**
  * 初始化state
  */
 export const initState = {
     formData: {
+        [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+        [DEFAULTVALUE]: ''
     },
     isTouch: false,
     current: {

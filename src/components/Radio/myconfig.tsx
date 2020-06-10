@@ -104,6 +104,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 value: isNaN(this[`value${index}`].state.value) ? this[`value${index}`].state.value : this[`value${index}`].state.value * 1
             });
         });
+
         pageJSON.components = pageJSON.components.map((component) => {
             if (component.configVisible) {
                 component = {

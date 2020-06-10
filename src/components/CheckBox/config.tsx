@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Table, message } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Table, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
 import Form from 'antd/es/form';
 import { findComponent, saveComponent } from 'Src/utils';
-import { FORMITEM_LAYOUT, ALIAS, FORM_MESSAGE } from 'Src/utils/constants';
+import { FORMITEM_LAYOUT, ALIAS, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
 import { initState } from './utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -16,6 +16,7 @@ const DISABLED = 'disabled';
 const OPTIONS = 'options';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
+const ISREQUIRED = 'isRequired';
 
 interface CheckboxConfigProps {
     pageJSON: any;
@@ -128,6 +129,7 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
                     }],
                     [LABEL]: current.label || '',
                     [KEY]: current.key || '',
+                    [ISREQUIRED]: current[ISREQUIRED],
                 },
                 current
             };
@@ -149,7 +151,6 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
             return false;
         }
         pageJSON.components = saveComponent(current.id, pageJSON.components, formData);
-        // console.log(onSave, 'onSave');
         onSave && onSave(pageJSON);
     }
 
@@ -161,10 +162,9 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
         const value = typeof e === 'boolean' ? e : e.target.value;
         switch (itemKey) {
             case LABEL:
-                formData.label = value;
-                break;
             case KEY:
-                formData.key = value;
+            case ISREQUIRED:
+                formData[itemKey] = value;
                 break;
             case TEXT:
                 formData.options[index][itemKey] = value;
@@ -247,6 +247,18 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
                     placeholder='例如： key'
                     onChange={this.handleChange.bind(this, KEY, 0)}
                 />
+            </Form.Item>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={this.handleChange.bind(this, ISREQUIRED, 0)}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
             </Form.Item>
             <Table rowKey="rowKey" dataSource={formData.options} columns={this.columns} bordered pagination={false} />
             <br />

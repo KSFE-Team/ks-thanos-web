@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Card, message } from 'antd';
+import { Form, Input, Button, Row, Col, Card, message, Radio } from 'antd';
 import ConfigItem from './ConfigItem';
 import DynamicConfigItem from './DynamicConfigItem';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { initState } from './utils';
 import { checkFieldData } from 'Src/utils/utils';
@@ -11,6 +11,7 @@ import ClearButton from 'Src/components/ClearButton';
 const FormItem = Form.Item;
 const KEY = 'key';
 const LABEL = 'label';
+const ISREQUIRED = 'isRequired';
 
 interface ConfigProps {
     form: any;
@@ -66,7 +67,8 @@ class Config extends Component<ConfigProps, ConfigState> {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
                     props: current.props,
-                    options: current.options
+                    options: current.options,
+                    [ISREQUIRED]: current[ISREQUIRED],
                 },
                 current
             };
@@ -87,6 +89,8 @@ class Config extends Component<ConfigProps, ConfigState> {
         pageJSON.components = saveComponent(current.id, pageJSON.components, {
             key: formData.key,
             label: formData.label || '',
+            isRequired: formData.isRequired,
+            defaultValue: formData.defaultValue || '',
             props: {
                 ...fieldProps
             },
@@ -132,6 +136,18 @@ class Config extends Component<ConfigProps, ConfigState> {
                     onChange={(e) => { this.handleChangeValue(e.target.value, LABEL); }}
                 />
             </FormItem>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={(e) => { this.handleChangeValue(e.target.value, ISREQUIRED); }}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <Card title="Select Props 配置">
                 {
                     selectProps.map((item, index) => {

@@ -1,3 +1,5 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
+
 /**
  * 获取初始化JSON
  */
@@ -8,7 +10,9 @@ export const getInitJson = () => ({
     default: false,
     placeholder: '',
     key: '',
-    label: ''
+    label: '',
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
 });
 
 /**
@@ -20,6 +24,8 @@ export const getTools = () => ({
     componentName: 'DatePicker'
 });
 
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 /**
  * 初始化state
  */
@@ -33,5 +39,7 @@ export const initState = {
         id: '',
         props: {}
     },
+    [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+    [DEFAULTVALUE]: '',
     isTouch: false,
 };

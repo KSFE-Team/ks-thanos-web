@@ -26,6 +26,8 @@ export const ALIAS = {
     SHOW_TIME: '是否有选择时间功能',
     TIME_FORMAT: '时间格式',
     TYPE: '类型',
+    ISREQUIRED: '是否必填',
+    DEFAULTVALUE: '默认值'
 };
 
 /**
@@ -53,3 +55,9 @@ export const tempTabs = [
     {name: '共享模版', index: 1},
     {name: '现有页面', index: 2}
 ];
+
+export const ISREQUIRED_TYPE = [
+    {VALUE: true, LABEL: '必填'},
+    {VALUE: false, LABEL: '非必填'},
+]
+;

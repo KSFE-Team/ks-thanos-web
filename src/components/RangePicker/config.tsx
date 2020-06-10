@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, Switch, message } from 'antd';
+import { Form, Input, Button, Row, Col, Switch, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
 import { FormComponentProps } from 'antd/es/form';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import ClearButton from 'Src/components/ClearButton';
 import { initState } from './utils';
@@ -17,6 +17,7 @@ const PLACEHOLDER = 'placeholder';
 const FORMAT = 'format';
 const SHOWTIME = 'showTime';
 const SHOWTIMEFORMAT = 'showTimeFormat';
+const ISREQUIRED = 'isRequired';
 
 interface RangePickerConfigProps extends FormComponentProps {
     pageJSON: any;
@@ -49,7 +50,8 @@ class RangePickerConfig extends Component<RangePickerConfigProps, RangePickerCon
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
-                    props: current.props
+                    props: current.props,
+                    [ISREQUIRED]: current[ISREQUIRED]
                 },
                 current
             };
@@ -73,6 +75,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps, RangePickerCon
         const postFormData = {
             key: formData[KEY],
             label: formData[LABEL] || '',
+            [ISREQUIRED]: formData[ISREQUIRED],
             props: {
                 ...current.props,
                 placeholder: fieldProps[PLACEHOLDER] || '',
@@ -167,7 +170,7 @@ class RangePickerConfig extends Component<RangePickerConfigProps, RangePickerCon
                             this.handleChangeValue({ showTime: true, format: `${DATE_FORMAT} ${TIME_FORMAT}`, type: 'props.showTime'});
                         }
                     }}
-                    defaultChecked={(stateProps[SHOWTIME] || stateProps[SHOWTIME] === false) ? stateProps[SHOWTIME] : true}
+                    defaultChecked={(stateProps[SHOWTIME] || stateProps[SHOWTIME] === false) ? !!stateProps[SHOWTIME] : true}
                 />
             </FormItem>
             {
@@ -182,6 +185,18 @@ class RangePickerConfig extends Component<RangePickerConfigProps, RangePickerCon
                     />
                 </FormItem>
             }
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={(e) => { this.handleChangeValue({ [ISREQUIRED]: e.target.value, type: ISREQUIRED }); }}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <FormItem>
                 <Row>
                     <Col>

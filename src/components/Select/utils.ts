@@ -1,3 +1,5 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
+
 /**
  * 获取初始化JSON
  */
@@ -8,6 +10,8 @@ export const getInitJson = () => ({
     default: false,
     key: '',
     label: '',
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
     props: {
         placeholder: '',
         disabled: false,
@@ -26,6 +30,8 @@ export const getTools = () => ({
     componentName: 'Select'
 });
 
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 /**
  * 初始化state
  */
@@ -34,7 +40,9 @@ export const initState = {
         props: {},
         options: [],
         key: '',
-        lable: ''
+        lable: '',
+        [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+        [DEFAULTVALUE]: ''
     },
     isTouch: false,
     current: {

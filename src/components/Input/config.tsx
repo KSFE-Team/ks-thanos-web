@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -10,6 +10,7 @@ import { initState } from './utils';
 const FormItem = Form.Item;
 const KEY = 'key';
 const LABEL = 'label';
+const ISREQUIRED = 'isRequired';
 
 interface InputConfigProps{
     pageJSON: any;
@@ -31,7 +32,8 @@ export default class InputConfig extends Component<InputConfigProps> {
             return {
                 formData: {
                     [KEY]: current[KEY],
-                    [LABEL]: current[LABEL]
+                    [LABEL]: current[LABEL],
+                    [ISREQUIRED]: current[ISREQUIRED],
                 },
                 current
             };
@@ -96,6 +98,18 @@ export default class InputConfig extends Component<InputConfigProps> {
                     onChange={this.handleChange.bind(this, LABEL)}
                 />
             </FormItem>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={this.handleChange.bind(this, ISREQUIRED)}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <FormItem>
                 <Row>
                     <Col>

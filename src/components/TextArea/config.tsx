@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -13,6 +13,7 @@ const KEY = 'key';
 const Label = 'label';
 const Rows = 'rows';
 const Placeholder = 'placeholder';
+const ISREQUIRED = 'isRequired';
 
 interface InputConfigProps{
     pageJSON: any;
@@ -31,12 +32,14 @@ export default class TextareaConfig extends Component<InputConfigProps> {
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = findComponent(components);
+
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [Rows]: current[Rows],
                     [Label]: current[Label],
-                    [Placeholder]: current[Placeholder]
+                    [Placeholder]: current[Placeholder],
+                    [ISREQUIRED]: current[ISREQUIRED]
                 },
                 current
             };
@@ -58,7 +61,11 @@ export default class TextareaConfig extends Component<InputConfigProps> {
             ...formData,
             props: {
                 ...current.props,
-                ...formData,
+                key: formData[KEY],
+                label: formData[Label],
+                placeholder: formData[Placeholder],
+                rows: formData[Rows]
+
             }
         });
         onSave && onSave(pageJSON);
@@ -121,6 +128,18 @@ export default class TextareaConfig extends Component<InputConfigProps> {
                     onChange={this.handleChange.bind(this, Rows)}
                 />
             </FormItem>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={this.handleChange.bind(this, ISREQUIRED)}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <FormItem>
                 <Row>
                     <Col>

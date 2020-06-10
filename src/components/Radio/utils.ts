@@ -1,3 +1,4 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
 
 /**
  * 获取初始化JSON
@@ -7,10 +8,10 @@ export const getInitJson = () => ({
     componentName: 'Radio',
     source: 'antd',
     default: false,
-    defaultValue: 1,
-    isRequired: true,
     key: 'status',
     label: '状态',
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
     options: [
         {value: 1, disabled: false, rowKey: 1, text: '启用', fragmentName: ''},
         {value: 0, disabled: false, rowKey: 2, text: '禁用', fragmentName: ''}
@@ -37,6 +38,8 @@ const OPTIONS = 'options';
 const SELECT = 'fragmentId';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 // eslint-disable-next-line no-redeclare
 export const initState = {
     formData: {
@@ -49,13 +52,11 @@ export const initState = {
         }],
         [LABEL]: '',
         [KEY]: '',
-        isRequired: true,
-        defaultValue: 1
+        [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+        [DEFAULTVALUE]: ''
     },
     isTouch: false,
     errMessage: '',
-    // isRequired: true,
-    // defaultValue: 1
     current: {
         id: '',
         props: {}

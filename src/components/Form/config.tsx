@@ -233,7 +233,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                     >
                         <Input
                             value={formData[STATE_NAME]}
-                            placeholder='例如： userSearchForm / userInfo'
+                            placeholder='例如： userSearchForm | userInfo'
                             onChange={(e) => {
                                 const value = e.target.value;
                                 this.handleChange(STATE_NAME, value, 'filter');

@@ -1,3 +1,5 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
+
 /**
  * 获取初始化JSON
  */
@@ -9,6 +11,8 @@ export const getInitJson = () => ({
     key: '',
     label: '时间区间',
     parentComponentName: 'DatePicker',
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
     props: {
         placeholder: ['开始时间', '截止时间'],
         format: 'YYYY-MM-DD HH:mm:ss',
@@ -25,6 +29,8 @@ export const getTools = () => ({
     componentName: 'RangePicker'
 });
 
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 /**
  * 初始化state
  */
@@ -32,7 +38,9 @@ export const initState = {
     formData: {
         props: {
             showTime: true
-        }
+        },
+        [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+        [DEFAULTVALUE]: ''
     },
     isTouch: false,
     current: {

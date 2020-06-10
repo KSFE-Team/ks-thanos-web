@@ -1,3 +1,4 @@
+import { ISREQUIRED_TYPE } from 'Src/utils/constants';
 /**
  * 获取初始化JSON
  */
@@ -6,6 +7,8 @@ export const getInitJson = () => ({
     componentName: 'Checkbox',
     source: 'antd',
     default: false,
+    isRequired: ISREQUIRED_TYPE[0].VALUE,
+    defaultValue: '',
     options: [{
         props: {
             disabled: false,
@@ -39,6 +42,9 @@ const DISABLED = 'disabled';
 const OPTIONS = 'options';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
+
 export const initState = {
     formData: {
         [OPTIONS]: [{
@@ -52,6 +58,8 @@ export const initState = {
         }],
         [LABEL]: '',
         [KEY]: '',
+        [ISREQUIRED]: ISREQUIRED_TYPE[0].VALUE,
+        [DEFAULTVALUE]: ''
     },
     isTouch: false,
     errMessage: '',

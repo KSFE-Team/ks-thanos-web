@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Form, Radio, Button, Row, Col, Input, message} from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -14,6 +14,7 @@ const FORMAT = 'format';
 const SHOW_TIME = 'showTime';
 const KEY = 'key';
 const LABEL = 'label';
+const ISREQUIRED = 'isRequired';
 
 interface ConfigProps {
     pageJSON: any;
@@ -36,6 +37,7 @@ export default class Config extends Component<ConfigProps> {
                 [KEY]: current[KEY],
                 [LABEL]: current[LABEL],
                 [PLACEHOLDER]: current[PLACEHOLDER],
+                [ISREQUIRED]: current[ISREQUIRED],
                 current
             };
         } else {
@@ -44,7 +46,7 @@ export default class Config extends Component<ConfigProps> {
     }
 
     handleSave = () => {
-        const { placeholder, showTime, format, key, label, current } = this.state;
+        const { placeholder, showTime, format, key, label, current, isRequired } = this.state;
         const {pageJSON, onSave} = this.props;
         const { error } = checkFieldData('DatePicker', {key, label});
         // 提交检验
@@ -56,6 +58,7 @@ export default class Config extends Component<ConfigProps> {
             [KEY]: key,
             [LABEL]: label,
             [PLACEHOLDER]: placeholder,
+            [ISREQUIRED]: isRequired,
             props: {
                 ...current.props,
                 [PLACEHOLDER]: placeholder,
@@ -75,7 +78,7 @@ export default class Config extends Component<ConfigProps> {
     };
 
     render() {
-        const {placeholder, format, showTime, key, label} = this.state;
+        const {placeholder, format, showTime, key, label, isRequired} = this.state;
         return <div>
             <FormItem
                 label={ALIAS.KEY}
@@ -127,6 +130,18 @@ export default class Config extends Component<ConfigProps> {
                     onChange={this.handleChange.bind(this, FORMAT)}
                 />
             </FormItem>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={isRequired}
+                    onChange={this.handleChange.bind(this, ISREQUIRED)}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <FormItem>
                 <Row>
                     <Col>

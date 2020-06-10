@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
 import { FormComponentProps } from 'antd/es/form';
-import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
+import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -18,6 +18,8 @@ const MAX_VALUE = 'max';
 // const PRECISION = 'precision';
 // const STEP = 'step';
 const KEY = 'key';
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 
 interface InputConfigProps extends FormComponentProps{
     pageJSON: any;
@@ -42,6 +44,7 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     [DEFAULT_VALUE]: current[DEFAULT_VALUE],
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
+                    [ISREQUIRED]: current[ISREQUIRED],
                 },
                 current
             };
@@ -61,6 +64,9 @@ class InputNumberConfig extends Component<InputConfigProps> {
         const key = formData[KEY];
         const label = formData[LABEL];
         const initialValue = formData[DEFAULT_VALUE];
+        const isRequired = formData[ISREQUIRED];
+        const defaultValue = initState.formData[DEFAULTVALUE];
+
         delete formData[KEY];
         delete formData[LABEL];
         delete formData[DEFAULT_VALUE];
@@ -78,11 +84,14 @@ class InputNumberConfig extends Component<InputConfigProps> {
             [KEY]: key,
             [LABEL]: label,
             [DEFAULT_VALUE]: initialValue,
+            [ISREQUIRED]: isRequired,
+            [DEFAULTVALUE]: defaultValue,
             props: {
                 ...current.props,
-                ...formData,
+                placeholder: formData[PLACEHOLDER]
             }
         });
+
         onSave && onSave(pageJSON);
     }
 
@@ -193,6 +202,18 @@ class InputNumberConfig extends Component<InputConfigProps> {
                     onChange={(value) => { this.handleChangeValue(STEP, value); }}
                 />
             </FormItem> */}
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={(e) => { this.handleChangeValue(ISREQUIRED, e.target.value); }}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
             <FormItem>
                 <Row>
                     <Col>

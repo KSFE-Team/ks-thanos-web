@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Input, Button, Row, Col, Icon, Switch, Table, Form, Select, message } from 'antd';
+import { Input, Button, Row, Col, Icon, Switch, Table, Form, Select, message, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORM_MESSAGE } from 'Src/utils/constants';
+import {FORMITEM_LAYOUT, ALIAS, FORM_MESSAGE, ISREQUIRED_TYPE } from 'Src/utils/constants';
 import { findComponent, saveComponent, getFragments } from 'Src/utils';
 import { checkFieldData } from 'Src/utils/utils';
 import ClearButton from 'Src/components/ClearButton';
@@ -16,16 +16,8 @@ const OPTIONS = 'options';
 const SELECT = 'fragmentId';
 const KEY = 'key';
 const ROW_KEY = 'rowKey';
-const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 6 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 12 },
-    }
-};
+const ISREQUIRED = 'isRequired';
+const DEFAULTVALUE = 'defaultValue';
 
 interface RadioConfigProps {
     pageJSON: any;
@@ -112,17 +104,17 @@ export default class RadioConfig extends Component<RadioConfigProps> {
             const fragment = getFragments(current.id, props.pageJSON.components);
             return {
                 formData: {
-                    [OPTIONS]: current.options || [{
+                    [OPTIONS]: current[OPTIONS] || [{
                         [DISABLED]: false,
                         [VALUE]: '',
                         [TEXT]: '',
                         [ROW_KEY]: 0,
                         [SELECT]: ''
                     }],
-                    [LABEL]: current.label || '',
-                    [KEY]: current.key || '',
-                    isRequired: state.formData.isRequired,
-                    defaultValue: current.defaultValue || state.formData.defaultValue
+                    [LABEL]: current[LABEL] || '',
+                    [KEY]: current[KEY] || '',
+                    [ISREQUIRED]: current[ISREQUIRED],
+                    [DEFAULTVALUE]: current[DEFAULTVALUE]
                 },
                 current,
                 selectOption: fragment.map((item) => {
@@ -165,7 +157,11 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         switch (itemKey) {
             case LABEL:
             case KEY:
+            case ISREQUIRED:
                 formData[itemKey] = value;
+                break;
+            case DEFAULTVALUE:
+                formData[itemKey] = formData[ISREQUIRED] ? value : '';
                 break;
             default:
                 formData.options[index][itemKey] = value;
@@ -219,52 +215,55 @@ export default class RadioConfig extends Component<RadioConfigProps> {
         const { formData } = this.state;
         return <div>
             <Form.Item
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
                 label={ALIAS.LABEL}
                 required={true}
             >
                 <Input
-                    value={formData.label}
+                    value={formData[LABEL]}
                     placeholder='例如： label'
                     onChange={this.handleChange.bind(this, LABEL, 0)}
                 />
             </Form.Item>
             <Form.Item
-                {...formItemLayout}
+                {...FORMITEM_LAYOUT}
                 label={ALIAS.KEY}
                 required={true}
             >
                 <Input
-                    value={formData.key}
+                    value={formData[KEY]}
                     placeholder='例如： key'
                     onChange={this.handleChange.bind(this, KEY, 0)}
                 />
             </Form.Item>
+            {/* 是否必填/选 */}
+            <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.ISREQUIRED}
+                required={true}
+            >
+                <Radio.Group defaultValue={formData[ISREQUIRED]}
+                    onChange={this.handleChange.bind(this, ISREQUIRED, 0)}
+                >
+                    { ISREQUIRED_TYPE.map(({VALUE, LABEL}, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>) }
+                </Radio.Group>
+            </Form.Item>
+            {/* 必填/选 默认值 */}
+            {formData.isRequired && <Form.Item
+                {...FORMITEM_LAYOUT}
+                label={ALIAS.DEFAULTVALUE}
+                required={false}
+            >
+                <Input defaultValue={formData[DEFAULTVALUE] || 1}
+                    onChange={this.handleChange.bind(this, DEFAULTVALUE, 0)}
+                />
+            </Form.Item>}
             <Table rowKey="rowKey" dataSource={formData.options} columns={this.columns} bordered pagination={false} />
             <br />
             <Row type="flex" justify='space-between'>
                 <Col>
                     <Button onClick={this.handleAddRadioItem} type='primary' >添加项</Button>
                 </Col>
-                {/* <Col span={6} style={{marginLeft: '10px'}}>
-                    <Radio.Group style={{display: 'flex', alignItems: 'center'}} defaultValue={formData.isRequired} onChange={(e) => {
-                        const formData = Object.assign({}, this.state.formData, { isRequired: e.target.value });
-                        this.setState({
-                            formData
-                        });
-                    }}>
-                        <Radio value={true}>必填</Radio>
-                        <Radio value={false}>非必填</Radio>
-                    </Radio.Group>
-                </Col>
-                {formData.isRequired && <Col span={5} style={{marginLeft: '10px'}}>
-                    <Input placeholder={`默认选中value${formData.defaultValue}`} onChange={(e) => {
-                        const formData = Object.assign({}, this.state.formData, { defaultValue: e.target.value });
-                        this.setState({
-                            formData
-                        });
-                    }}/>
-                </Col>} */}
                 <Col>
                     <Button onClick={this.handleSave} type='primary' >确定</Button>
                 </Col>
