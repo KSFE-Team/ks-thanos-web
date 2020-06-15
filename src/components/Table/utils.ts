@@ -42,5 +42,6 @@ export const initState = {
     tableCount: 0, // table key
     showSelectedRows: false,
     showSelectedRowsType: 'radio',
+    showPagination: true,
     isClear: false,
 };

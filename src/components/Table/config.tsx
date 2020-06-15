@@ -54,6 +54,8 @@ export default class TableConfig extends Component<TableConfigProps> {
                             dataKey: item.dataIndex,
                             key: index,
                             tableName: item.title,
+                            width: item.width,
+                            dataType: item.dataType
                         };
                     });
                     newState.dataSource = dataSource;
@@ -74,6 +76,10 @@ export default class TableConfig extends Component<TableConfigProps> {
                 }
                 if (current.tableType === TABLE_TYPE.PARENT_TABLE) {
                     newState.showSelectedRows = true;
+                }
+
+                if (current.showPagination !== undefined) {
+                    newState.showPagination = current.showPagination;
                 }
             }
         }
@@ -105,6 +111,8 @@ export default class TableConfig extends Component<TableConfigProps> {
             key: ++tableCount,
             dataKey: '',
             tableName: '',
+            width: '',
+            dataType: ''
         };
         this.setState({
             dataSource: [...dataSource, newData],
@@ -140,7 +148,7 @@ export default class TableConfig extends Component<TableConfigProps> {
             return false;
         }
         const pageJSON = this.props.pageJSON;
-        const { current, api, method, dataSource, showSelectedRows, showSelectedRowsType } = this.state;
+        const { current, api, method, dataSource, showSelectedRows, showSelectedRowsType, showPagination } = this.state;
         pageJSON.components = pageJSON.components.map((item) => {
             if (item.configVisible) {
                 item.stateName = current.stateName;
@@ -149,9 +157,12 @@ export default class TableConfig extends Component<TableConfigProps> {
                 if (item.showSelectedRows === true) {
                     item.showSelectedRowsType = showSelectedRowsType;
                 }
+                item.showPagination = showPagination;
                 item.props.columns = dataSource.map((item: any) => ({
                     title: item.tableName,
                     dataIndex: item.dataKey,
+                    width: item.width,
+                    dataType: item.dataType
                 }));
 
                 item.dependencies = {
@@ -252,6 +263,17 @@ export default class TableConfig extends Component<TableConfigProps> {
     }
 
     /**
+     * @desc showshowPagination change event
+     * @param { Object } event
+     */
+    showshowPaginationChange = (event) => {
+        const { value } = event.target;
+        this.setState({
+            showPagination: value,
+        });
+    }
+
+    /**
      * @desc showSelectedRowsType change event
      * @param { Object } event
      */
@@ -301,128 +323,150 @@ export default class TableConfig extends Component<TableConfigProps> {
         });
     }
 
-    render() {
-        const formItemLayout = {
-            labelCol: { span: 8 },
-            wrapperCol: { span: 16 },
-        };
-        const { dataSource, current } = this.state;
-        let columns = [
-            {
-                title: '表头名称',
-                dataIndex: 'tableName',
-                editable: true,
-            },
-            {
-                title: '接口字段',
-                dataIndex: 'dataKey',
-                editable: true,
-            },
-            {
-                title: 'operation',
-                render: (text: string, record: any) => {
-                    return this.state.dataSource.length >= 2 ? (
-                        <div>
-                            <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
-                                Delete
-                            </Button>
-                        </div>
+     columns = [
+         {
+             title: '表头名称',
+             dataIndex: 'tableName',
+             editable: true,
+         },
+         {
+             title: '接口字段',
+             dataIndex: 'dataKey',
+             editable: true,
+         },
+         {
+             title: '列宽(175)',
+             dataIndex: 'width',
+             editable: true, // 数值类型
+             //  render: (text) => {
+             //      console.log(text, 'text');
+             //  }
+         },
+         {
+             title: '类型', // 数值类型
+             // 普通、时间、需匹配文字
+             dataIndex: 'dataType',
+             editable: true,
+         },
+         {
+             title: 'operation',
+             render: (text: string, record: any) => {
+                 return this.state.dataSource.length >= 2 ? (
+                     <div>
+                         <Button title="Sure to delete?" type="danger" onClick={() => this.handleTableRowDelete(record.key)}>
+                            Delete
+                         </Button>
+                     </div>
 
-                    ) : null;
-                },
-            },
-        ];
-        const components = {
-            body: {
-                row: EditableFormRow,
-                cell: EditableCell,
-            },
-        };
+                 ) : null;
+             },
+         },
+     ];
 
-        columns = columns.map((col) => {
-            if (!col.editable) {
-                return col;
-            }
-            return {
-                ...col,
-                onCell: (record) => ({
-                    record,
-                    editable: col.editable,
-                    dataIndex: col.dataIndex,
-                    title: col.title,
-                    handleSave: this.handleTableInputSave,
-                }),
-            };
-        });
+     render() {
+         const formItemLayout = {
+             labelCol: { span: 8 },
+             wrapperCol: { span: 16 },
+         };
+         const { dataSource, current } = this.state;
 
-        return (
-            <React.Fragment>
-                <FormItem {...formItemLayout} label="接口地址" required={true}>
-                    <Input value={this.state.api}
-                        placeholder="例：/user/list"
-                        onChange={this.apiInputChange} />
-                </FormItem>
-                <FormItem {...formItemLayout} label="请求方式" required={true}>
-                    <Select defaultValue={this.state.method} key={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
-                        <Option value="GET">GET</Option>
-                        <Option value="POST">POST</Option>
-                    </Select>
-                </FormItem>
-                <FormItem {...formItemLayout} label={current && current.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'} required={true}>
-                    <Input value={this.state.current.stateName}
-                        placeholder="组件存储数据Key, 使用英文且唯一"
-                        onChange={this.stateNameInputChange} />
-                </FormItem>
-                {
-                    current && current.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
-                        <Input value={this.state.current.listName}
-                            placeholder="表格列表名称"
-                            onChange={this.tableNameInputChange} />
-                    </FormItem> : ''
-                }
+         const components = {
+             body: {
+                 row: EditableFormRow,
+                 cell: EditableCell,
+             },
+         };
 
-                <FormItem {...formItemLayout} label="是否显示selectedRows">
-                    <Radio.Group value={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
-                        <Radio value={false}>不显示</Radio>
-                        <Radio value={true}>显示</Radio>
-                    </Radio.Group>
-                </FormItem>
-                {
-                    this.state.showSelectedRows && <FormItem {...formItemLayout} label="选择类型">
-                        <Select defaultValue={this.state.showSelectedRowsType} style={{ width: 120 }} onChange={this.showSelectedRowsTypeChange}>
-                            <Option value="radio">单选</Option>
-                            <Option value="checkbox">多选</Option>
-                        </Select>
-                    </FormItem>
-                }
-                <Table
-                    components={components}
-                    dataSource={dataSource}
-                    bordered={true}
-                    columns={columns}
-                    pagination={false}
-                />
-                {/* <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
+         const columns = this.columns.map((col) => {
+             if (!col.editable) {
+                 return col;
+             }
+             return {
+                 ...col,
+                 onCell: (record) => ({
+                     record,
+                     editable: col.editable,
+                     dataIndex: col.dataIndex,
+                     title: col.title,
+                     handleSave: this.handleTableInputSave,
+                 }),
+             };
+         });
+
+         return (
+             <React.Fragment>
+                 <FormItem {...formItemLayout} label="接口地址" required={true}>
+                     <Input value={this.state.api}
+                         placeholder="例：/user/list"
+                         onChange={this.apiInputChange} />
+                 </FormItem>
+                 <FormItem {...formItemLayout} label="请求方式" required={true}>
+                     <Select defaultValue={this.state.method} key={this.state.method} style={{ width: 120 }} onChange={this.methodChange}>
+                         <Option value="GET">GET</Option>
+                         <Option value="POST">POST</Option>
+                     </Select>
+                 </FormItem>
+                 <FormItem {...formItemLayout} label={current && current.tableType !== TABLE_TYPE.NORMAL ? '绑定组件的key' : '表格名称'} required={true}>
+                     <Input value={this.state.current.stateName}
+                         placeholder="组件存储数据Key, 使用英文且唯一"
+                         onChange={this.stateNameInputChange} />
+                 </FormItem>
+                 {
+                     current && current.tableType !== TABLE_TYPE.NORMAL ? <FormItem {...formItemLayout} label={'列表名称'}>
+                         <Input value={this.state.current.listName}
+                             placeholder="表格列表名称"
+                             onChange={this.tableNameInputChange} />
+                     </FormItem> : ''
+                 }
+
+                 <FormItem {...formItemLayout} label="是否显示selectedRows">
+                     <Radio.Group value={this.state.showSelectedRows} onChange={this.showSelectedRowsChange}>
+                         <Radio value={false}>不显示</Radio>
+                         <Radio value={true}>显示</Radio>
+                     </Radio.Group>
+                 </FormItem>
+                 <FormItem {...formItemLayout} label="是否需要分页">
+                     <Radio.Group value={this.state.showPagination} onChange={this.showshowPaginationChange}>
+                         <Radio value={false}>不需要</Radio>
+                         <Radio value={true}>需要</Radio>
+                     </Radio.Group>
+                 </FormItem>
+                 {
+                     this.state.showSelectedRows && <FormItem {...formItemLayout} label="选择类型">
+                         <Select defaultValue={this.state.showSelectedRowsType} style={{ width: 120 }} onChange={this.showSelectedRowsTypeChange}>
+                             <Option value="radio">单选</Option>
+                             <Option value="checkbox">多选</Option>
+                         </Select>
+                     </FormItem>
+                 }
+                 <Table
+                     components={components}
+                     dataSource={dataSource}
+                     bordered={true}
+                     columns={columns}
+                     pagination={false}
+                 />
+                 {/* <Row style={{marginTop: '10px'}} type="flex" justify="end" gutter={1}>
                     <Checkbox checked={searchComponentChecked} onChange={this.addSearchComponent}>是否拥有条件搜索</Checkbox>
                 </Row> */}
-                <Row style={{ marginTop: '20px' }} type="flex" justify="end" gutter={1}>
-                    <Col>
-                        <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
+                 <Row style={{ marginTop: '20px' }} type="flex" justify="end" gutter={1}>
+                     <Col>
+                         <Button onClick={this.handleAdd} type="primary" style={{ marginBottom: 16 }}>
                             Add a row
-                        </Button>
-                    </Col>
-                    <Col offset={1}>
-                        <Button type="primary" onClick={this.saveTableData}>
+                         </Button>
+                     </Col>
+                     <Col offset={1}>
+                         <Button type="primary" onClick={this.saveTableData}>
                             确定
-                        </Button>
-                    </Col>
-                    <Col offset={1}>
-                        <ClearButton initState={initState} that={this}/>
-                    </Col>
-                </Row>
-            </React.Fragment>
-        );
-    }
+                         </Button>
+                     </Col>
+                     <Col offset={1}>
+                         <ClearButton initState={initState} that={this}/>
+                     </Col>
+                 </Row>
+             </React.Fragment>
+         );
+     }
 }
 
 interface EditableCellProps {
