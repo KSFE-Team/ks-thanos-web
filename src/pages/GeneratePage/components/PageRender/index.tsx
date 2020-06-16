@@ -94,6 +94,9 @@ class PageRender extends Component<PageRenderProps> {
             }
         });
     };
+    /**
+     * 拖拽组件顺序  dataSource 替换 parentNode components
+     */
 
     getDndComponents=(components, dataSource, id) => components.map((item) => {
         if (item.id === id) {
@@ -152,7 +155,7 @@ class PageRender extends Component<PageRenderProps> {
                         // 在树上找到parentNode 用 dataSource 替换 parentNode components
                         if (parentComponent) { // formItem
                             const newPageJSON = this.getDndComponents(pageJSON.components, dataSource, parentComponent.id);
-                            this.setRedux({
+                            this.setJSON({
                                 components: newPageJSON
                             });
                         } else { // 一级
