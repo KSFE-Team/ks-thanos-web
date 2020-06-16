@@ -24,6 +24,7 @@ class KForm extends Component<KFormProps> {
             return <PageRender
                 dataSource={config.components}
                 generatePage={this.props.generatePage}
+                parentComponent={config}
             />;
         } else {
             return null;

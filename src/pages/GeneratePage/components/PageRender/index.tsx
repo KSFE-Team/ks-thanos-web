@@ -13,7 +13,11 @@ interface PageRenderProps{
     },
     dataSource?: any[]
     selectedComponentId: string
-    chooseTabName: string
+    chooseTabName: string,
+    parentComponent?: {
+        components:any,
+        id:string
+    }
 }
 
 class PageRender extends Component<PageRenderProps> {
@@ -91,9 +95,20 @@ class PageRender extends Component<PageRenderProps> {
         });
     };
 
+    getDndComponents=(components, dataSource, id) => components.map((item) => {
+        if (item.id === id) {
+            item.components = dataSource;
+        } else {
+            if (item.components) { // 区域块
+                item.components = this.getDndComponents(item.components, dataSource, id);
+            }
+        }
+        return item;
+    });
+
     render() {
         const { pageJSON } = this.props.generatePage;
-        const {chooseTabName} = this.props;
+        const { chooseTabName, parentComponent } = this.props;
         const { components } = pageJSON;
         const dataSource = this.props.dataSource || components;
         return (
@@ -134,9 +149,17 @@ class PageRender extends Component<PageRenderProps> {
                     dataSource={dataSource}
                     onDragStart={() => {}}
                     onDragEnd={(dataSource) => {
-                        this.setJSON({
-                            components: dataSource
-                        });
+                        // 在树上找到parentNode 用 dataSource 替换 parentNode components
+                        if (parentComponent) { // formItem
+                            const newPageJSON = this.getDndComponents(pageJSON.components, dataSource, parentComponent.id);
+                            this.setRedux({
+                                components: newPageJSON
+                            });
+                        } else { // 一级
+                            this.setJSON({
+                                components: dataSource
+                            });
+                        }
                     }}
                 />
             </div>

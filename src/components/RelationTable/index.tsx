@@ -19,6 +19,7 @@ class KRelationTable extends React.Component<KRelationTableProps> {
             return <PageRender
                 dataSource={config.components}
                 generatePage={this.props.generatePage}
+                parentComponent={config}
             />;
         } else {
             return null;
