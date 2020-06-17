@@ -47,6 +47,10 @@ class PageRender extends Component<PageRenderProps> {
      */
     handleClick = (item: any, e: any) => {
         e.stopPropagation();
+        // 拖拽效果
+        if (e.target.dataset && e.target.dataset.reactBeautifulDndDroppable) {
+            return;
+        }
         const { id } = item;
         const { pageJSON } = this.props.generatePage;
         const { components } = pageJSON;
