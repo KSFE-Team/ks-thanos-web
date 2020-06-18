@@ -10,6 +10,7 @@ import {
 } from 'Src/utils/constants';
 import { checkFieldData } from 'Src/utils/utils';
 import { initState, getInitJson} from './utils';
+import Sortable from 'sortablejs';
 const { Option } = Select;
 const FormItem = Form.Item;
 const EditableContext = React.createContext(null);
@@ -29,6 +30,11 @@ interface TableConfigProps {
 export default class TableConfig extends Component<TableConfigProps> {
 
     state = initState
+
+    // 在dom渲染后执行初始化
+    componentDidMount() {
+        this.draftSort();
+    }
 
     static getDerivedStateFromProps(props, state) {
         const newState: any = {};
@@ -164,7 +170,6 @@ export default class TableConfig extends Component<TableConfigProps> {
                     width: item.width,
                     dataType: item.dataType
                 }));
-
                 item.dependencies = {
                     type: 'fetch', // 数据来源类型 fetch 接口， dict 本地字典
                     responseType: 'list', // 接口返回类型， // list 列表， object 对象
@@ -363,6 +368,23 @@ export default class TableConfig extends Component<TableConfigProps> {
          },
      ];
 
+      swapArray=(arr, index1, index2) => {
+          arr[index1] = arr.splice(index2, 1, arr[index1])[0];
+          return arr;
+      }
+
+     // 拖拽初始化及逻辑
+     draftSort = () => {
+         const el = document.querySelectorAll('.sortTable .ant-table-tbody');
+         Sortable.create(el[el.length - 1], {// 配置里面的Table
+             animation: 100, // 动画参数
+             onEnd: (evt) => { // 记录拖拽之后的顺序
+                 const newData = this.swapArray(this.state.dataSource, evt.newIndex, evt.oldIndex);
+                 this.setState({ dataSource: newData });
+             }
+         });
+     }
+
      render() {
          const formItemLayout = {
              labelCol: { span: 8 },
@@ -440,6 +462,7 @@ export default class TableConfig extends Component<TableConfigProps> {
                      </FormItem>
                  }
                  <Table
+                     className='sortTable'
                      components={components}
                      dataSource={dataSource}
                      bordered={true}
@@ -481,6 +504,7 @@ interface EditableCellProps {
 class EditableCell extends React.Component<EditableCellProps> {
     state = {
         editing: false,
+        epartmeneId: '1'
     };
 
     input: any;
