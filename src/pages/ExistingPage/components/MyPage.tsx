@@ -55,16 +55,20 @@ class ExistingPage extends Component<ExistingPageProps> {
                             goto(`/generatePage/${record.pageName}?pageOrTemp=page&id=${record.id}`);
                         }}>修改</Button>
                         {
-                            record.type && +record.type === 1 ? null : <Button className='mar-l-4' type="danger" onClick={() => {
-                                Modal.confirm({
-                                    title: `确认删除${record.pageName}？`,
-                                    onOk: () => {
-                                        actions.existingPage.deletepageItem({
-                                            pageName: record.pageName
-                                        });
-                                    }
-                                });
-                            }}>删除</Button>
+                            record.type && +record.type === 1 ? null : <Button
+                                className='mar-l-4'
+                                type="danger"
+                                onClick={() => {
+                                    Modal.confirm({
+                                        title: `确认删除${record.pageName}？`,
+                                        onOk: () => {
+                                            actions.existingPage.deletepageItem({
+                                                pageName: record.pageName
+                                            });
+                                        }
+                                    });
+                                }}
+                            >删除</Button>
                         }
 
                     </span>

@@ -1,12 +1,16 @@
 import React, { Component, Fragment } from 'react';
 import { connect, actions } from 'kredux';
-import { Button, Modal, Form, Input, Pagination, message} from 'antd';
+import {
+    Button, Modal, Form,
+    Input, Pagination, message,
+    Spin
+} from 'antd';
 import './style.scss';
 import { goto } from 'Src/utils/commonFunc';
 import { SearchForm } from 'Src/bizComponents';
 import {tempTabs} from 'Src/utils/constants';
 import { STATE } from 'Src/pages/TempLateMgt/model/myTemplate';
-import TextWithImg from './TextWithImg';
+import ScreenShot from './ScreenShot';
 
 interface CuTemplateProps {
     existingPage: {
@@ -38,7 +42,8 @@ interface CuTemplateProps {
         }
     },
     form: any,
-    listLoading: boolean
+    listLoading: boolean,
+    getPageListLoading: boolean
 }
 class CuTempLateModal extends Component<CuTemplateProps> {
 
@@ -54,7 +59,7 @@ class CuTempLateModal extends Component<CuTemplateProps> {
 
     componentDidMount() {
         // 初始化redux
-        this.changeLimit(9);
+        this.changeLimit(10);
         this.loadList();
     }
 
@@ -106,7 +111,7 @@ class CuTempLateModal extends Component<CuTemplateProps> {
         if (idx === 0) { // 库模版
             pageOrTempInfo.pageOrTemp = 'template';
             pageOrTempInfo.type = '2';
-            this.changeLimit(9);
+            this.changeLimit(10);
         } else if (idx === 1) { // 共享模版
             pageOrTempInfo.pageOrTemp = 'template';
             pageOrTempInfo.type = '1';
@@ -139,7 +144,7 @@ class CuTempLateModal extends Component<CuTemplateProps> {
     render() {
         const {tempTabs, tab, templateId, pageOrTempInfo} = this.state;
         const {pageOrTemp} = pageOrTempInfo;
-        const { listLoading } = this.props;
+        const { listLoading, getPageListLoading } = this.props;
         const { pageList = [], searchPageForm, cuPageModalVisible } = this.props.existingPage;
         const { templateList = [], searchTemplateForm } = this.props.myTemplate;
         const list = pageOrTemp === 'page' ? pageList : templateList;
@@ -183,7 +188,8 @@ class CuTempLateModal extends Component<CuTemplateProps> {
                                     <Button
                                         key={item.index}
                                         type="primary" className ={ tab === idx ? 'active mar-l-4' : 'mar-l-4' }
-                                        onClick={() => { this.changeTabe(idx); }}>
+                                        onClick={() => { this.changeTabe(idx); }}
+                                    >
                                         {item.name}
                                     </Button>
                                 );
@@ -191,42 +197,44 @@ class CuTempLateModal extends Component<CuTemplateProps> {
                         }
                     </Fragment>}
                 />
-                <ul className='content'>
-                    {tab === 0 && <li key={-1} className = { templateId === '-1' ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' } onClick={() => this.setState({templateId: '-1'})}>空白模版</li> }
-                    {
-                        list.length && list.length > 0 ? list.map((item, ind) => {
-                            const { img = '' } = item;
-                            if (img) {
-                                return <TextWithImg
-                                    key={ind}
-                                    text={item[pageOrTemp + 'Name']}
-                                    src={img}
-                                    className={templateId === item[pageOrTemp + 'Name'] ? 'liborder' : ''}
-                                    onClick={() => this.setState({
-                                        templateId: item[pageOrTemp + 'Name']
-                                    })}
-                                />;
-                            }
-                            return (
-                                <li
-                                    key={ind}
-                                    className = { templateId === item[pageOrTemp + 'Name'] ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' }
-                                    onClick={() => this.setState({templateId: item[pageOrTemp + 'Name']})}
-                                >
-                                    {item[pageOrTemp + 'Name']}
-                                </li>
-                            );
-                        })
-                            : <li key={-2}>暂无数据</li>
-                    }
-                </ul>
-                <Pagination
-                    defaultCurrent={1}
-                    total={searchForm.total}
-                    current= {searchForm.page}
-                    pageSize={searchForm.limit}
-                    onChange={this.handlePageChange}
-                />
+                <Spin spinning={!!listLoading || !!getPageListLoading}>
+                    <ul className='content'>
+                        {tab === 0 && <li key={-1} className = { templateId === '-1' ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' } onClick={() => this.setState({templateId: '-1'})}>空白模版</li> }
+                        {
+                            list.length && list.length > 0 ? list.map((item, ind) => {
+                                const { img = '' } = item;
+                                if (img) {
+                                    return <ScreenShot
+                                        key={ind}
+                                        text={item[pageOrTemp + 'Name']}
+                                        src={img}
+                                        className={templateId === item[pageOrTemp + 'Name'] ? 'liborder' : ''}
+                                        onClick={() => this.setState({
+                                            templateId: item[pageOrTemp + 'Name']
+                                        })}
+                                    />;
+                                }
+                                return (
+                                    <li
+                                        key={ind}
+                                        className = { templateId === item[pageOrTemp + 'Name'] ? 'liborder temp-item-container temp-item-text' : 'temp-item-container temp-item-text' }
+                                        onClick={() => this.setState({templateId: item[pageOrTemp + 'Name']})}
+                                    >
+                                        {item[pageOrTemp + 'Name']}
+                                    </li>
+                                );
+                            })
+                                : <li key={-2}>暂无数据</li>
+                        }
+                    </ul>
+                    <Pagination
+                        defaultCurrent={1}
+                        total={searchForm.total}
+                        current= {searchForm.page}
+                        pageSize={searchForm.limit}
+                        onChange={this.handlePageChange}
+                    />
+                </Spin>
             </Modal>
         );
     }
@@ -239,7 +247,8 @@ export default connect(({
 }) => ({
     myTemplate,
     existingPage,
-    listLoading: loading.effects['myTemplate/getTemplateList']
+    listLoading: loading.effects['myTemplate/getTemplateList'],
+    getPageListLoading: loading.effects['existingPage/getPageList']
 }))(Form.create({
     mapPropsToFields(props: CuTemplateProps) {
         return {

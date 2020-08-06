@@ -9,7 +9,7 @@ interface TextWithImgProps {
     className: string;
 }
 
-export default class TextWithImg extends Component<TextWithImgProps> {
+export default class ScreenShot extends Component<TextWithImgProps> {
 
     render() {
         const { text, src, className = '' } = this.props;

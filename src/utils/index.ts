@@ -1,3 +1,4 @@
+import html2canvas from 'html2canvas';
 export { default as request } from './request';
 
 // 生成随机码
@@ -236,4 +237,24 @@ export const modifyCorrelationFragment = (components: any[] = [], stateName: str
             // });
         }
     });
+};
+
+/* 灭霸水印 */
+const WATERMARK = '灭霸预览图';
+/* 截图+水印 */
+export const getScreenShotByCanvas = async() => {
+    /* 获取截屏 */
+    const container: HTMLElement = document.querySelector('.thanos-generate-page-container') || document.body;
+    const canvas = await html2canvas(container);
+    const ctx: any = canvas.getContext('2d');
+    ctx.save();
+    ctx.translate(canvas.width / 4, canvas.height / 4);
+    ctx.rotate(-(30 * Math.PI / 180));
+    ctx.globalAlpha = 0.05;
+    ctx.font = '100px Arial';
+    ctx.fillStyle = '#000';
+    ctx.textAlign = 'center';
+    ctx.fillText(WATERMARK, 0, 50);
+    ctx.restore();
+    return canvas.toDataURL('image/jpeg', 0.5);
 };

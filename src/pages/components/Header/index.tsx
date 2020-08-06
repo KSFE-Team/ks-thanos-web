@@ -5,13 +5,13 @@ import {
 } from 'kredux';
 import { Button, Modal } from 'antd';
 import { formatComponents, findParamKey } from './utils';
-import html2canvas from 'html2canvas';
 import './index.scss';
 import {
     goto, clearAllData, getComponents
 } from 'Src/utils/commonFunc';
 import { parse } from 'qs';
 import { checkFieldData } from 'Src/utils/utils';
+import { getScreenShotByCanvas } from 'Src/utils';
 
 const confirm = Modal.confirm;
 const error = Modal.error;
@@ -161,19 +161,7 @@ export default class Header extends Component<HeaderProps, {}> {
                     ];
                 }
                 /* 获取截屏 */
-                const container: HTMLElement = document.querySelector('.thanos-generate-page-container') || document.body;
-                const canvas = await html2canvas(container);
-                const ctx: any = canvas.getContext('2d');
-                ctx.save();
-                ctx.translate(canvas.width / 4, canvas.height / 4);
-                ctx.rotate(-(30 * Math.PI / 180));
-                ctx.globalAlpha = 0.05;
-                ctx.font = '100px Arial';
-                ctx.fillStyle = '#000';
-                ctx.textAlign = 'center';
-                ctx.fillText('灭霸预览图', 0, 50);
-                ctx.restore();
-                const screenshotSrc: string = canvas.toDataURL('image/jpeg', 0.5);
+                const screenshotSrc: string = await getScreenShotByCanvas();
                 actions.generatePage.addOrUpdateItem({
                     postDate: {
                         [pageOrTemp + 'Data']: JSON.stringify({

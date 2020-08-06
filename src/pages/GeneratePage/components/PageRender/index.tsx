@@ -26,8 +26,14 @@ class PageRender extends Component<PageRenderProps> {
      * 渲染组件
      */
     renderComponent = (component) => {
-        const ComponentName = ALL_TOOLS[component.componentName].component;
-        if (!ComponentName) {
+        let componentName = component.componentName;
+        if (componentName === 'CheckBox') {
+            componentName = 'Checkbox';
+        } else if (componentName === 'TextArea') {
+            componentName = 'Textarea';
+        }
+        const ComponentInstance = ALL_TOOLS[componentName].component;
+        if (!ComponentInstance) {
             console.error('thanos：no present component');
             return null;
         }
@@ -39,7 +45,7 @@ class PageRender extends Component<PageRenderProps> {
             config: otherProps,
             generatePage: this.props.generatePage
         };
-        return <ComponentName {...componentProps} />;
+        return <ComponentInstance {...componentProps} />;
     };
 
     /**
