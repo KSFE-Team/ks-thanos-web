@@ -254,7 +254,7 @@ export default class RadioConfig extends Component<RadioConfigProps> {
                 label={ALIAS.DEFAULTVALUE}
                 required={false}
             >
-                <Input defaultValue={formData[DEFAULTVALUE] || 1}
+                <Input defaultValue={formData[DEFAULTVALUE] || '1'}
                     onChange={this.handleChange.bind(this, DEFAULTVALUE, 0)}
                 />
             </Form.Item>}
