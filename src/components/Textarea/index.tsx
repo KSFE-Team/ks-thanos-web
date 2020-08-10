@@ -1,24 +1,19 @@
 import React, { Component } from 'react';
 import { Input, Form } from 'antd';
-import PropTypes from 'prop-types';
 import { getInitJson, getTools } from './utils';
 import TextareaConfig from './config';
 import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 const { TextArea } = Input;
 
-interface KTextarea {
+interface KTextareaProps {
     label: string;
     generatePage: {
         pageJSON: any
     }
 }
 
-class KTextarea extends Component<KTextarea> {
-    static propTypes = {
-        props: PropTypes.object
-    }
-
+class KTextarea extends Component<KTextareaProps> {
     static defaultProps = {
         label: '备注信息'
     }
