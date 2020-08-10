@@ -75,6 +75,9 @@ const ALL_TOOLS = {
     ...CLOUD_COMPONENTS
 };
 
+console.log(`ALL_TOOLS`, ALL_TOOLS);
+console.log(`Textarea`, ALL_TOOLS.Textarea.component);
+
 export {
     DATA_DISPLAY,
     RELATION_TABLE,
