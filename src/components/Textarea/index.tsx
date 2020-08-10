@@ -7,14 +7,14 @@ import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 
 const { TextArea } = Input;
 
-interface KTextarea {
+interface KTextareaProps {
     label: string;
     generatePage: {
         pageJSON: any
     }
 }
 
-class KTextarea extends Component<KTextarea> {
+class KTextarea extends Component<KTextareaProps> {
     static propTypes = {
         props: PropTypes.object
     }

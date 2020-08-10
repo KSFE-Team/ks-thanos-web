@@ -5,7 +5,7 @@ import * as Select from './Select/index';
 import * as DatePicker from './DatePicker/index';
 import * as InputNumber from './InputNumber/index';
 import * as RangePicker from './RangePicker/index';
-import * as Textarea from './Textarea/index';
+import * as Textarea from './Textarea';
 import * as Radio from './Radio/index';
 import * as Checkbox from './Checkbox/index';
 import * as Form from './Form';
