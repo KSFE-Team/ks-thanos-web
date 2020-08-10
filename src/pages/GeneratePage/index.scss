@@ -2,7 +2,7 @@
     
     .page-wrapper {
         display: flex;
-        height: calc(100vh - 56px);
+        min-height: calc(100vh - 56px);
 
         .left-toolbar {
             width: 50px;
@@ -60,7 +60,7 @@
                         background-color: #fafafa;
                         display: flex;
                         flex-direction: column;
-                        height: calc(100vh - 56px);
+                        min-height: calc(100vh - 56px);
                         border-right: 1px solid #ccd5db;
                 
                         .thanos-page-operation-bar-tools {

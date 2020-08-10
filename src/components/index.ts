@@ -72,8 +72,6 @@ const ALL_TOOLS = {
     ...DATA_ENTRY,
     ...OTHER_COMPONENTS,
     ...RELATION_TABLE,
-    ...Form,
-    ...Table,
     ...CLOUD_COMPONENTS
 };
 
