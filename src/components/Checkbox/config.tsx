@@ -77,8 +77,8 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
             key: 'check',
             render: (item, record, index) =>
                 <Switch
-                    defaultChecked={record[CHECK]}
-                    key={record[CHECK]}
+                    checked={record.props[CHECK]}
+                    key={record.props[CHECK]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, CHECK, index)}
@@ -90,8 +90,8 @@ export default class CheckboxConfig extends Component<CheckboxConfigProps> {
             key: 'disabled',
             render: (item, record, index) =>
                 <Switch
-                    defaultChecked={record[DISABLED]}
-                    key={record[DISABLED]}
+                    checked={record.props[DISABLED]}
+                    key={record.props[DISABLED]}
                     checkedChildren="是"
                     unCheckedChildren="否"
                     onChange={this.handleChange.bind(this, DISABLED, index)}

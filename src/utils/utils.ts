@@ -75,7 +75,7 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
         case 'RangePicker':
             return {
                 error: checkCommonFn(data, FIELD_ARR),
-                message: 'InputNumber'
+                message: 'RangePicker'
             };
         case 'Textarea':
             return {
