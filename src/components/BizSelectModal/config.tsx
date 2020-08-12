@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col, message, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
@@ -12,7 +12,7 @@ const KEY = 'key';
 const LABEL = 'label';
 const TYPE = 'type';
 
-interface BizSelectModalConfigProps{
+interface BizSelectModalConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
@@ -21,8 +21,6 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
     static propTypes = {
         onSave: PropTypes.func
     };
-
-    state=initState
 
     static getDerivedStateFromProps(props, state) {
         if (!state.isTouch) {
@@ -42,6 +40,16 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
             return state;
         }
     }
+
+    state = initState
+
+    defaultOptions = [
+        'activity', 'adPicture', 'adPosition', 'album', 'appleProduct', 'attribute', 'camp', 'campCourse',
+        'campLabel', 'campStage', 'contentPack', 'coupon', 'discountSuit', 'entityTuan', 'file', 'giftPackage',
+        'knowledge', 'live', 'mallProduct', 'newLabel', 'newUserTask', 'outAttribute', 'outAttributeValue', 'panguProduct',
+        'previewStory', 'product', 'promotion', 'question', 'special', 'story', 'storyArticle', 'subChannel', 'tag',
+        'task', 'testUser', 'userGroup', 'usr', 'vipCard', 'virtualMedal', 'warehouse'
+    ]
 
     handleSave = () => {
         const { formData, current } = this.state;
@@ -63,9 +71,8 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         onSave && onSave(pageJSON);
     }
 
-    handleChange = (key: string, e: any) => {
+    handleChange = (key: string, value: string) => {
         const { formData } = this.state;
-        const value = e.target.value;
         this.setState({
             formData: {
                 ...formData,
@@ -75,8 +82,20 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         });
     };
 
+    handleSearch = (value: string) => {
+        if (this.defaultOptions.find((item) => item.toLowerCase() === value.toLowerCase())) {
+            this.setState({
+                inputType: ''
+            });
+        } else {
+            this.setState({
+                inputType: value
+            });
+        }
+    }
+
     render() {
-        const { formData } = this.state;
+        const { formData, inputType } = this.state;
         return <div>
             <FormItem
                 label={ALIAS.LABEL}
@@ -86,7 +105,9 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                 <Input
                     value={formData[LABEL]}
                     placeholder='例如： 姓名'
-                    onChange={this.handleChange.bind(this, LABEL)}
+                    onChange={(event) => {
+                        this.handleChange(LABEL, event.target.value);
+                    }}
                 />
             </FormItem>
             <FormItem
@@ -97,7 +118,9 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                 <Input
                     value={formData[KEY]}
                     placeholder='例如： name'
-                    onChange={this.handleChange.bind(this, KEY)}
+                    onChange={(event) => {
+                        this.handleChange(KEY, event.target.value);
+                    }}
                 />
             </FormItem>
             <FormItem
@@ -105,11 +128,27 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                 {...FORMITEM_LAYOUT}
                 required={true}
             >
-                <Input
+                <Select
+                    style={{
+                        width: '100%'
+                    }}
+                    showSearch
                     value={formData[TYPE]}
-                    placeholder='例如： file'
-                    onChange={this.handleChange.bind(this, TYPE)}
-                />
+                    onSearch={this.handleSearch.bind(this)}
+                    onChange={(value: string) => {
+                        this.handleChange(TYPE, value);
+                    }}
+                    filterOption={(input, option) =>
+                        String(option.props.children).toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    }
+                >
+                    {
+                        inputType ? <Select.Option value={inputType}>{inputType}</Select.Option> : null
+                    }
+                    {
+                        this.defaultOptions.map((option, index) => <Select.Option key={index} value={option}>{option}</Select.Option>)
+                    }
+                </Select>
             </FormItem>
             <FormItem>
                 <Row>
@@ -119,7 +158,7 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                             type='primary'
                         >确定</Button>
                     </Col>
-                    <ClearButton initState={initState} that={this}/>
+                    <ClearButton initState={initState} that={this} />
                 </Row>
             </FormItem>
         </div>;

@@ -35,5 +35,6 @@ export const initState = {
     current: {
         id: '',
         props: {}
-    }
+    },
+    inputType: ''
 };
