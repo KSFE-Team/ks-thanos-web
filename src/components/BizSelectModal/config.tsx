@@ -3,7 +3,7 @@ import { Form, Input, Button, Row, Col, message, Select } from 'antd';
 import PropTypes from 'prop-types';
 import { ALIAS, FORMITEM_LAYOUT, FORM_MESSAGE } from 'Src/utils/constants';
 import { findComponent, saveComponent } from 'Src/utils';
-import { initState } from './utils';
+import { initState, DEFAULT_OPTIONS } from './utils';
 import ClearButton from 'Src/components/ClearButton';
 import { checkFieldData } from 'Src/utils/utils';
 
@@ -43,14 +43,6 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
 
     state = initState
 
-    defaultOptions = [
-        'activity', 'adPicture', 'adPosition', 'album', 'appleProduct', 'attribute', 'camp', 'campCourse',
-        'campLabel', 'campStage', 'contentPack', 'coupon', 'discountSuit', 'entityTuan', 'file', 'giftPackage',
-        'knowledge', 'live', 'mallProduct', 'newLabel', 'newUserTask', 'outAttribute', 'outAttributeValue', 'panguProduct',
-        'previewStory', 'product', 'promotion', 'question', 'special', 'story', 'storyArticle', 'subChannel', 'tag',
-        'task', 'testUser', 'userGroup', 'usr', 'vipCard', 'virtualMedal', 'warehouse'
-    ]
-
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
@@ -82,14 +74,16 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
         });
     };
 
-    handleSearch = (value: string) => {
-        if (this.defaultOptions.find((item) => item.toLowerCase() === value.toLowerCase())) {
+    handleSearch = (searchValue: string) => {
+        if (DEFAULT_OPTIONS.find(({
+            value
+        }) => value.toLowerCase() === searchValue.toLowerCase())) {
             this.setState({
                 inputType: ''
             });
         } else {
             this.setState({
-                inputType: value
+                inputType: searchValue
             });
         }
     }
@@ -146,7 +140,11 @@ export default class BizSelectModalConfig extends Component<BizSelectModalConfig
                         inputType ? <Select.Option value={inputType}>{inputType}</Select.Option> : null
                     }
                     {
-                        this.defaultOptions.map((option, index) => <Select.Option key={index} value={option}>{option}</Select.Option>)
+                        DEFAULT_OPTIONS.map((option, index) => (
+                            <Select.Option key={index} value={option.value}>
+                                {option.name}({option.value})
+                            </Select.Option>
+                        ))
                     }
                 </Select>
             </FormItem>
