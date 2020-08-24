@@ -58,6 +58,8 @@ $file-mask: rgba(0, 0, 0, .5);
 
         .file-info {
             width: 100%;
+            height: calc(100% - 30px);
+            text-align: center;
             position: relative;
             overflow: hidden;
     

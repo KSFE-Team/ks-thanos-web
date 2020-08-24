@@ -12,8 +12,9 @@ interface PageConfigProps {
 class PageConfig extends Component<PageConfigProps> {
 
     handleChangeName = (event) => {
+        const { value = '' } = event.target;
         actions.generatePage.changeTemplateName({
-            name: event.target.value
+            name: value.trim()
         });
     }
 
