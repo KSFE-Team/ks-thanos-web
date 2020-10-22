@@ -30,6 +30,8 @@ const TABLE_FIELD = {
         'tableName'
     ]
 };
+// ExtendContainer
+const EXTEND_FIELD = ['formKey', 'sortKey', 'addButtonText'];
 
 export function checkFieldData(type: string, data: any, source?: string): checkFieldDataResult {
     let tempArr = [];
@@ -117,6 +119,11 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
             return {
                 error: checkCommonFn(data, TABLE_FIELD.config) || checkArrayCommonFn(tempArr, TABLE_FIELD.dataSource),
                 message: 'Table'
+            };
+        case 'ExtendContainer':
+            return {
+                error: checkCommonFn(data, EXTEND_FIELD),
+                message: 'ExtendContainer'
             };
     }
     return {

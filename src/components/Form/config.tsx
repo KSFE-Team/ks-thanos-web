@@ -282,23 +282,25 @@ export default class FormConfig extends Component<FormConfigProps> {
                         style={{marginBottom: 0}}
                     >
                         <ComponentType
-                            dataSource={[dataSource] || []}
+                            dataSource={[formData[TYPE] === SEARCH ? dataSource.filter((data) => data.name !== 'ExtendContainer') : dataSource] || []}
                             span={12}
                             onClick={this.handleClick}
                             title={''}
                         />
                     </FormItem>
-                    <FormItem
-                        label={'云组件'}
-                        {...formItemLayout}
-                    >
-                        <ComponentType
-                            dataSource={[cloudDataSource] || []}
-                            span={12}
-                            onClick={this.handleClick}
-                            title={''}
-                        />
-                    </FormItem>
+                    {
+                        formData[TYPE] !== SEARCH && <FormItem
+                            label={'云组件'}
+                            {...formItemLayout}
+                        >
+                            <ComponentType
+                                dataSource={[cloudDataSource] || []}
+                                span={12}
+                                onClick={this.handleClick}
+                                title={''}
+                            />
+                        </FormItem>
+                    }
                 </TabPane>
             </Tabs>
         </div>;
