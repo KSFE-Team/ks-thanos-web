@@ -2,7 +2,8 @@ import {actions} from 'kredux';
 import {getUniqueID, request, insertComponents} from 'Src/utils';
 import {API} from 'Src/api';
 import {goto} from 'Src/utils/commonFunc';
-import {message, Modal} from 'antd';
+import { message, Modal } from 'antd';
+import { stringify } from 'qs';
 
 export const STATE = {
     count: 0,
@@ -85,8 +86,12 @@ export default {
         },
         /* 加载云组件列表 */
         loadCloudComponentList: async() => {
-            const response = await request(API.cloudComponent.query, {
-                method: 'get'
+            const postData = {
+                page: 1,
+                count: 100
+            };
+            const response = await request(`${API.cloudComponent.query}?${stringify(postData)}`, {
+                method: 'get',
             });
             if (response && response.errcode === 0) {
                 actions.generatePage.setReducers({

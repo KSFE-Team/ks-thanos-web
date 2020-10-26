@@ -19,6 +19,7 @@ const SELECT_FIELD = ['label', 'value'];
 const RADIO_CHECKBOX_FIELD = ['text', 'value'];
 // BizSelectModal
 const BIZ_FIELD = ['key', 'label', 'type'];
+const BIZ_TAGS_FIELD = ['key', 'label', 'type', 'showTagKey', 'buttonText'];
 // Table
 const TABLE_FIELD = {
     config: [
@@ -124,6 +125,11 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
             return {
                 error: checkCommonFn(data, EXTEND_FIELD),
                 message: 'ExtendContainer'
+            };
+        case 'BizSelectTags':
+            return {
+                error: checkCommonFn(source ? { ...data, type: data.props.type } : data, BIZ_TAGS_FIELD),
+                message: 'BizSelectTags'
             };
     }
     return {
