@@ -14,6 +14,24 @@ export const getInitJson = () => ({
 });
 
 /**
+ * 初始数据
+ */
+export const initState = {
+    formData: {
+        label: '',
+        formKey: '',
+        sortKey: '',
+        addButtonText: '',
+        // components: [], // 区域块内的组件
+    },
+    isTouch: false,
+    // current: {
+    //     id: '',
+    //     props: {}
+    // },
+};
+
+/**
  * 获取组件Tools配置
  */
 export const getTools = () => ({

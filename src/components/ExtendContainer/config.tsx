@@ -4,9 +4,10 @@ import { Form, Input, Button, Row, Col, message } from 'antd';
 import { getDataEntry, ALL_TOOLS, getCloudComponents } from 'Src/components';
 import {findComponent, getTools, getUniqueID, saveComponent} from 'Src/utils';
 import ComponentType from 'Src/pages/GeneratePage/components/Config/ComponentType';
-import { filterCloudComponents } from './utils';
+import { filterCloudComponents, initState } from './utils';
 import { checkFieldData } from 'Src/utils/utils';
 import { FORM_MESSAGE } from 'Src/utils/constants';
+import ClearButton from 'Src/components/ClearButton';
 
 const FormItem = Form.Item;
 
@@ -111,6 +112,7 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
 
     handleSave = () => {
         const { formData, current } = this.state;
+        console.log('formData!', formData);
         const { pageJSON, onSave } = this.props;
         const { error } = checkFieldData('ExtendContainer', formData);
         // 提交检验
@@ -235,6 +237,7 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
                             type='primary'
                         >确定</Button>
                     </Col>
+                    <ClearButton initState={initState} that={this} />
                 </Row>
             </FormItem>
         </div>;
