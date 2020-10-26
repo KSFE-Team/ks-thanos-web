@@ -163,7 +163,7 @@ export default class Header extends Component<HeaderProps, {}> {
                 }
                 /* 获取截屏 */
                 const screenshotSrc: string = await getScreenShotByCanvas();
-                actions.generatePage.add11OrUpdateItem({
+                actions.generatePage.addOrUpdateItem({
                     postDate: {
                         [pageOrTemp + 'Data']: JSON.stringify({
                             components: formatComponents(components),

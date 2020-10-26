@@ -6,6 +6,7 @@ export const getInitJson = () => ({
     componentName: 'ExtendContainer',
     source: 'ks-cms-ui',
     default: false,
+    label: '',
     formKey: '',
     sortKey: '',
     addButtonText: '',

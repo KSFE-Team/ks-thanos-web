@@ -21,6 +21,7 @@ const formItemLayout = {
     }
 };
 
+const LABEL = 'label';
 const FORMKEY = 'formKey';
 const SORTKEY = 'sortKey';
 const ADDBUTTONTEXT = 'addButtonText';
@@ -37,6 +38,7 @@ interface ExtendContainerConfigState {
         addButtonText: any
         formKey: any
         sortKey: any
+        label: any
     };
     isTouch: boolean;
     current: {
@@ -59,7 +61,8 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
                 extendContainerName: '',
                 addButtonText: '',
                 formKey: '',
-                sortKey: ''
+                sortKey: '',
+                label: ''
             },
             isTouch: false,
             current
@@ -73,6 +76,7 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
             const current = findComponent(components);
             return {
                 formData: {
+                    [LABEL]: current[LABEL],
                     [FORMKEY]: current[FORMKEY],
                     [SORTKEY]: current[SORTKEY],
                     [ADDBUTTONTEXT]: current[ADDBUTTONTEXT],
@@ -144,6 +148,21 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
         const cloudDataSource = getTools(filterCloudComponents(cloudComponentList, getCloudComponents()));
         return <div>
             <FormItem
+                label={'label'}
+                {...formItemLayout}
+                required={true}
+            >
+                <Input
+                    value={formData[LABEL]}
+                    placeholder='例如： 事故列表'
+                    required={true}
+                    onChange={(e) => {
+                        const value = e.target.value;
+                        this.handleChange(LABEL, value);
+                    }}
+                />
+            </FormItem>
+            <FormItem
                 label={'字段key'}
                 {...formItemLayout}
                 required={true}
@@ -191,7 +210,7 @@ export default class ExtendContainerConfig extends Component<ExtendContainerConf
                 {...formItemLayout}
             >
                 <ComponentType
-                    dataSource={[dataSource.filter((data) => data.name !== 'ExtendContainer')] || []}
+                    dataSource={[dataSource.filter((data) => data.name !== 'ExtendContainer' && data.name !== 'Fragment')] || []} // 暂不支持嵌套配置
                     span={12}
                     onClick={this.handleClick}
                     title={''}

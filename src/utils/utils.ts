@@ -31,7 +31,7 @@ const TABLE_FIELD = {
     ]
 };
 // ExtendContainer
-const EXTEND_FIELD = ['formKey', 'sortKey', 'addButtonText'];
+const EXTEND_FIELD = ['label', 'formKey', 'sortKey', 'addButtonText'];
 
 export function checkFieldData(type: string, data: any, source?: string): checkFieldDataResult {
     let tempArr = [];
