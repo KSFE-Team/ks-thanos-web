@@ -29,14 +29,14 @@ export default class BizSelectTagsConfig extends Component<BizSelectTagsConfigPr
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = findComponent(components);
-            const { type = '' } = (current.props || {});
+            const { type = '', showTagKey = '', buttonText = '' } = (current.props || {});
             return {
                 formData: {
                     [KEY]: current[KEY],
                     [LABEL]: current[LABEL],
                     [TYPE]: type,
-                    [SHOWTAGKEY]: current[SHOWTAGKEY],
-                    [BUTTONTEXT]: current[BUTTONTEXT],
+                    [SHOWTAGKEY]: showTagKey,
+                    [BUTTONTEXT]: buttonText,
                 },
                 current
             };
@@ -50,7 +50,7 @@ export default class BizSelectTagsConfig extends Component<BizSelectTagsConfigPr
     handleSave = () => {
         const { formData, current } = this.state;
         const { pageJSON, onSave } = this.props;
-        const { type, ...OTHER_DATA } = formData;
+        const { type, showTagKey, buttonText, ...OTHER_DATA } = formData;
         const { error } = checkFieldData('BizSelectTags', formData);
         if (error) {
             message.error(FORM_MESSAGE);
@@ -61,7 +61,9 @@ export default class BizSelectTagsConfig extends Component<BizSelectTagsConfigPr
             props: {
                 ...current.props,
                 placeholder: formData[LABEL],
-                [TYPE]: type
+                [TYPE]: type,
+                [SHOWTAGKEY]: showTagKey,
+                [BUTTONTEXT]: buttonText,
             },
         });
         onSave && onSave(pageJSON);
