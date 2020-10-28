@@ -11,7 +11,7 @@ import * as Checkbox from './Checkbox/index';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
-import * as TimingSetting from './TimingSetting';
+import * as BizTimingSetting from './BizTimingSetting';
 /**
  * 展示类组件
  */
@@ -58,7 +58,7 @@ const getDataEntry = () => DATA_ENTRY;
  */
 const CLOUD_COMPONENTS = {
     BizSelectModal,
-    TimingSetting
+    BizTimingSetting
 };
 
 /**
