@@ -12,6 +12,8 @@ import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
 import * as BizTimingSetting from './BizTimingSetting';
+import * as ExtendContainer from './ExtendContainer';
+import * as BizSelectTags from './BizSelectTags';
 /**
  * 展示类组件
  */
@@ -24,7 +26,8 @@ const DATA_ENTRY = {
     Textarea,
     Radio,
     Checkbox,
-    Fragment
+    Fragment,
+    ExtendContainer
 };
 
 /**
@@ -38,7 +41,7 @@ const DATA_DISPLAY = {
  * 其他组件
  */
 const OTHER_COMPONENTS = {
-    Form
+    Form,
 };
 
 /*
@@ -58,7 +61,8 @@ const getDataEntry = () => DATA_ENTRY;
  */
 const CLOUD_COMPONENTS = {
     BizSelectModal,
-    BizTimingSetting
+    BizTimingSetting,
+    BizSelectTags
 };
 
 /**

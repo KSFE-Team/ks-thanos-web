@@ -144,7 +144,8 @@ export default class Header extends Component<HeaderProps, {}> {
         confirm({
             title: `确认提交${text}${pageOrTempText}的所写配置吗？`,
             onOk: async() => {
-                const {toTempPageJSON} = this.props.generatePage;
+                const { toTempPageJSON } = this.props.generatePage;
+                console.log('toTempPageJSON', JSON.stringify(toTempPageJSON));
                 let components = pageOrTemp === 'page' ? pageJSON.components : getComponents(JSON.parse(JSON.stringify(toTempPageJSON.components))),
                     id: number;
                 if (queryString.pageOrTemp === 'page' && pageOrTemp === 'template') {

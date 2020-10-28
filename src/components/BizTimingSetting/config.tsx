@@ -153,7 +153,7 @@ export default class BizTimingSettingConfig extends Component<BizTimingSettingCo
     render() {
         const { formData } = this.state;
         const { TYPE, REQUIRED } = FiELDS;
-        const url = 'https://kaishu.yuque.com/iqor84/gqd66m/crns56';
+        const url = 'https://kaishu.yuque.com/nbdzm5/kms/ggklfp';
         return <div>
             <FormItem
                 label={'定时配置'}
