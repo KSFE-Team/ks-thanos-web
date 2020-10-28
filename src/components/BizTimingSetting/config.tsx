@@ -32,12 +32,12 @@ const CONFIG_TYPE = [
     }
 ];
 
-interface TimingSettingConfigProps {
+interface BizTimingSettingConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
 
-export default class TimingSettingConfig extends Component<TimingSettingConfigProps> {
+export default class BizTimingSettingConfig extends Component<BizTimingSettingConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
@@ -91,7 +91,7 @@ export default class TimingSettingConfig extends Component<TimingSettingConfigPr
             }
         });
         onSave && onSave(pageJSON);
-        console.log(pageJSON.components, 'pageJSON.components');
+        // console.log(pageJSON.components, 'pageJSON.components');
     }
 
     // 日期节点

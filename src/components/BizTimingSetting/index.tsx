@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Radio } from 'antd';
 import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { getInitJson, getTools } from './utils';
-import TimingSettingConfig from './config';
+import BizTimingSettingConfig from './config';
 
 const RadioGroup = Radio.Group;
 const CONFIG_TYPE = [
@@ -17,14 +17,14 @@ const CONFIG_TYPE = [
     }
 ];
 
-interface KTimingSettingProps {
+interface KBizTimingSettingProps {
     config: any;
     generatePage: {
         pageJSON: any
     }
 }
 
-class KTimingSetting extends Component<KTimingSettingProps> {
+class KBizTimingSetting extends Component<KBizTimingSettingProps> {
     static propTypes = {
         props: PropTypes.object
     };
@@ -52,8 +52,8 @@ class KTimingSetting extends Component<KTimingSettingProps> {
 }
 
 export {
-    KTimingSetting as component,
+    KBizTimingSetting as component,
     getInitJson,
     getTools,
-    TimingSettingConfig as config
+    BizTimingSettingConfig as config
 };

@@ -2,7 +2,6 @@ import history from './history';
 import { PROJECT_NAME } from './constants';
 import { ALL_TOOLS } from 'Src/components';
 import { actions } from 'kredux';
-
 /**
  * @desc 路由跳转方法
  * @param { string } route 需要跳转的路由
