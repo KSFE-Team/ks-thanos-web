@@ -37,7 +37,9 @@ class KTimingSetting extends Component<KTimingSettingProps> {
                 {...FORMITEM_LAYOUT}
                 style={{ marginBottom: 0 }}
             >
-                <RadioGroup>
+                <RadioGroup
+                    value={CONFIG_TYPE[1].value}
+                >
                     {
                         CONFIG_TYPE.map(({ value, label }) => {
                             return <Radio value={value} key={value}>{label}</Radio>;

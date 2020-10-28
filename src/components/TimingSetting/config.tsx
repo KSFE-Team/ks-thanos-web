@@ -1,17 +1,22 @@
 import React, { Fragment, Component } from 'react';
 import { Form, Input, Button, Row, Col, Radio } from 'antd';
 import PropTypes from 'prop-types';
-import { ALIAS, FORMITEM_LAYOUT } from 'Src/utils/constants';
-import { findComponent } from 'Src/utils';
+import { ALIAS, FORMITEM_LAYOUT, ISREQUIRED_TYPE } from 'Src/utils/constants';
+import { findComponent, saveComponent } from 'Src/utils';
 import { initState } from './utils';
 import ClearButton from 'Src/components/ClearButton';
-// import { checkFieldData } from 'Src/utils/utils';
 
 const RadioGroup = Radio.Group;
 const FormItem = Form.Item;
-const KEY = 'key';
-const LABEL = 'label';
-const TYPE = 'type';
+const FiELDS = {
+    TYPE: 'type',
+    STARTTIME_KEY: 'startTime',
+    STARTTIME_LABEL: 'startTimeLabel',
+    ENDTIME_KEY: 'endTime',
+    ENDTIME_LABEL: 'endTimeLabel',
+    REQUIRED: 'required'
+};
+
 const CONFIG_TYPE = [
     {
         label: '时间',
@@ -42,12 +47,12 @@ export default class TimingSettingConfig extends Component<TimingSettingConfigPr
             const { pageJSON } = props;
             const { components } = pageJSON;
             const current = findComponent(components);
-            const { type = '' } = (current.props || {});
+            const { type, required } = current.props;
             return {
                 formData: {
-                    [KEY]: current[KEY],
-                    [LABEL]: current[LABEL],
-                    [TYPE]: type,
+                    [FiELDS.TYPE]: type,
+                    [FiELDS.REQUIRED]: required,
+                    props: current.props,
                 },
                 current
             };
@@ -71,67 +76,84 @@ export default class TimingSettingConfig extends Component<TimingSettingConfigPr
         });
     };
 
-    // handleSave = () => {
-    //     const { formData, current } = this.state;
-    //     const { pageJSON, onSave } = this.props;
-    //     const { type, ...OTHER_DATA } = formData;
-    //     const { error } = checkFieldData('BizSelectModal', formData);
-    //     if (error) {
-    //         message.error(FORM_MESSAGE);
-    //         return false;
-    //     }
-    //     pageJSON.components = saveComponent(current.id, pageJSON.components, {
-    //         ...OTHER_DATA,
-    //         props: {
-    //             ...current.props,
-    //             placeholder: formData[LABEL],
-    //             [TYPE]: type
-    //         },
-    //     });
-    //     onSave && onSave(pageJSON);
-    // }
+    // 保存
+    handleSave = () => {
+        const { formData, current } = this.state;
+        const { pageJSON, onSave } = this.props;
+        const { type, required, props, ...other } = formData;
+        pageJSON.components = saveComponent(current.id, pageJSON.components, {
+            props: {
+                type,
+                required,
+                formFields: {
+                    ...other
+                }
+            }
+        });
+        onSave && onSave(pageJSON);
+        console.log(pageJSON.components, 'pageJSON.components');
+    }
 
-    
-
-    // handleSearch = (searchValue: string) => {
-    //     if (DEFAULT_OPTIONS.find(({
-    //         value
-    //     }) => value.toLowerCase() === searchValue.toLowerCase())) {
-    //         this.setState({
-    //             inputType: ''
-    //         });
-    //     } else {
-    //         this.setState({
-    //             inputType: searchValue
-    //         });
-    //     }
-    // }
-
-    // 根据类型 - 渲染节点 区分 all || time || data
-    getComponentNode = () => {
+    // 日期节点
+    dataNode = () => {
+        const { STARTTIME_KEY, STARTTIME_LABEL, ENDTIME_KEY, ENDTIME_LABEL } = FiELDS;
         const { formData } = this.state;
-        console.log(formData, '---');
-        switch (formData[TYPE]) {
-            case 'settingAll':
-                return <Fragment>
-                    <FormItem
-                        label={`定时配置${ALIAS.KEY}`}
-                        {...FORMITEM_LAYOUT}
-                    >
-                        <Input
-                            value={formData[KEY]}
-                            placeholder='默认Key为：timeSetting'
-                            onChange={() => {
-                                // this.handleChange(LABEL, event.target.value);
-                            }}
-                        />
-                    </FormItem>
-                </Fragment>;
-        }
+        return <Fragment>
+            <FormItem
+                label={`上架时间${ALIAS.KEY}`}
+                {...FORMITEM_LAYOUT}
+            >
+                <Input
+                    value={formData[STARTTIME_KEY]}
+                    placeholder='默认Key为：startTime'
+                    onChange={(e) => {
+                        this.handleChange(STARTTIME_KEY, e.target.value);
+                    }}
+                />
+            </FormItem>
+            <FormItem
+                label={`上架时间${ALIAS.LABEL}`}
+                {...FORMITEM_LAYOUT}
+            >
+                <Input
+                    value={formData[STARTTIME_LABEL]}
+                    placeholder='默认Label为：上架时间'
+                    onChange={(e) => {
+                        this.handleChange(STARTTIME_LABEL, e.target.value);
+                    }}
+                />
+            </FormItem>
+            <FormItem
+                label={`下架时间${ALIAS.KEY}`}
+                {...FORMITEM_LAYOUT}
+            >
+                <Input
+                    value={formData[ENDTIME_KEY]}
+                    placeholder='默认Key为：endTime'
+                    onChange={(e) => {
+                        this.handleChange(ENDTIME_KEY, e.target.value);
+                    }}
+                />
+            </FormItem>
+            <FormItem
+                label={`下架时间${ALIAS.LABEL}`}
+                {...FORMITEM_LAYOUT}
+            >
+                <Input
+                    value={formData[ENDTIME_LABEL]}
+                    placeholder='默认Label为：下架时间'
+                    onChange={(e) => {
+                        this.handleChange(ENDTIME_LABEL, e.target.value);
+                    }}
+                />
+            </FormItem>
+        </Fragment>;
     }
 
     render() {
         const { formData } = this.state;
+        const { TYPE, REQUIRED } = FiELDS;
+        const url = 'https://kaishu.yuque.com/iqor84/gqd66m/crns56';
         return <div>
             <FormItem
                 label={'定时配置'}
@@ -141,7 +163,7 @@ export default class TimingSettingConfig extends Component<TimingSettingConfigPr
                 <RadioGroup
                     value={formData.type}
                     onChange={(e) => {
-                        this.handleChange('type', e.target.value);
+                        this.handleChange(TYPE, e.target.value);
                     }}
                 >
                     {
@@ -151,71 +173,29 @@ export default class TimingSettingConfig extends Component<TimingSettingConfigPr
                     }
                 </RadioGroup>
             </FormItem>
-            {
-                this.getComponentNode()
-            }
-            {/* <FormItem
-                label={ALIAS.LABEL}
+            <Form.Item
                 {...FORMITEM_LAYOUT}
+                label='是否必填'
                 required={true}
             >
-                <Input
-                    value={formData[LABEL]}
-                    placeholder='例如： 姓名'
-                    onChange={(event) => {
-                        this.handleChange(LABEL, event.target.value);
-                    }}
-                />
-            </FormItem>
-            <FormItem
-                label={ALIAS.KEY}
-                {...FORMITEM_LAYOUT}
-                required={true}
-            >
-                <Input
-                    value={formData[KEY]}
-                    placeholder='例如： name'
-                    onChange={(event) => {
-                        this.handleChange(KEY, event.target.value);
-                    }}
-                />
-            </FormItem>
-            <FormItem
-                label={ALIAS.TYPE}
-                {...FORMITEM_LAYOUT}
-                required={true}
-            >
-                <Select
-                    style={{
-                        width: '100%'
-                    }}
-                    showSearch
-                    value={formData[TYPE]}
-                    onSearch={this.handleSearch.bind(this)}
-                    onChange={(value: string) => {
-                        this.handleChange(TYPE, value);
-                    }}
-                    filterOption={(input, option) =>
-                        String(option.props.children).toLowerCase().indexOf(input.toLowerCase()) >= 0
-                    }
+                <Radio.Group defaultValue={formData[REQUIRED]}
+                    onChange={(e) => { this.handleChange(REQUIRED, e.target.value); }}
                 >
-                    {
-                        inputType ? <Select.Option value={inputType}>{inputType}</Select.Option> : null
-                    }
-                    {
-                        DEFAULT_OPTIONS.map((option, index) => (
-                            <Select.Option key={index} value={option.value}>
-                                {option.name}({option.value})
-                            </Select.Option>
-                        ))
-                    }
-                </Select>
-            </FormItem> */}
+                    {ISREQUIRED_TYPE.map(({ VALUE, LABEL }, index) => <Radio key={index} value={VALUE}>{LABEL}</Radio>)}
+                </Radio.Group>
+            </Form.Item>
+            {this.dataNode()}
+            <div style={{ marginBottom: '10px', color: 'green', marginLeft: '10px' }}>
+                <p>以上字段均有默认值，支持单独修改字段。</p>具体字段参数请参考：<a target="_blank" onClick={(e) => {
+                    e.stopPropagation();
+                    window.open(url);
+                }}>{url}</a>
+            </div>
             <FormItem>
                 <Row>
                     <Col>
                         <Button
-                            // onClick={this.handleSave}
+                            onClick={this.handleSave}
                             type='primary'
                         >确定</Button>
                     </Col>
