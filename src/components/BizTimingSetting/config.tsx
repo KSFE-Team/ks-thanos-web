@@ -85,13 +85,12 @@ export default class BizTimingSettingConfig extends Component<BizTimingSettingCo
             props: {
                 type,
                 required,
-                formFields: {
+                formFields: JSON.stringify({
                     ...other
-                }
+                })
             }
         });
         onSave && onSave(pageJSON);
-        // console.log(pageJSON.components, 'pageJSON.components');
     }
 
     // 日期节点
