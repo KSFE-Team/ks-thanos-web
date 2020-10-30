@@ -295,7 +295,7 @@ export default class FormConfig extends Component<FormConfigProps> {
                         >
                             <ComponentType
                                 dataSource={[cloudDataSource] || []}
-                                span={12}
+                                span={16}
                                 onClick={this.handleClick}
                                 title={''}
                             />

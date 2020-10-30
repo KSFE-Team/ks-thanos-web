@@ -27,7 +27,7 @@ export default class ComponentType extends Component<PageConfigProps> {
                                 key={index}
                             >
                                 <Row
-                                    gutter={8}
+                                    gutter={6}
                                 >
                                     {
                                         row.map((item, idx: number) => {
