@@ -11,6 +11,8 @@ import * as Checkbox from './Checkbox/index';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
+import * as Conditions from './Conditions';
+
 /**
  * 展示类组件
  */
@@ -23,7 +25,8 @@ const DATA_ENTRY = {
     Textarea,
     Radio,
     Checkbox,
-    Fragment
+    Fragment,
+    Conditions
 };
 
 /**
@@ -56,7 +59,8 @@ const getDataEntry = () => DATA_ENTRY;
  * 云组件
  */
 const CLOUD_COMPONENTS = {
-    BizSelectModal
+    BizSelectModal,
+    Conditions
 };
 
 /**

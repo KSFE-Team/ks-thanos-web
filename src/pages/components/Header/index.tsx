@@ -160,6 +160,7 @@ export default class Header extends Component<HeaderProps, {}> {
                         }
                     ];
                 }
+                console.log(components, 'components');
                 /* 获取截屏 */
                 const screenshotSrc: string = await getScreenShotByCanvas();
                 actions.generatePage.addOrUpdateItem({
