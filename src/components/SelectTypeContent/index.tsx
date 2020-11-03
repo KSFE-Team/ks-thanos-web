@@ -21,8 +21,7 @@ class KSelectTypeContent extends Component<KSelectTypeContentProps> {
     };
 
     render() {
-        const { params: { typeLabel } } = this.props;
-        console.log(typeLabel, 'label', this.props);
+        const typeLabel = '内容类型';
         return (
             <Fragment>
                 <Form.Item

@@ -195,5 +195,30 @@ export const DEFAULT_OPTIONS = [
     {
         value: 'warehouse',
         name: '仓库列表'
+    },
+    {
+        value: 'resourcePack',
+        name: '资源包'
+    },
+    {
+        value: 'newAudioStory',
+        name: '音频故事'
+    },
+    {
+        value: 'newVideoStory',
+        name: '视频故事'
+    },
+    {
+        value: 'newAudioAlbum',
+        name: '音频专辑'
+    },
+    {
+        value: 'newVideoAlbum',
+        name: '视频专辑'
+    },
+    {
+        value: 'content',
+        name: '单个内容'
     }
+
 ];

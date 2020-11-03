@@ -4,7 +4,7 @@ export const getInitJson = () => ({
     componentName: 'BizTimingSetting',
     source: 'Src/components/@ks/kms-biztimingsetting',
     props: {
-        formFields: {},
+        formFields: '{}',
         info: {},
         type: 'data',
         disabled: false,

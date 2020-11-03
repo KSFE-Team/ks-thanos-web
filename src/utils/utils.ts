@@ -33,6 +33,8 @@ const TABLE_FIELD = {
 };
 // ExtendContainer
 const EXTEND_FIELD = ['label', 'formKey', 'sortKey', 'addButtonText'];
+// selectTypeContent = []
+const SELECT_TYPE_CONTENT = ['typeField', 'typeLabel', 'contentArr', 'contentField'];
 
 export function checkFieldData(type: string, data: any, source?: string): checkFieldDataResult {
     let tempArr = [];
@@ -131,6 +133,12 @@ export function checkFieldData(type: string, data: any, source?: string): checkF
                 error: checkCommonFn(source ? { ...data, type: data.props.type } : data, BIZ_TAGS_FIELD),
                 message: 'BizSelectTags'
             };
+        case 'SelectTypeContent':
+            return {
+                error: checkCommonFn(source ? { ...data, type: data.props.type } : data, SELECT_TYPE_CONTENT),
+                message: 'BizSelectTags'
+            };
+
     }
     return {
         error: false,

@@ -48,11 +48,12 @@ export default class BizTimingSettingConfig extends Component<BizTimingSettingCo
             const { components } = pageJSON;
             const current = findComponent(components);
             const { type, required } = current.props;
+            const objData = JSON.parse(current.props.formFields);
             return {
                 formData: {
                     [FiELDS.TYPE]: type,
                     [FiELDS.REQUIRED]: required,
-                    props: current.props,
+                    ...objData
                 },
                 current
             };
@@ -85,9 +86,7 @@ export default class BizTimingSettingConfig extends Component<BizTimingSettingCo
             props: {
                 type,
                 required,
-                formFields: JSON.stringify({
-                    ...other
-                })
+                formFields: JSON.stringify({ ...other })
             }
         });
         onSave && onSave(pageJSON);
