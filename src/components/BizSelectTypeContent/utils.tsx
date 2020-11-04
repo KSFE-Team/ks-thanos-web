@@ -34,7 +34,7 @@ export const getInitJson = () => ({
     source: 'Src/components/@ks/kms-bizselecttypecontent',
     default: false,
     props: {
-        params: '{"contentArr": "", "typeLabel": "", "typeField": "","contentField": "","initComponentValue": "{}"}'
+        params: '{"contentArr": "", "typeLabel": "", "typeField": "","contentField": "","initComponentValue": {}}'
     }
 });
 
