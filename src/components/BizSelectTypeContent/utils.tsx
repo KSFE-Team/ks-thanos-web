@@ -30,8 +30,8 @@ export const initState = {
  */
 export const getInitJson = () => ({
     stateName: '',
-    componentName: 'SelectTypeContent',
-    source: 'Src/components/@ks/kms-selecttypecontent',
+    componentName: 'BizSelectTypeContent',
+    source: 'Src/components/@ks/kms-bizselecttypecontent',
     default: false,
     props: {
         params: '{"contentArr": "", "typeLabel": "", "typeField": "","contentField": "","initComponentValue": "{}"}'
@@ -42,10 +42,10 @@ export const getInitJson = () => ({
  * 获取组件Tools配置
  */
 export const getTools = () => ({
-    name: 'SelectTypeContent',
+    name: 'BizSelectTypeContent',
     icon: 'edit',
-    componentName: 'SelectTypeContent',
-    cloudName: '@ks/kms-selecttypecontent'
+    componentName: 'BizSelectTypeContent',
+    cloudName: '@ks/kms-bizselecttypecontent'
 });
 
 /**

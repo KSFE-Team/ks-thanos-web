@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import { Form, Radio, Input } from 'antd';
 import { FORMITEM_LAYOUT } from 'Src/utils/constants';
 import { getInitJson, getTools, CONTENT_ARR } from './utils';
-import SelectTypeContentConfig from './config';
+import BizSelectTypeContentConfig from './config';
 
 const RadioGroup = Radio.Group;
 
-interface KSelectTypeContentProps {
+interface KBizSelectTypeContentProps {
     config: any;
     generatePage: {
         pageJSON: any
@@ -15,7 +15,7 @@ interface KSelectTypeContentProps {
     params: any
 }
 
-class KSelectTypeContent extends Component<KSelectTypeContentProps> {
+class KBizSelectTypeContent extends Component<KBizSelectTypeContentProps> {
     static propTypes = {
         props: PropTypes.object
     };
@@ -57,8 +57,8 @@ class KSelectTypeContent extends Component<KSelectTypeContentProps> {
 }
 
 export {
-    KSelectTypeContent as component,
+    KBizSelectTypeContent as component,
     getInitJson,
     getTools,
-    SelectTypeContentConfig as config
+    BizSelectTypeContentConfig as config
 };

@@ -14,7 +14,7 @@ import * as BizSelectModal from './BizSelectModal';
 import * as BizTimingSetting from './BizTimingSetting';
 import * as ExtendContainer from './ExtendContainer';
 import * as BizSelectTags from './BizSelectTags';
-import * as SelectTypeContent from './SelectTypeContent';
+import * as BizSelectTypeContent from './BizSelectTypeContent';
 /**
  * 展示类组件
  */
@@ -64,7 +64,7 @@ const CLOUD_COMPONENTS = {
     BizSelectModal,
     BizTimingSetting,
     BizSelectTags,
-    SelectTypeContent
+    BizSelectTypeContent
 };
 
 /**

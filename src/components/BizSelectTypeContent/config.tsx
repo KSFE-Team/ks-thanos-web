@@ -26,12 +26,12 @@ const flagArr = [
     }
 ];
 
-interface SelectTypeContentConfigProps {
+interface BizSelectTypeContentConfigProps {
     pageJSON: any;
     onSave(pageJSON: any): void;
 }
 
-export default class SelectTypeContentConfig extends Component<SelectTypeContentConfigProps> {
+export default class BizSelectTypeContentConfig extends Component<BizSelectTypeContentConfigProps> {
     static propTypes = {
         onSave: PropTypes.func
     };
