@@ -9,14 +9,11 @@ export const getInitJson = () => ({
     componentType: 'cloud',
     props: {
         formfields: [{
-            key: '', // PropTypes.string.isRequired
-            isRequired: '', // PropTypes.bool 默认true
-            type: '', // 1kaishu、2huiben 默认1
-            option: [{value: '', label: ''}] // 单isBeta status isAbTest 多 clients tagCode memberTag
+            key: 'tagCode', // PropTypes.string.isRequired
+            isRequired: true, // PropTypes.bool 默认true
+            type: 1, // 1kaishu、2huiben 默认1
         }]
     },
-    // key: '',
-    // label: '',
 });
 
 /**
@@ -35,10 +32,9 @@ export const getTools = () => ({
 export const initState = {
     formData: {
         formfields: [{
-            key: '', // PropTypes.string.isRequired
-            isRequired: '', // PropTypes.bool 默认true
-            type: '', // 1kaishu、2huiben 默认1
-            option: [{value: '', label: ''}] // 单isBeta status isAbTest 多 clients tagCode memberTag
+            key: 'tagCode', // PropTypes.string.isRequired
+            isRequired: true, // PropTypes.bool 默认true
+            type: 1, // 1kaishu、2huiben 默认1
         }]
     },
     isTouch: false,

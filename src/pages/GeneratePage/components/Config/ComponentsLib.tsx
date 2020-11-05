@@ -10,7 +10,6 @@ import './index.scss';
 const { Search } = Input;
 const FormItem = Form.Item;
 const SPLIT_COUNT = 2;
-
 /**
  * 组件库
  */

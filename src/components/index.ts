@@ -11,8 +11,10 @@ import * as Checkbox from './Checkbox/index';
 import * as Form from './Form';
 import * as Fragment from './Fragment';
 import * as BizSelectModal from './BizSelectModal';
+import * as BizTimingSetting from './BizTimingSetting';
+import * as ExtendContainer from './ExtendContainer';
+import * as BizSelectTags from './BizSelectTags';
 import * as Conditions from './Conditions';
-
 /**
  * 展示类组件
  */
@@ -26,6 +28,7 @@ const DATA_ENTRY = {
     Radio,
     Checkbox,
     Fragment,
+    ExtendContainer,
     Conditions
 };
 
@@ -40,7 +43,7 @@ const DATA_DISPLAY = {
  * 其他组件
  */
 const OTHER_COMPONENTS = {
-    Form
+    Form,
 };
 
 /*
@@ -60,6 +63,8 @@ const getDataEntry = () => DATA_ENTRY;
  */
 const CLOUD_COMPONENTS = {
     BizSelectModal,
+    BizTimingSetting,
+    BizSelectTags,
     Conditions
 };
 
