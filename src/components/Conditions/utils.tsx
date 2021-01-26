@@ -4,7 +4,7 @@
 export const getInitJson = () => ({
     stateName: '',
     componentName: 'Conditions',
-    source: 'Src/components/@ks/kms-Conditions',
+    source: 'Src/components/@ks/kms-conditions',
     default: false,
     componentType: 'cloud',
     props: {
